@@ -14,7 +14,7 @@ public class Robot extends Tanks{
 	int g = (int) (((255 - 10) * Math.random()) + 10);
 	int b = (int) (((255 - 10) * Math.random()) + 10);
 	
-	float speed = (float) ((new Random()).nextFloat() * 0.2);
+	float speed = (float) (((new Random()).nextFloat() * 0.2) * 25);
 	
 	public Robot(float[] x, float[] y, int points) {
 		super(x, y);

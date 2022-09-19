@@ -84,7 +84,7 @@ public class RunningScreen implements Screen {
 					}
 				}
 				ATRobots[i] = new Robot(x[i], y[i], points);
-				//ATRobots[i].setSpeed((float) 0.5);
+				//ATRobots[i].setSpeed((float) 25);
 			}
 		    
 		    Arrays.fill(hitWall, false);
@@ -92,7 +92,7 @@ public class RunningScreen implements Screen {
 		    while(running == true) {	
 		    	for(int i = 0; i < robots; i++) {
 		    		// Detects Right Wall Collision
-		    		if((int)x[i][1] == 1920) {
+		    		if((int)x[i][1] >= 1920) {
 		    			try {
 	 	         			Sound.source("src/com/redteam/atrobots/sounds/wall_hit.wav");
 	 	         		} catch (Exception ex) {
@@ -103,7 +103,7 @@ public class RunningScreen implements Screen {
 		    		}
 		    		
 		    		// Detects Left Wall Collision
-		    		else if((int)x[i][1] == 0) {
+		    		else if((int)x[i][1] <= 0) {
 		    			try {
 	 	         			Sound.source("src/com/redteam/atrobots/sounds/wall_hit.wav");
 	 	         		} catch (Exception ex) {
