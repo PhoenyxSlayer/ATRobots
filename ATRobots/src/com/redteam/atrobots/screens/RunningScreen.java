@@ -84,7 +84,7 @@ public class RunningScreen implements Screen {
 					}
 				}
 				ATRobots[i] = new Robot(x[i], y[i], points);
-				ATRobots[i].setSpeed((float) 0.5);
+				//ATRobots[i].setSpeed((float) 0.5);
 			}
 		    
 		    Arrays.fill(hitWall, false);
