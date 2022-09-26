@@ -1,6 +1,6 @@
-package com.redteam.atrobots.screens;
+package com.redteam.atr3.screens;
 
-import com.redteam.atrobots.Window;
+import com.redteam.atr3.Window;
 
 public interface Screen
 {

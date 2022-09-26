@@ -1,6 +1,6 @@
-package com.redteam.atrobots;
+package com.redteam.atr3;
 
-import com.redteam.atrobots.screens.*;
+import com.redteam.atr3.screens.*;
 
 public class ATRobots {
 	

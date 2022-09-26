@@ -1,11 +1,11 @@
-package com.redteam.atrobots;
+package com.redteam.atr3;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import com.redteam.atrobots.ATRobots.*;
-import com.redteam.atrobots.screens.Screen;
+import com.redteam.atr3.ATRobots.*;
+import com.redteam.atr3.screens.Screen;
 
 public class Window extends JFrame{
 	

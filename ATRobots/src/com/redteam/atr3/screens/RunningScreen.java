@@ -1,10 +1,10 @@
-package com.redteam.atrobots.screens;
+package com.redteam.atr3.screens;
 
 import javax.swing.JPanel;
 
-import com.redteam.atrobots.Window;
+import com.redteam.atr3.Window;
 
-public class StartScreen implements Screen {
+public class RunningScreen implements Screen {
 	private JPanel p;
 	private Window w;
 		
