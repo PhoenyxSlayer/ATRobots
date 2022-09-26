@@ -12,7 +12,7 @@ public class Window extends JFrame{
 	private static final long serialVersionUID = 6286634599679800388L;
 	
 	// Begin state with Start Screen
-	private State state = State.START;
+	private State state = State.RUNNING;
 	
 	// Hash maps for the Screen States
 	

@@ -9,7 +9,7 @@ public class ATRobots {
 	// Game States
 	public enum State
 	{
-	    START, RUNNING, SETTINGS, CLOSING;
+	    START, RUNNING;
 	}
 	
 	// Resolution
@@ -26,8 +26,6 @@ public class ATRobots {
 		gameWindow = new Window("ATRobots", getWidth(), getHeight(), this);
 		gameWindow.addScreen(State.START, new StartScreen());
 		gameWindow.addScreen(State.RUNNING, new RunningScreen());
-		gameWindow.addScreen(State.SETTINGS, new SettingsScreen());
-		gameWindow.addScreen(State.CLOSING, new ClosingScreen());
 		gameWindow.run();
 	}
 }
