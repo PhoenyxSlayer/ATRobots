@@ -2,10 +2,12 @@ package com.redteam.atr3;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.lwjgl.glfw.GLFW.*;
 
 import javax.swing.JFrame;
 import com.redteam.atr3.ATRobots.*;
 import com.redteam.atr3.screens.Screen;
+
 
 public class Window extends JFrame{
 	
@@ -21,13 +23,22 @@ public class Window extends JFrame{
 	
 	// JFrame Window Creation
 	public Window(String title, int width, int height, ATRobots main) {
-		super (title);
+		glfwInit();
+
+		long win = glfwCreateWindow(width, height, title, 0, 0);
+
+		glfwShowWindow(win);
+
+
+		while (glfwWindowShouldClose(win) != true) {
+			glfwPollEvents();
+		}
 		// JFrame Formatting
-		setSize(width, height);
+		/*setSize(width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null);*/
 	}
 	
 	// Adds Screens Classes w/ what state their associated w/ to HashMap
