@@ -23,14 +23,7 @@ public class RunningScreen implements Screen {
 	    @Override
 	    public void draw()
 	    {
-	    	p = new JPanel();
-			p.setSize(w.getWidth(),w.getHeight());
-			p.setPreferredSize(new Dimension(w.getWidth(),w.getHeight()));
-			p.setMaximumSize(new Dimension(w.getWidth(),w.getHeight()));
-			p.setBackground(Color.black);
-			p.setLayout(null);
-			
-			w.add(p);
+	    	// TODO
 	    }
 	
 	    @Override

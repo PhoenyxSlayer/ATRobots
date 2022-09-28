@@ -30,7 +30,7 @@ public class Window extends JFrame{
 
 
 		while (glfwWindowShouldClose(win) != true) {
-			glfwPollEvents();
+			glfwWaitEvents();
 		}
 		// JFrame Formatting
 		/*setSize(width, height);
