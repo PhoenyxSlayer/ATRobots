@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import com.redteam.atr3.Window;
 
 public class RunningScreen implements Screen {
-	private JPanel p;
+	private JPanel a;
 	private Window w;
 		
 		@Override
