@@ -17,7 +17,6 @@ public class Window extends JFrame{
 	private State state = State.RUNNING;
 	
 	// Hash maps for the Screen States
-	
 	// SOURCE: https://stackoverflow.com/questions/34560139/how-can-i-create-a-start-screen-for-my-java-game
 	private Map<State, Screen> screens = new HashMap<>();
 	

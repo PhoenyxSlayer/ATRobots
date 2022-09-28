@@ -23,7 +23,8 @@ public class ATRobots {
 	
 	// Add All Game States
 	public ATRobots() {
- 
+
+		Window gameWindow = new Window("Title", 1280, 720, this);
 		gameWindow.addScreen(State.START, new StartScreen());
 		gameWindow.addScreen(State.RUNNING, new RunningScreen());
 		gameWindow.run();
