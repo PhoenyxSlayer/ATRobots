@@ -6,16 +6,18 @@ import java.io.InputStreamReader;
 
 public class Robot{
 	
-	private String s;
+	private String s, dir;
 	private int flag;
 	private File directory;
 	private String[] flist;
 	public void getName() throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Enter Directory of Robot: ");
+        dir = br.readLine();
 		System.out.print("Enter Robot Name: ");
         s = br.readLine();
      // Create an object of the File class
-        directory = new File("/home/daniel/Downloads");
+        directory = new File(dir);
 
      // store all names with same name
         		flist = directory.list();
