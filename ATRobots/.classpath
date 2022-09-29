@@ -388,5 +388,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl-zstd-natives-windows-arm64.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-zstd-natives-windows-x86.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-zstd-sources.jar"/>
+	<classpathentry kind="lib" path="lib/joml-1.10.5.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
