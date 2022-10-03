@@ -51,8 +51,11 @@ public class TestGame implements ILogic {
 	public void init() throws Exception {
 		renderer.init();
 
-		Model model = loader.loadOBJModel("/models/tank.obj");
-		model.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")), 1f);
+		Model tankModel = loader.loadOBJModel("/models/tank.obj");
+		tankModel.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")), 1f);
+		
+		Model bulletModel = loader.loadOBJModel("/models/bulletFixed.obj");
+		bulletModel.setTexture(new Texture(loader.loadTexture("textures/bullet.jpg")), 1f);
 
 		terrains = new ArrayList<>();
 		Terrain terrain = new Terrain(new Vector3f(0,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/blue.png")), 0.1f));
@@ -60,15 +63,8 @@ public class TestGame implements ILogic {
 		terrains.add(terrain); terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		Random rnd = new Random();
-		for(int i = 0; i < 200; i++) {
-			float x = rnd.nextFloat() * 100 - 50;
-			float y = rnd.nextFloat() * 100 - 50;
-			float z = rnd.nextFloat() * -300;
-			entities.add(new Entity(model, new Vector3f(x,y,z),
-					new Vector3f(rnd.nextFloat() * 180, rnd.nextFloat() * 180, 0), 1));
-		}
-		entities.add(new Entity(model, new Vector3f(0,0,-2f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankModel, new Vector3f(-5f,0,-5f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
 
 		float lightIntensity = 1.0f;
 		// point light
@@ -130,8 +126,8 @@ public class TestGame implements ILogic {
 			Vector2f rotVec = mouseInput.getDisplVec();
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
-
-		//entity.incRotation(0.0f, 0.25f, 0.0f);
+		for(int i = 0; i < entities.size(); i++)
+			entities.get(i).incRotation(0.0f, 0.5f, 0.0f);
 		spotAngle += spotInc * 0.05f;
 		if(spotAngle > 4) {
 			spotInc = -1;
