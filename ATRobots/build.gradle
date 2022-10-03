@@ -1,3 +1,5 @@
+// FOR LINUX YOU NEED TO RUN gradlew.bat USING dos2unix
+
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
