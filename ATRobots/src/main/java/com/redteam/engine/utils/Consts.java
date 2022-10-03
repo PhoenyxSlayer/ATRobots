@@ -15,7 +15,7 @@ public class Consts {
 	public static final int MAX_SPOT_LIGHTS = 5;
 	public static final int MAX_POINT_LIGHTS = 5;
 
-	public static final String TITLE = "TEST";
+	public static final String TITLE = "ATRobotsv3";
 
 
 	public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
