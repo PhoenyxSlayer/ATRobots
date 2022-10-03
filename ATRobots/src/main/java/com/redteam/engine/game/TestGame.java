@@ -66,7 +66,7 @@ public class TestGame implements ILogic {
 		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankModel, new Vector3f(-5f,0,-5f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankModel, new Vector3f(0f,0,-400f), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
 
 		float lightIntensity = 1.0f;
@@ -93,8 +93,8 @@ public class TestGame implements ILogic {
 		pointLights = new PointLight[]{pointLight};
 		spotLights = new SpotLight[]{spotLight, spotLight1};
 		
-		camera.setPosition(0, 50, 0);
-		camera.setRotation(90, 0, 0);
+		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
+		camera.setRotation(90f, 0f, 0f);
 	}
 
 	@Override
