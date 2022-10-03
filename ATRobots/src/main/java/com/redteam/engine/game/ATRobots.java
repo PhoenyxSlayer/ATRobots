@@ -20,10 +20,8 @@ public class ATRobots {
 	
 	// Main function
 	public static void main(String[] args) throws IOException {
-		robotName.getInside();
-		if(robotName.equals()) {
-			robotName.referenceName();
-			window = new Window(Consts.TITLE, 1600, 900, false);
+		if(robotName.getInside()) {
+			window = new Window(Consts.TITLE, 1600, 900, true);
 			game = new TestGame();
 			Engine engine = new Engine();
 			try {
@@ -31,9 +29,6 @@ public class ATRobots {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		else {
-			System.err.println("COULD NOT FIND FILE");
 		}
 	}
 	
