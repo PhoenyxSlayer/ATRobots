@@ -14,7 +14,6 @@ public class Model {
 	public Model(int id, int vertexCount, Texture texture) {
 		this.id = id;
 		this.vertexCount = vertexCount;
-		this.material = material;
 		this.material = new Material(texture);
 	}
 	

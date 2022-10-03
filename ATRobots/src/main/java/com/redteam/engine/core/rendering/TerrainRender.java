@@ -2,7 +2,6 @@ package com.redteam.engine.core.rendering;
 
 import com.redteam.engine.core.Camera;
 import com.redteam.engine.core.Shader;
-import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.entity.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
@@ -18,10 +17,9 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public class TerrainRender implements IRenderer {
 
     Shader shader;

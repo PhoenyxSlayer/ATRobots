@@ -4,7 +4,6 @@ import com.redteam.engine.core.Camera;
 import com.redteam.engine.core.Shader;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
-import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.entity.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
