@@ -9,7 +9,7 @@ public class Consts {
 			Z_NEAR = 0.01f,
 			Z_FAR = 1000f,
 			MOUSE_SENSITIVITY = 0.2f,
-			CAMERA_STEP = 0.05f,
+			CAMERA_STEP = 0.1f,
 			SPECULAR_POWER = 10f;
 
 	public static final int MAX_SPOT_LIGHTS = 5;

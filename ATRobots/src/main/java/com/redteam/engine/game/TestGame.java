@@ -18,7 +18,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class TestGame implements ILogic {
 	
@@ -35,8 +34,14 @@ public class TestGame implements ILogic {
 	private DirectionalLight directionalLight;
 	private PointLight[] pointLights;
 	private SpotLight[] spotLights;
+	
+	private Model tankModel, bulletModel;
+	
+	private boolean spectator = false;
+	
+	private float cameraSpeed;
 
-	Vector3f cameraInc;
+	Vector3f cameraInc, modelInc;
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -44,23 +49,21 @@ public class TestGame implements ILogic {
 		loader = new ObjectLoader();
 		camera = new Camera();
 		cameraInc = new Vector3f(0,0,0);
+		cameraInc.set(0,0,0);
+		modelInc = new Vector3f(0,0,0);
 		lightAngle = -90;
 	}
 	
 	@Override
 	public void init() throws Exception {
 		renderer.init();
-
-		Model tankModel = loader.loadOBJModel("/models/tank.obj");
-		tankModel.setTexture(new Texture(loader.loadTexture("textures/grassblock.png")), 1f);
 		
-		Model bulletModel = loader.loadOBJModel("/models/bulletFixed.obj");
-		bulletModel.setTexture(new Texture(loader.loadTexture("textures/bullet.jpg")), 1f);
-
+		bulletModel = setModel("/models/bulletFixed.obj", "textures/bullet.png");
+		tankModel = setModel("/models/tank.obj", "textures/grassblock.png");
 		terrains = new ArrayList<>();
-		Terrain terrain = new Terrain(new Vector3f(0,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/blue.png")), 0.1f));
-		Terrain terrain2 = new Terrain(new Vector3f(-800,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
-		terrains.add(terrain); terrains.add(terrain2);
+		Terrain terrain = new Terrain(new Vector3f(-400,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
+		//Terrain terrain2 = new Terrain(new Vector3f(-800,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
+		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
 		entities.add(new Entity(tankModel, new Vector3f(-5f,0,-5f), new Vector3f(0,0,0), 1));
@@ -89,40 +92,85 @@ public class TestGame implements ILogic {
 
 		pointLights = new PointLight[]{pointLight};
 		spotLights = new SpotLight[]{spotLight, spotLight1};
+		
+		camera.setPosition(0, 50, 0);
+		camera.setRotation(90, 0, 0);
 	}
 
 	@Override
 	public void input() {
 		cameraInc.set(0,0,0);
-		if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-			cameraInc.z = -1;
-		if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-			cameraInc.z = 1;
-
-		if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-			cameraInc.x = -1;
-		if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-			cameraInc.x = 1;
-
-		if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL))
-			cameraInc.y = -1;
-		if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
-			cameraInc.y = 1;
-
+		modelInc.set(0,0,0);
+		
+		if(window.isKeyPressed(GLFW.GLFW_KEY_V)) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			spectator = spectator ? false: true;
+		}
+		
+		if(!spectator) {
+			cameraSpeed = Consts.CAMERA_STEP;
+			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
+			camera.setRotation(90, 0, 0);
+			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
+				cameraInc.z = -1;
+				modelInc.z = -1;
+			}
+			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
+				cameraInc.z = 1;
+				modelInc.z = 1;
+			}
+	
+			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
+				cameraInc.x = -1;
+				modelInc.x = -1;
+			}
+			if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
+				cameraInc.x = 1;
+				modelInc.x = 1;
+			}
+		} else {
+			cameraSpeed = (Consts.CAMERA_STEP * 5);
+			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
+				cameraInc.z = -1;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_S))
+				cameraInc.z = 1;
+	
+			if(window.isKeyPressed(GLFW.GLFW_KEY_A))
+				cameraInc.x = -1;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_D))
+				cameraInc.x = 1;
+			
+			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL))
+				cameraInc.y = -1;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
+				cameraInc.y = 1;
+		}
+		/*
 		float lightPos = spotLights[0].getPointLight().getPosition().z;
 		if(window.isKeyPressed((GLFW.GLFW_KEY_N)))
 			spotLights[0].getPointLight().getPosition().z = lightPos + 0.1f;
 		if(window.isKeyPressed((GLFW.GLFW_KEY_M)))
 			spotLights[0].getPointLight().getPosition().z = lightPos - 0.1f;
+			
+		*/
 	}
 
 	@Override
 	public void update(float interval, MouseInput mouseInput) {
-		camera.movePosition(cameraInc.x * Consts.CAMERA_STEP,
-				  			cameraInc.y * Consts.CAMERA_STEP,
-							cameraInc.z * Consts.CAMERA_STEP);
-
-		if(mouseInput.isRightButtonPress()) {
+		camera.movePosition(cameraInc.x * cameraSpeed,
+				  			cameraInc.y * cameraSpeed,
+							cameraInc.z * cameraSpeed);
+		
+		entities.get(0).incPos(modelInc.x * cameraSpeed,
+							   modelInc.y * cameraSpeed,
+	  					       modelInc.z * cameraSpeed);
+		
+		if(mouseInput.isRightButtonPress() && spectator) {
 			Vector2f rotVec = mouseInput.getDisplVec();
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
@@ -177,4 +225,17 @@ public class TestGame implements ILogic {
 		loader.cleanup();
 	}
 	
+	public Model getTankModel() {
+		return tankModel;
+	}
+	
+	public Model getBulletModel() {
+		return bulletModel;
+	}
+	
+	public Model setModel(String modelOBJ, String texture) throws Exception{
+		Model model = loader.loadOBJModel(modelOBJ);
+		model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
+		return model;
+	}
 }
