@@ -9,10 +9,15 @@ public class TextParsing {
 	public static void main(String[] args){
 		ArrayList<ArrayList<String>> code = new ArrayList<ArrayList<String>>();
 		ArrayList<String> labels = new ArrayList<String>();
-		HashMap<String, ArrayList<String>> functions = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> text = new ArrayList<String>();
-		ArrayList<String> global = new ArrayList<String>();
-		try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Phoenyx\\Desktop\\DOSBox\\atrobots\\PEASHOOT.AT2"))) {
+		HashMap<String, ArrayList<String>> functions = new HashMap<String, ArrayList<String>>();
+		HashMap<String, Integer> userVars = new HashMap<String, Integer>();
+		
+		String[] varText;
+		int index = -1;
+		
+		//Read in AT2 file line by line, remove any comment or blank lines and turn the file into an array;
+		try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Phoenyx\\Desktop\\DOSBox\\atrobots\\sniper.at2"))) {
 			String line = "";
 			
 			
@@ -22,45 +27,58 @@ public class TextParsing {
 				if(line == null) break;
 				if(!(line.matches(";.+|;+|\s+;.+") || line.isBlank())) {
 					text.add(line);
+					//System.out.println(line); //debug code
 				}
-				/*if(line.matches("![a-zA-z]+")) {
-					lineNum = 0;
-					labels.add(line);
-					//System.out.println("Labels: "+labels+"");
-				}
-				if(line.matches("\s+.+") && !(line.matches(";\s*.+|\s+;\s*.+"))){
-					ArrayList<String> lines = new ArrayList<String>();
-					//System.out.println(line.stripLeading());
-					code.add(lines);
-					code.get(lineNum).add(line.stripLeading().stripTrailing());
-					lineNum++;
-				}*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		/*for(int i = 0; i < labels.size(); i++) {
-			functions.put(labels.get(i), code.get(i));
-		}*/
+		//Run any code that doesn't come after a function label first
+		while(!text.get(0).matches("![a-zA-Z]+|:\\d+")) {
+			if(text.get(0).startsWith("#def")) {
+				varText = text.get(0).stripLeading().stripTrailing().split(" ");
+				for(String var : varText) {
+					if(!var.equals("#def")) {
+						userVars.put(var, 0);
+					}
+				}
+			}
+			//System.out.println(text.get(0).startsWith("#def"));
+			text.remove(0);
+		}
 		
+		//Collect function labels and store them in an array
+		//Collect any code that comes after a label and store it an array
 		for(int i = 0; i < text.size(); i++) {
-			if(text.get(i).matches("![a-zA-z]+")) {
+			if(text.get(i).matches("![a-zA-z]+|:\\d+")) {
 				ArrayList<String> lines = new ArrayList<String>();
 				code.add(lines);
 				labels.add(text.get(i));
+				index++;
+			}else {
+				code.get(index).add(text.get(i).stripLeading().stripTrailing());
 			}
 		}
-		for(String test : text) {
+		
+		//Compile the functions into a hash map
+		for(int i = 0; i < labels.size(); i++) {
+			functions.put(labels.get(i), code.get(i));
+		}
+		
+		//debugger code. only used for debugging any runtime errors.
+		/*for(String test : text) {
 			System.out.println(test);
 		}
-		System.out.println("global lines: "+global+"");
+		
 		System.out.println("labels: "+labels+"");
 		System.out.println("code: "+code+"");
-		/*code.get(1).add("hello");
-		System.out.println(code.get(1));*/
-		//System.out.println("functions: "+functions+"");
+		for(Map.Entry<String, ArrayList<String>> entry : functions.entrySet()) {
+			String key = entry.getKey();
+			ArrayList<String> value = entry.getValue();
+			System.out.println(""+key+" = "+value+"");
+		}
 		System.out.println("Number of labels: "+labels.size()+"");
-		System.out.println("Number of code arrays: "+code.size()+"");
+		System.out.println("Number of code arrays: "+code.size()+"");*/
 	}
 }
