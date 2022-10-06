@@ -1,7 +1,6 @@
 package com.redteam.engine.game;
 
 import java.io.IOException;
-
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.utils.Consts;
@@ -19,19 +18,15 @@ public class ATRobots {
 	}
 	
 	// Main function
-	public static void main(String[] args) throws IOException {
-		if(robotName.getInside()) {
+	public static void main(String[] args) throws Exception {
+			if(robotName.getFile()) {
 			window = new Window(Consts.TITLE, 1600, 900, true);
 			game = new TestGame();
 			Engine engine = new Engine();
-			try {
-				engine.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			engine.start();
 		}
 	}
-	
+		
 	public static Window getWindow() {
 		return window;
 	}

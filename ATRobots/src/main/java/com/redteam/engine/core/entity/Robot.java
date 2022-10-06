@@ -1,6 +1,5 @@
 package com.redteam.engine.core.entity;
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Robot{
@@ -9,37 +8,36 @@ public class Robot{
 	private boolean found = false;
 	private File directory;
 	private String[] flist;
-	public boolean getOutside() throws IOException{
-        Scanner scan = new Scanner(System.in);
-        
-        // Type in for ex. C:\Users\Downloads or /home/name/Downloads etc...
-        System.out.print("Enter Directory of Robot: ");
-        dir = scan.next();
-        
-        // Type in the name of the AT2 file without the .AT2 part
-		System.out.print("Enter Robot Name: ");
-        s = scan.next();
-     // Create an object of the File class
-        directory = new File(dir);
-        
-        scan.close();
-        
-        return directorySearch(flist,directory);
-	}
 	
-	public boolean getInside() throws IOException{
-        Scanner scan = new Scanner(System.in);
-        
-        // Type in the name of the AT2 file without the .AT2 part
+	
+	public boolean getFile(){
+		Scanner scan = new Scanner(System.in);		
+		System.out.print("Is the Robot you want to run in the src directory? (yes/no): ");
+		String y = new String();
+		y = scan.nextLine();
+		if(y.equalsIgnoreCase("yes")) {
+				System.out.println("Looking for robot inside of src...");
+		System.out.print("Enter Name of Robot");
+		s = scan.next();
+		directory = new File("src/main/resources/AT2/");
+		
+		scan.close();
+		
+		return directorySearch(flist, directory);
+		}
+		else {
+		System.out.print("Enter Directory of Robot: ");
+		 dir = scan.next();
+		        // Type in the name of the AT2 file without the .AT2 part
 		System.out.print("Enter Robot Name: ");
-        s = scan.next();
-     // Create an object of the File class
-        directory = new File("src/main/resources/AT2/");
-        
-        scan.close();
+		s = scan.next();
+		     // Create an object of the File class
+		directory = new File(dir);
 
-     // store all names with same name
-   		return directorySearch(flist,directory);
+		scan.close();
+		                
+		return directorySearch(flist,directory);
+		}
 	}
 	
 	private boolean directorySearch(String[] fileList, File fileDirectory) {
