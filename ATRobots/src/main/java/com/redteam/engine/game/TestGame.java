@@ -19,13 +19,13 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestGame implements ILogic {
+public class TestGame implements ILogic{
 	
 	private final RenderManager renderer;
 	private final ObjectLoader loader;
 	private final Window window;
 	
-	private List<Entity> entities;
+	private static List<Entity> entities;
 	private List<Terrain> terrains;
 
 	private Camera camera;
@@ -59,20 +59,21 @@ public class TestGame implements ILogic {
 		renderer.init();
 		
 		bulletModel = setModel("/models/bulletFixed.obj", "textures/bullet.png");
-		tankModel = setModel("/models/tank.obj", "textures/grassblock.png");
+		tankModel = setModel("/models/tank.obj", "textures/Camo.jpg");
 		terrains = new ArrayList<>();
-		Terrain terrain = new Terrain(new Vector3f(-400,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
+		Terrain terrain = new Terrain(new Vector3f(-400,25,-800), loader, new Material(new Texture(loader.loadTexture("textures/rock.jpg")), 0.1f));
 		//Terrain terrain2 = new Terrain(new Vector3f(-800,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
 		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankModel, new Vector3f(0f,0,-400f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankModel, new Vector3f(390f,25,-20f), new Vector3f(0,0,0), 1));
+		// 0, 0, -400f is center of terrain^^
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
 
 		float lightIntensity = 1.0f;
 		// point light
 		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
-		Vector3f lightColor = new Vector3f(1,1,1);
+		Vector3f lightColor = new Vector3f(1,1,1); 
 		PointLight pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
 
 		// spot light
@@ -95,6 +96,16 @@ public class TestGame implements ILogic {
 		
 		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
 		camera.setRotation(90f, 0f, 0f);
+	}
+	
+	public static float getPositionX(float xcord) {
+		xcord = entities.get(0).getPos().x;
+		return xcord;
+	}
+	
+	public static  float getPositionZ(float zcord) {
+		zcord =  entities.get(0).getPos().z;
+		return zcord;
 	}
 
 	@Override

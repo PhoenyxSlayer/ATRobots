@@ -1,9 +1,18 @@
 package com.redteam.engine.core;
 
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.TestGame;
 import com.redteam.engine.utils.Consts;
 
 
@@ -39,7 +48,9 @@ public class Engine {
 		run();
 	}
 	
-	public void run() {
+	public void run() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+		float x = 0;
+		float z = 0;
 		this.isRunning = true;
 		int frames = 0;
 		long frameCounter = 0;
@@ -79,9 +90,14 @@ public class Engine {
 				render();
 				frames++;
 			}
+			
+			x = TestGame.getPositionX(x);
+			z = TestGame.getPositionZ(z);
+				if((x > 400) || (x < -400) || (z > 0) || (z < -800)){
+					 playSound("beep.wav");
+			}
 		}
-		cleanup();
-		
+		cleanup();	
 	}
 	
 	private void stop() {
@@ -115,5 +131,13 @@ public class Engine {
 	
 	public static void setFps(int fps) {
 		Engine.fps = fps;
+	}
+	
+	void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	    File f = new File(soundFile);
+	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
+	    Clip clip = AudioSystem.getClip();
+	    clip.open(audioIn);
+	    clip.start();
 	}
 }

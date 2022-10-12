@@ -1,6 +1,5 @@
 package com.redteam.engine.game;
 
-import java.io.IOException;
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.utils.Consts;

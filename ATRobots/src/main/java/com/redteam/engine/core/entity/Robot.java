@@ -12,20 +12,21 @@ public class Robot{
 	
 	public boolean getFile(){
 		Scanner scan = new Scanner(System.in);		
-		System.out.print("Is the Robot you want to run in the src directory? (yes/no): ");
+		System.out.print("Is the Robot you want to run in the src directory?(yes/no): ");
 		String y = new String();
 		y = scan.nextLine();
-		if(y.equalsIgnoreCase("yes")) {
-				System.out.println("Looking for robot inside of src...");
-		System.out.print("Enter Name of Robot");
+		if(y.equalsIgnoreCase("yes")) {		
+			System.out.println("Looking for Robot inside of src...");
+								
+		System.out.print("Enter Name of Robot: ");
 		s = scan.next();
+		
 		directory = new File("src/main/resources/AT2/");
 		
 		scan.close();
-		
 		return directorySearch(flist, directory);
 		}
-		else {
+		else{
 		System.out.print("Enter Directory of Robot: ");
 		 dir = scan.next();
 		        // Type in the name of the AT2 file without the .AT2 part
@@ -37,9 +38,9 @@ public class Robot{
 		scan.close();
 		                
 		return directorySearch(flist,directory);
-		}
 	}
-	
+}
+		
 	private boolean directorySearch(String[] fileList, File fileDirectory) {
 		// store all names with same name
         flist = directory.list();
@@ -59,6 +60,7 @@ public class Robot{
         }
         if (!found) {
         	System.err.println("COULD NOT FIND FILE " + s + ".AT2");
+        	System.err.println("Check directory.");
         }
         return false;
 	}
