@@ -9,6 +9,7 @@ public class ATRobots {
 	private static Robot robotName = new Robot();
 	private static Window window;
 	private static TestGame game;
+	
 
 	// Game States
 	public enum State
@@ -26,7 +27,7 @@ public class ATRobots {
 		}
 	}
 		
-	public static Window getWindow() {
+	public static Window getWindow() { 
 		return window;
 	}
 	

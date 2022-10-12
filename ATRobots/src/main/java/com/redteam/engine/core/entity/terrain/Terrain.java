@@ -4,6 +4,8 @@ import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.entity.Material;
 import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.entity.Texture;
+
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Terrain {
@@ -18,7 +20,7 @@ public class Terrain {
         this.position = position;
         this.model = generateTerrain(loader);
         this.model.setMaterial(material);
-    }
+    }  
 
     private Model generateTerrain(ObjectLoader loader) {
         int count = VERTEX_COUNT * VERTEX_COUNT;
@@ -30,7 +32,7 @@ public class Terrain {
 
         for(int i = 0; i < VERTEX_COUNT; i++) {
             for(int j = 0; j < VERTEX_COUNT; j++) {
-                vertices[vertexPointer * 3] = j / (VERTEX_COUNT - 1.0f) * SIZE;
+                vertices[vertexPointer * 3] = j / (VERTEX_COUNT - 1.0f) * SIZE;      
                 vertices[vertexPointer * 3 + 1] = 0; // height map
                 vertices[vertexPointer * 3 + 2] = i / (VERTEX_COUNT - 1.0f) * SIZE;
                 normals[vertexPointer * 3] = 0;

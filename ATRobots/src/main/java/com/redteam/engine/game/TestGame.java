@@ -43,6 +43,7 @@ public class TestGame implements ILogic{
 
 	Vector3f cameraInc, modelInc;
 	
+	
 	public TestGame() {
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
