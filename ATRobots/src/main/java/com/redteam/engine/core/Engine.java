@@ -90,12 +90,26 @@ public class Engine {
 				render();
 				frames++;
 			}
+		//Collision Detection
 			
 			x = TestGame.getPositionX(x);
 			z = TestGame.getPositionZ(z);
-				if((x > 400) || (x < -400) || (z > 0) || (z < -800)){
-					 playSound("beep.wav");
-			}
+				if(x > 400) {
+					playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x - 1, z);
+				}
+				else if(x < - 400) {
+					playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x + 1, z);
+				}
+				else if(z > 0) {
+					playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x, z - 1);
+				}
+				else if(z < -800) {
+					playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x, z + 1);
+				}
 		}
 		cleanup();	
 	}
