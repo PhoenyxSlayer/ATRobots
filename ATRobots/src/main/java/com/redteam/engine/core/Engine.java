@@ -95,19 +95,19 @@ public class Engine {
 			x = TestGame.getPositionX(x);
 			z = TestGame.getPositionZ(z);
 				if(x > 400) {
-					playSound("bloop_x.wav");
+					playSound("beep.wav");
 				 	TestGame.setTankPos(x - 1, z);
 				}
 				else if(x < - 400) {
-					playSound("bloop_x.wav");
+					playSound("beep.wav");
 				 	TestGame.setTankPos(x + 1, z);
 				}
 				else if(z > 0) {
-					playSound("bloop_x.wav");
+					playSound("beep.wav");
 				 	TestGame.setTankPos(x, z - 1);
 				}
 				else if(z < -800) {
-					playSound("bloop_x.wav");
+					playSound("beep.wav");
 				 	TestGame.setTankPos(x, z + 1);
 				}
 		}
