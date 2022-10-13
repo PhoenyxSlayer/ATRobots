@@ -24,7 +24,7 @@ public class ATRobots {
 			game = new TestGame();
 			Engine engine = new Engine();
 			engine.start();
-		}
+		}			
 	}
 		
 	public static Window getWindow() { 

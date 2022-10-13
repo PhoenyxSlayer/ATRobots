@@ -23,7 +23,7 @@ public class TestGame implements ILogic{
 	
 	private final RenderManager renderer;
 	private final ObjectLoader loader;
-	private final Window window;
+	public static Window window;
 	
 	private static List<Entity> entities;
 	private List<Terrain> terrains;
@@ -67,7 +67,7 @@ public class TestGame implements ILogic{
 		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankModel, new Vector3f(390f,0,-10f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankModel, new Vector3f(-390f,0,-790f), new Vector3f(0,0,0), 1));
 		// 0, 0, -400f is center of terrain^^
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
 
@@ -99,8 +99,29 @@ public class TestGame implements ILogic{
 		camera.setRotation(90f, 0f, 0f);
 	}
 	
-	public static void setTankPos(float x, float z) {
-		entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,0,0), 1));		
+	public static void setTankPos(float x, float z, float y) {
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,y,0), 1));
+		return;
+	}
+	
+	public static void tankDirect(float x, float z) {
+		if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A)))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,225,0), 1));
+		else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D)))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,135,0), 1));
+		else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,45,0), 1));
+		else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,315,0), 1));
+					
+		else if(window.isKeyPressed(GLFW.GLFW_KEY_W))		
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,180,0), 1));
+		else if(window.isKeyPressed(GLFW.GLFW_KEY_A))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,270,0), 1));
+		else if(window.isKeyPressed(GLFW.GLFW_KEY_S))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,0,0), 1));
+		else if(window.isKeyPressed(GLFW.GLFW_KEY_D))
+			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,90,0), 1));
 		return;
 	}
 	
@@ -141,7 +162,6 @@ public class TestGame implements ILogic{
 				cameraInc.z = 1;
 				modelInc.z = 1;
 			}
-	
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
 				cameraInc.x = -1;
 				modelInc.x = -1;
@@ -192,7 +212,8 @@ public class TestGame implements ILogic{
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
 		for(int i = 0; i < entities.size(); i++)
-			entities.get(i).incRotation(0.0f, 0.5f, 0.0f);
+		entities.get(i).incRotation(0.0f, 0.0f, 0.0f);	
+	//Rotation Control ^^
 		spotAngle += spotInc * 0.05f;
 		if(spotAngle > 4) {
 			spotInc = -1;

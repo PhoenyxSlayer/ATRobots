@@ -1,5 +1,6 @@
 package com.redteam.engine.core;
 
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
@@ -51,6 +52,7 @@ public class Engine {
 	public void run() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 		float x = 0;
 		float z = 0;
+		float y = 0;
 		this.isRunning = true;
 		int frames = 0;
 		long frameCounter = 0;
@@ -58,7 +60,12 @@ public class Engine {
 		long lastTime = System.nanoTime();
 		double unprocessedTime = 0;
 		
-		while(isRunning) {
+			//	playSound("tank.wav");
+		while(isRunning) {	
+			//if((window.isKeyPressed(GLFW.GLFW_KEY_W)) || (window.isKeyPressed(GLFW.GLFW_KEY_A)) || (window.isKeyPressed(GLFW.GLFW_KEY_S)) || (window.isKeyPressed(GLFW.GLFW_KEY_D))){
+				//playSound("TankRunning.wav");
+				//}
+			
 			boolean render = false;
 			long startTime = System.nanoTime();
 			long passedTime = startTime - lastTime;
@@ -91,24 +98,60 @@ public class Engine {
 				frames++;
 			}
 		//Collision Detection
-			
 			x = TestGame.getPositionX(x);
 			z = TestGame.getPositionZ(z);
-				if(x > 400) {
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z);
+			TestGame.tankDirect(x, z);
+			if(x > 400){
+					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+						y = 135;
+					}
+					else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))){
+						y = 45;
+					}
+					else if(window.isKeyPressed(GLFW.GLFW_KEY_D)){
+						y = 90;
+					}
+					//playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x - 1, z, y);
 				}
 				else if(x < - 400) {
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z);
+					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+						y = 225;
+					}
+					else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_A))){
+						y = 315;
+					}
+					else if(window.isKeyPressed(GLFW.GLFW_KEY_A)){
+						y = 270;
+					}
+				//	playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x + 1, z, y);
 				}
 				else if(z > 0) {
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z);
+					if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+						y = 45;
+					}
+					else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_A))){
+						y = 315;
+					}
+					else if(window.isKeyPressed(GLFW.GLFW_KEY_S)){
+						y = 0;
+					}
+				//	playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x, z - 1, y);
 				}
 				else if(z < -800) {
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z);
+					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+						y = 225;
+					}
+					else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))){
+						y = 135;
+					}
+					else if(window.isKeyPressed(GLFW.GLFW_KEY_W)){
+						y = 180;
+					}
+				//	playSound("bloop_x.wav");
+				 	TestGame.setTankPos(x, z + 1, y);
 				}
 		}
 		cleanup();	
@@ -152,6 +195,7 @@ public class Engine {
 	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
 	    Clip clip = AudioSystem.getClip();
 	    clip.open(audioIn);
-	    clip.start();
+	   // if(!clip.isPlaying()) {
+	    clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 }
