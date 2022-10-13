@@ -67,7 +67,7 @@ public class TestGame implements ILogic{
 		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankModel, new Vector3f(-390f,0,-790f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankModel, new Vector3f(390f,0,-10f), new Vector3f(0,0,0), 1));
 		// 0, 0, -400f is center of terrain^^
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
 
@@ -130,7 +130,7 @@ public class TestGame implements ILogic{
 		return xcord;
 	}
 	
-	public static  float getPositionZ(float zcord) {
+	public static float getPositionZ(float zcord) {
 		zcord =  entities.get(0).getPos().z;
 		return zcord;
 	}
