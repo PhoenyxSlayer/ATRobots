@@ -37,7 +37,7 @@ public class TestGame implements ILogic{
 	
 	public static Model tankModel, bulletModel;
 	
-	private boolean spectator = false;
+	private static boolean spectator = false;
 	
 	private float cameraSpeed;
 
@@ -67,7 +67,7 @@ public class TestGame implements ILogic{
 		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankModel, new Vector3f(390f,0,-10f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankModel, new Vector3f(390f,1.3f,-10f), new Vector3f(0,0,0), 1));
 		// 0, 0, -400f is center of terrain^^
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
 
@@ -100,28 +100,30 @@ public class TestGame implements ILogic{
 	}
 	
 	public static void setTankPos(float x, float z, float y) {
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,y,0), 1));
+			entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,y,0), 1));
 		return;
 	}
 	
 	public static void tankDirect(float x, float z) {
-		if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A)))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,225,0), 1));
-		else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D)))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,135,0), 1));
-		else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,45,0), 1));
-		else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,315,0), 1));
+		if(!spectator) {
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A)))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D)))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
 					
-		else if(window.isKeyPressed(GLFW.GLFW_KEY_W))		
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,180,0), 1));
-		else if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,270,0), 1));
-		else if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,0,0), 1));
-		else if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-			entities.set(0,new Entity(tankModel, new Vector3f(x,0,z), new Vector3f(0,90,0), 1));
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_W))		
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_A))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_S))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_D))
+				entities.set(0,new Entity(tankModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
+		}
 		return;
 	}
 	
@@ -144,7 +146,6 @@ public class TestGame implements ILogic{
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			spectator = spectator ? false: true;

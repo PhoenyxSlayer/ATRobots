@@ -60,7 +60,7 @@ public class Engine {
 		long lastTime = System.nanoTime();
 		double unprocessedTime = 0;
 		
-			playSound("tank.wav");
+			//playSound("tank.wav");
 			
 		while(isRunning) {	
 			//if((window.isKeyPressed(GLFW.GLFW_KEY_W)) || (window.isKeyPressed(GLFW.GLFW_KEY_A)) || (window.isKeyPressed(GLFW.GLFW_KEY_S)) || (window.isKeyPressed(GLFW.GLFW_KEY_D))){
@@ -112,7 +112,7 @@ public class Engine {
 					else if(window.isKeyPressed(GLFW.GLFW_KEY_D)){
 						y = 90;
 					}
-					//playSound("bloop_x.wav");
+					playSound("bloop_x.wav");
 				 	TestGame.setTankPos(x - 0.2f, z, y);
 				}
 				else if(x < -400) {
@@ -125,7 +125,7 @@ public class Engine {
 					else if(window.isKeyPressed(GLFW.GLFW_KEY_A)){
 						y = 270;
 					}
-				//	playSound("bloop_x.wav");
+					playSound("bloop_x.wav");
 				 	TestGame.setTankPos(x + 0.2f, z, y);
 				}
 				else if(z > 0) {
@@ -138,7 +138,7 @@ public class Engine {
 					else if(window.isKeyPressed(GLFW.GLFW_KEY_S)){
 						y = 0;
 					}
-				//	playSound("bloop_x.wav");
+					playSound("bloop_x.wav");
 				 	TestGame.setTankPos(x, z - 0.2f, y);
 				}
 				else if(z < -800) {
@@ -151,7 +151,7 @@ public class Engine {
 					else if(window.isKeyPressed(GLFW.GLFW_KEY_W)){
 						y = 180;
 					}
-				//	playSound("bloop_x.wav");
+					playSound("bloop_x.wav");
 				 	TestGame.setTankPos(x, z + 0.2f, y);
 				}
 		}
@@ -196,7 +196,6 @@ public class Engine {
 	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
 	    Clip clip = AudioSystem.getClip();
 	    clip.open(audioIn);
-	   // if(!clip.isPlaying()) {
-	    clip.loop(Clip.LOOP_CONTINUOUSLY);
+	    clip.start();
 	}
 }
