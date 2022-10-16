@@ -60,8 +60,8 @@ public class TestGame implements ILogic{
 		renderer.init();
 		
 		bulletModel = setModel("/models/bulletFixed.obj", "textures/bullet.png");
-		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
-		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
+		tankTopModel = setModel("/models/bunny.obj", "textures/Camo.jpg");
+		tankBotModel = setModel("/models/untitled.obj", "textures/grassblock.png");
 		terrains = new ArrayList<>();
 		Terrain terrain = new Terrain(new Vector3f(-400,0,-800), loader, new Material(new Texture(loader.loadTexture("textures/rock.jpg")), 0.1f));
 		//Terrain terrain2 = new Terrain(new Vector3f(-800,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
@@ -103,7 +103,7 @@ public class TestGame implements ILogic{
 	
 	public static void setTankPos(float x, float z, float y) {
 			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,y,0), 1));
-			entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,y,0), 1));
+			entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,y,0), 1));
 		return;
 	}
 	
@@ -111,35 +111,35 @@ public class TestGame implements ILogic{
 		if(!spectator) {
 			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
 			}
 			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
 			}
 			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S))) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
 			}
 			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S))) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
 			}
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
 			}
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
 			}
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
 			}
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
-				entities.set(0,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
 			}
 		}
 		return;
