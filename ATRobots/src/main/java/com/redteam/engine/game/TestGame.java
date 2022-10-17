@@ -75,10 +75,10 @@ public class TestGame implements ILogic{
 		// 0, 0, -400f is center of terrain^^
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 0));
 
-		//float lightIntensity = 1.0f;
+		float lightIntensity = 1.0f;
 		// point light
-		//Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
-		//Vector3f lightColor = new Vector3f(1,1,1); 
+		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
+		Vector3f lightColor = new Vector3f(1,1,1); 
 		//PointLight pointLight = new PointLight(lightColor, lightPosition, lightIntensity, 0, 0, 1);
 
 		// spot light
@@ -92,9 +92,9 @@ public class TestGame implements ILogic{
 		//spotLight1.getPointLight().setPosition(new Vector3f(0.5f, 0.5f, -3.6f));
 
 		// directional light
-		//lightPosition = new Vector3f(-1, -10, 0);
-		//lightColor = new Vector3f(1,1,1);
-		//directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
+		lightPosition = new Vector3f(-1, -10, 0);
+		lightColor = new Vector3f(1,1,1);
+		directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
 
 		//pointLights = new PointLight[]{pointLight};
 		//spotLights = new SpotLight[]{spotLight, spotLight1};
@@ -204,7 +204,7 @@ public class TestGame implements ILogic{
 				bulletNumber--;
 			}
 			
-			if(bulletNumber > 20) {
+			if(bulletNumber >= 50) {
 				entities.remove(i + 2);
 				bulletNumber--;
 			}
