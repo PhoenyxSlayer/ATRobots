@@ -62,10 +62,10 @@ public class TestGame implements ILogic{
 		renderer.init();
 		
 		bulletModel = setModel("/models/bulletFixed.obj", "textures/bullet.png");
-		tankTopModel = setModel("/models/tankTop.obj", "textures/concrete.jpg");
+		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
 		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
 		terrains = new ArrayList<>();
-		Terrain terrain = new Terrain(new Vector3f(-400,0,-800), loader, new Material(new Texture(loader.loadTexture("textures/rock.jpg")), 0.1f));
+		Terrain terrain = new Terrain(new Vector3f(-400,0,-800), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
 		//Terrain terrain2 = new Terrain(new Vector3f(-800,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
 		terrains.add(terrain); //terrains.add(terrain2);
 
@@ -200,6 +200,11 @@ public class TestGame implements ILogic{
 			}
 			if((entities.get(i + 2).getPos().x <= -400 || entities.get(i + 2).getPos().x >= 400)
 			 ||(entities.get(i + 2).getPos().z <= -800 || entities.get(i + 2).getPos().z >= 0)) {
+				entities.remove(i + 2);
+				bulletNumber--;
+			}
+			
+			if(bulletNumber > 20) {
 				entities.remove(i + 2);
 				bulletNumber--;
 			}
