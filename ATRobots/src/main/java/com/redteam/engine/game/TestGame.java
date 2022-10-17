@@ -43,6 +43,8 @@ public class TestGame implements ILogic{
 
 	Vector3f cameraInc, modelInc;
 	
+	private static int bulletNumber = 0;
+	private static float bulletAngle = 0.0f;
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -71,7 +73,7 @@ public class TestGame implements ILogic{
 		entities.add(new Entity(tankTopModel, new Vector3f(390f,1.3f,-10f), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(tankBotModel, new Vector3f(390f,1.3f,-10f), new Vector3f(0,0,0), 1));
 		// 0, 0, -400f is center of terrain^^
-		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 0));
 
 		float lightIntensity = 1.0f;
 		// point light
@@ -163,6 +165,45 @@ public class TestGame implements ILogic{
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)) 
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
+			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+				bulletNumber++;
+				entities.add(new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,getRot(0) - 90,-90), 1));
+			}
+		}
+		for(int i = 0; i < bulletNumber; i++) {
+			bulletAngle = entities.get(i + 2).getRotation().y + 90;
+			switch((int)bulletAngle) {
+			case 0:
+				entities.get(i + 2).incPos(0, 0, 1);
+				break;
+			case 45:
+				entities.get(i + 2).incPos(1, 0, 1);
+				break;
+			case 90:
+				entities.get(i + 2).incPos(1, 0, 0);
+				break;
+			case 135:
+				entities.get(i + 2).incPos(1, 0, -1);
+				break;
+			case 180:
+				entities.get(i + 2).incPos(0, 0, -1);
+				break;
+			case 225:
+				entities.get(i + 2).incPos(-1, 0, -1);
+				break;
+			case 270:
+				entities.get(i + 2).incPos(-1, 0, 0);
+				break;
+			case 315:
+				entities.get(i + 2).incPos(-1, 0, 1);
+				break;
+			}
+			if((entities.get(i + 2).getPos().x <= -400 || entities.get(i + 2).getPos().x >= 400)
+			 ||(entities.get(i + 2).getPos().z <= -800 || entities.get(i + 2).getPos().z >= 0)) {
+				entities.remove(i + 2);
+				bulletNumber--;
+			}
+			
 		}
 		return;
 	}
@@ -303,6 +344,11 @@ public class TestGame implements ILogic{
 	public void cleanup() {
 		renderer.cleanup();
 		loader.cleanup();
+	}
+	
+	public static float getRot(int index) {
+		
+		return entities.get(index).getRotation().y;
 	}
 	
 	public Model setModel(String modelOBJ, String texture) throws Exception{
