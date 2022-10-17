@@ -109,22 +109,38 @@ public class TestGame implements ILogic{
 	
 	public static void tankDirect(float x, float z) {
 		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A)))
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D)))
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S)))
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_W))
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_A))
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_S))
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_D)) 
-				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));		
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
+				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
+				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
+			}
 		}
 		return;
 	}
