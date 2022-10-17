@@ -5,7 +5,6 @@ import com.redteam.engine.core.entity.Material;
 import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.entity.Texture;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Terrain {
