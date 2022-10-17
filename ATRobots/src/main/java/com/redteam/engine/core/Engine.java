@@ -102,7 +102,7 @@ public class Engine {
 			z = TestGame.getPositionZ(z);
 			TestGame.tankDirect(x, z);
 			TestGame.turretDirect(x, z);
-			if(x > 400){
+			if(x > Consts.X_BORDER){
 					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
 						y = 135;
 					}
@@ -113,9 +113,9 @@ public class Engine {
 						y = 90;
 					}
 					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x - 0.2f, z, y);
+				 	TestGame.setTankPos(x - Consts.CAMERA_STEP * 2, z, y);
 				}
-				else if(x < -400) {
+				else if(x < -Consts.X_BORDER) {
 					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
 						y = 225;
 					}
@@ -126,7 +126,7 @@ public class Engine {
 						y = 270;
 					}
 					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x + 0.2f, z, y);
+				 	TestGame.setTankPos(x + Consts.CAMERA_STEP * 2, z, y);
 				}
 				else if(z > 0) {
 					if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
@@ -139,9 +139,9 @@ public class Engine {
 						y = 0;
 					}
 					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z - 0.2f, y);
+				 	TestGame.setTankPos(x, z - Consts.CAMERA_STEP * 2, y);
 				}
-				else if(z < -800) {
+				else if(z <= -Consts.Z_BORDER) {
 					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
 						y = 225;
 					}
@@ -152,7 +152,7 @@ public class Engine {
 						y = 180;
 					}
 					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z + 0.2f, y);
+				 	TestGame.setTankPos(x, z + Consts.CAMERA_STEP * 2, y);
 				}
 		}
 		cleanup();	

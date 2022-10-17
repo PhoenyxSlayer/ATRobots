@@ -9,13 +9,18 @@ public class Consts {
 			Z_NEAR = 0.01f,
 			Z_FAR = 1000f,
 			MOUSE_SENSITIVITY = 0.2f,
-			CAMERA_STEP = 0.1f,
+			CAMERA_STEP = 1.0f,
 			SPECULAR_POWER = 10f;
 
 	public static final int MAX_SPOT_LIGHTS = 5;
 	public static final int MAX_POINT_LIGHTS = 5;
-
+	public static final int X_BORDER = 150,
+							Z_BORDER = X_BORDER * 2;
+	
+	
 	public static final String TITLE = "ATRobotsv3";
+	
+	
 
 
 	public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);

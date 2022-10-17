@@ -65,13 +65,13 @@ public class TestGame implements ILogic{
 		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
 		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
 		terrains = new ArrayList<>();
-		Terrain terrain = new Terrain(new Vector3f(-400,0,-800), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
+		Terrain terrain = new Terrain(new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
 		//Terrain terrain2 = new Terrain(new Vector3f(-800,-1,-800), loader, new Material(new Texture(loader.loadTexture("textures/checkerboard.png")), 0.1f));
 		terrains.add(terrain); //terrains.add(terrain2);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankTopModel, new Vector3f(390f,1.3f,-10f), new Vector3f(0,0,0), 1));
-		entities.add(new Entity(tankBotModel, new Vector3f(390f,1.3f,-10f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
 		// 0, 0, -400f is center of terrain^^
 		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 0));
 
@@ -198,8 +198,8 @@ public class TestGame implements ILogic{
 				entities.get(i + 2).incPos(-1, 0, 1);
 				break;
 			}
-			if((entities.get(i + 2).getPos().x <= -400 || entities.get(i + 2).getPos().x >= 400)
-			 ||(entities.get(i + 2).getPos().z <= -800 || entities.get(i + 2).getPos().z >= 0)) {
+			if((entities.get(i + 2).getPos().x <= -Consts.X_BORDER || entities.get(i + 2).getPos().x >= Consts.X_BORDER)
+			 ||(entities.get(i + 2).getPos().z <= -Consts.Z_BORDER || entities.get(i + 2).getPos().z >= 0)) {
 				entities.remove(i + 2);
 				bulletNumber--;
 			}
