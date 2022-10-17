@@ -102,6 +102,7 @@ public class Engine {
 			x = TestGame.getPositionX(x);
 			z = TestGame.getPositionZ(z);
 			TestGame.tankDirect(x, z);
+			TestGame.turretDirect(x, z);
 			if(x > 400){
 					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
 						y = 135;
