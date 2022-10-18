@@ -19,7 +19,7 @@ public class Consts {
 							Z_BORDER = X_BORDER * 2;
 	
 	
-	public static final String TITLE = "ATRobotsv3";
+	public static final String TITLE = "ATRobotsV3";
 	
 	
 

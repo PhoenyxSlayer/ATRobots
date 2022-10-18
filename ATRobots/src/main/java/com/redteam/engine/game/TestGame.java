@@ -221,7 +221,6 @@ public class TestGame implements ILogic{
 				if((entities.get(bullet).getPos().x <= -Consts.X_BORDER || entities.get(bullet).getPos().x >= Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z <= -Consts.Z_BORDER || entities.get(bullet).getPos().z >= 0)) {
 					//entities.remove(i + 2);
-					//
 					System.out.println("BULLET BEING REMOVED" + bullet);
 					bulletInside = false;
 					entities.remove(bullet);
