@@ -37,14 +37,23 @@ public class TestGame implements ILogic{
 	
 	public static Model tankTopModel, tankBotModel, bulletModel;
 	
-	private static boolean spectator = false;
+	private static boolean spectator = false,
+						   bulletInside;
 	
 	private float cameraSpeed;
 
 	Vector3f cameraInc, modelInc;
 	
-	private static int bulletNumber = 0;
+	private static int bulletNumber,
+					   removedBullet = 10;
+	
 	private static float bulletAngle = 0.0f;
+	
+	private static Entity bulletEntity;
+	
+	private static long time,
+						cooldownTime = 250,
+						lastAttack = 0;
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -62,6 +71,7 @@ public class TestGame implements ILogic{
 		renderer.init();
 		
 		bulletModel = setModel("/models/bulletFixed.obj", "textures/bullet.png");
+		
 		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
 		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
 		terrains = new ArrayList<>();
@@ -166,49 +176,62 @@ public class TestGame implements ILogic{
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)) 
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-				bulletNumber++;
-				entities.add(new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,getRot(0) - 90,-90), 1));
+				bulletEntity = new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,getRot(0) - 90,-90), 1);
+				time = System.currentTimeMillis();	
+				if(time > lastAttack + cooldownTime) {
+					bulletNumber = entities.size();
+					entities.add(bulletNumber, bulletEntity);
+					bulletInside = true;
+					lastAttack = time;
+				}
 			}
 		}
-		for(int i = 0; i < bulletNumber; i++) {
-			bulletAngle = entities.get(i + 2).getRotation().y + 90;
-			switch((int)bulletAngle) {
-			case 0:
-				entities.get(i + 2).incPos(0, 0, 1);
-				break;
-			case 45:
-				entities.get(i + 2).incPos(1, 0, 1);
-				break;
-			case 90:
-				entities.get(i + 2).incPos(1, 0, 0);
-				break;
-			case 135:
-				entities.get(i + 2).incPos(1, 0, -1);
-				break;
-			case 180:
-				entities.get(i + 2).incPos(0, 0, -1);
-				break;
-			case 225:
-				entities.get(i + 2).incPos(-1, 0, -1);
-				break;
-			case 270:
-				entities.get(i + 2).incPos(-1, 0, 0);
-				break;
-			case 315:
-				entities.get(i + 2).incPos(-1, 0, 1);
-				break;
+		
+		for(int bullet = 2; bullet < entities.size(); bullet++) {
+			if(bulletInside || (bullet < removedBullet)) {
+				bulletAngle = entities.get(bullet).getRotation().y + 90;
+				switch((int)bulletAngle) {
+				case 0:
+					entities.get(bullet).incPos(0, 0, 1);
+					break;
+				case 45:
+					entities.get(bullet).incPos(1, 0, 1);
+					break;
+				case 90:
+					entities.get(bullet).incPos(1, 0, 0);
+					break;
+				case 135:
+					entities.get(bullet).incPos(1, 0, -1);
+					break;
+				case 180:
+					entities.get(bullet).incPos(0, 0, -1);
+					break;
+				case 225:
+					System.out.println("TEST");
+					entities.get(bullet).incPos(-1, 0, -1);
+					break;
+				case 270:
+					entities.get(bullet).incPos(-1, 0, 0);
+					break;
+				case 315:
+					entities.get(bullet).incPos(-1, 0, 1);
+					break;
+				}
+				
+				if((entities.get(bullet).getPos().x <= -Consts.X_BORDER || entities.get(bullet).getPos().x >= Consts.X_BORDER)
+				 ||(entities.get(bullet).getPos().z <= -Consts.Z_BORDER || entities.get(bullet).getPos().z >= 0)) {
+					//entities.remove(i + 2);
+					//
+					System.out.println("BULLET BEING REMOVED" + bullet);
+					bulletInside = false;
+					entities.remove(bullet);
+					removedBullet = bullet;
+				}
 			}
-			if((entities.get(i + 2).getPos().x <= -Consts.X_BORDER || entities.get(i + 2).getPos().x >= Consts.X_BORDER)
-			 ||(entities.get(i + 2).getPos().z <= -Consts.Z_BORDER || entities.get(i + 2).getPos().z >= 0)) {
-				entities.remove(i + 2);
-				bulletNumber--;
+			else {
+				bullet--;
+				bulletInside = true;
 			}
-			
-			if(bulletNumber >= 50) {
-				entities.remove(i + 2);
-				bulletNumber--;
-			}
-			
 		}
 		return;
 	}
