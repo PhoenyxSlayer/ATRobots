@@ -47,7 +47,8 @@ public class TestGame implements ILogic{
 	private static int bulletNumber,
 					   removedBullet = 10;
 	
-	private static float bulletAngle = 0.0f;
+	private static float bulletAngle = 0.0f,
+						 angle = 0;
 	
 	private static Entity bulletEntity;
 	
@@ -159,24 +160,25 @@ public class TestGame implements ILogic{
 	
 	public static void turretDirect(float x, float z) {
 		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) && window.isKeyPressed(GLFW.GLFW_KEY_LEFT))) 
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
+			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) && window.isKeyPressed(GLFW.GLFW_KEY_LEFT)))
+				angle = 225;
 			else if((window.isKeyPressed(GLFW.GLFW_KEY_UP) && window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)))
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
+				angle = 135;
 			else if((window.isKeyPressed(GLFW.GLFW_KEY_RIGHT) && window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
+				angle = 45;
 			else if((window.isKeyPressed(GLFW.GLFW_KEY_LEFT) && window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
+				angle = 315;
 			else if(window.isKeyPressed(GLFW.GLFW_KEY_UP))
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,180,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT)) 
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,270,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_DOWN)) 
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,0,0), 1));
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)) 
-				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,90,0), 1));
+				angle = 180;
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT))
+				angle = 270;
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_DOWN))
+				angle = 0;
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT))
+				angle = 90;
+			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle,0), 1));
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-				bulletEntity = new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,getRot(0) - 90,-90), 1);
+				bulletEntity = new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle - 90,-90), 1);
 				time = System.currentTimeMillis();	
 				if(time > lastAttack + cooldownTime) {
 					bulletNumber = entities.size();
@@ -192,36 +194,38 @@ public class TestGame implements ILogic{
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
 				switch((int)bulletAngle) {
 				case 0:
-					entities.get(bullet).incPos(0, 0, 1);
+					entities.get(bullet).incPos(0, 0, Consts.BULLET_SPEED);
 					break;
 				case 45:
-					entities.get(bullet).incPos(1, 0, 1);
+					entities.get(bullet).incPos(Consts.BULLET_SPEED, 0, Consts.BULLET_SPEED);
 					break;
 				case 90:
-					entities.get(bullet).incPos(1, 0, 0);
+					entities.get(bullet).incPos(Consts.BULLET_SPEED, 0, 0);
 					break;
 				case 135:
-					entities.get(bullet).incPos(1, 0, -1);
+					entities.get(bullet).incPos(Consts.BULLET_SPEED, 0, -Consts.BULLET_SPEED);
 					break;
 				case 180:
-					entities.get(bullet).incPos(0, 0, -1);
+					entities.get(bullet).incPos(0, 0, -Consts.BULLET_SPEED);
 					break;
 				case 225:
-					System.out.println("TEST");
-					entities.get(bullet).incPos(-1, 0, -1);
+					entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, -Consts.BULLET_SPEED);
 					break;
 				case 270:
-					entities.get(bullet).incPos(-1, 0, 0);
+					entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, 0);
 					break;
 				case 315:
-					entities.get(bullet).incPos(-1, 0, 1);
+					entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, Consts.BULLET_SPEED);
+					break;
+				default:
+					entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, -Consts.BULLET_SPEED);
 					break;
 				}
 				
 				if((entities.get(bullet).getPos().x <= -Consts.X_BORDER || entities.get(bullet).getPos().x >= Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z <= -Consts.Z_BORDER || entities.get(bullet).getPos().z >= 0)) {
 					//entities.remove(i + 2);
-					System.out.println("BULLET BEING REMOVED" + bullet);
+					System.out.println("BULLET BEING REMOVED AT " + bullet);
 					bulletInside = false;
 					entities.remove(bullet);
 					removedBullet = bullet;
@@ -242,6 +246,16 @@ public class TestGame implements ILogic{
 	
 	public static float getPositionZ(float zcord) {
 		zcord =  entities.get(0).getPos().z;
+		return zcord;
+	}
+	
+	public static float getTurretPositionX(float xcord) {
+		xcord = entities.get(1).getPos().x;
+		return xcord;
+	}
+	
+	public static float getTurretPositionZ(float zcord) {
+		zcord = entities.get(1).getPos().z;
 		return zcord;
 	}
 
