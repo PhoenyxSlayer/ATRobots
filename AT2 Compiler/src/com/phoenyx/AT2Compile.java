@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextParsing {
+public class AT2Compile {
 	public static void main(String[] args){
 		ArrayList<ArrayList<String>> code = new ArrayList<ArrayList<String>>();
 		ArrayList<String> labels = new ArrayList<String>();
 		ArrayList<String> text = new ArrayList<String>();
 		ArrayList<String> runFirst = new ArrayList<String>();
+		ArrayList<String> rfInstructs = new ArrayList<String>();
+		ArrayList<String> instructs = new ArrayList<String>();
 		HashMap<String, ArrayList<String>> functions = new HashMap<String, ArrayList<String>>();
 		HashMap<String, Integer> userVars = new HashMap<String, Integer>();
 		
@@ -19,6 +21,7 @@ public class TextParsing {
 		String msg;
 		String err = "";
 		int index = -1;
+		boolean isValid = false;
 		
 		//Read in AT2 file line by line, remove any comment or blank lines and turn the file into an array;
 		try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Phoenyx\\Desktop\\DOSBox\\atrobots\\sniper.at2"))) {
@@ -81,12 +84,175 @@ public class TextParsing {
 				code.add(lines);
 				labels.add(text.get(i));
 				index++;
-			}else {
+			}else if(!code.isEmpty()){
 				code.get(index).add(text.get(i).replaceAll(";.+|;+|\s+;.+", "").strip());
+			}else {
+				break;
 			}
 		}
 		
+		for(int i = 0; i < runFirst.size(); i++) {
+			String[] rfLines = runFirst.get(i).strip().split(" ");
+			for(String rf : rfLines) {
+				if(!(rf.isBlank() || rf.matches("\\d+|-\\d+|\\d+.+|\\d+.+\\d+||@\\d+") || rf.contains(",") || rf.matches("ax|bx") || userVars.containsKey(rf))) {
+					rfInstructs.add(rf);
+				}
+			}
+		}
+		
+		for(int i = 0; i < rfInstructs.size(); i++) {
+			switch(rfInstructs.get(i)) {
+			case "nop":
+			case "add":
+			case "sub":
+			case "inc":
+			case "dec":
+			case "shl":
+			case "sal":
+			case "shr":
+			case "sar":
+			case "rol":
+			case "ror":
+			case "neg":
+			case "or":
+			case "and":
+			case "xor":
+			case "not":
+			case "mpy":
+			case "div":
+			case "mod":
+			case "ret":
+			case "call":
+			case "gsb":
+			case "jmp":
+			case "goto":
+			case "cmp":
+			case "jls":
+			case "jb":
+			case "jgr":
+			case "ja":
+			case "jne":
+			case "je":
+			case "jeq":
+			case "jge":
+			case "jle":
+			case "jz":
+			case "jnz":
+			case "jtl":
+			case "xchg":
+			case "swap":
+			case "do":
+			case "loop":
+			case "test":
+			case "mov":
+			case "set":
+			case "addr":
+			case "get":
+			case "put":
+			case "int":
+			case "ipo":
+			case "in":
+			case "opo":
+			case "out":
+			case "del":
+			case "push":
+			case "pop":
+			case "loc":
+			case "err":
+				isValid = true;
+				break;
+				default:
+					isValid = false;
+					err = "isValid: "+isValid+"\nRobot is not valid: No instruction called "+rfInstructs.get(i)+"";
+					System.out.println(err);
+					break;
+			}
+			if(!isValid) break;
+		}
+		
+		for(int i = 0; i < code.size(); i++) {
+			for(int j = 0; j < code.get(i).size(); j++) {
+				String[] lines = code.get(i).get(j).strip().split(" ");
+				for(String l : lines) {
+					if(!(l.isBlank() || l.matches("\\d+|-\\d+|\\d+.+|\\d+.+\\d+||@\\d+") || l.contains(",") || l.matches("ax|bx") || userVars.containsKey(l))) {
+						instructs.add(l);
+					}
+				}
+			}
+		}
+		
+		for(int i = 0; i < instructs.size(); i++) {
+			switch(instructs.get(i)) {
+			case "nop":
+			case "add":
+			case "sub":
+			case "inc":
+			case "dec":
+			case "shl":
+			case "sal":
+			case "shr":
+			case "sar":
+			case "rol":
+			case "ror":
+			case "neg":
+			case "or":
+			case "and":
+			case "xor":
+			case "not":
+			case "mpy":
+			case "div":
+			case "mod":
+			case "ret":
+			case "call":
+			case "gsb":
+			case "jmp":
+			case "goto":
+			case "cmp":
+			case "jls":
+			case "jb":
+			case "jgr":
+			case "ja":
+			case "jne":
+			case "je":
+			case "jeq":
+			case "jge":
+			case "jle":
+			case "jz":
+			case "jnz":
+			case "jtl":
+			case "xchg":
+			case "swap":
+			case "do":
+			case "loop":
+			case "test":
+			case "mov":
+			case "set":
+			case "addr":
+			case "get":
+			case "put":
+			case "int":
+			case "ipo":
+			case "in":
+			case "opo":
+			case "out":
+			case "del":
+			case "push":
+			case "pop":
+			case "loc":
+			case "err":
+				isValid = true;
+				break;
+				default:
+					isValid = false;
+					err = "isValid: "+isValid+"\nRobot is not valid: No instruction called "+instructs.get(i)+"";
+					System.out.println(err);
+					break;
+			}
+			if(!isValid) break;
+		}
+		
 		//Compile the functions into a hash map
+		if(!isValid) return;
 		for(int i = 0; i < labels.size(); i++) {
 			functions.put(labels.get(i), code.get(i));
 		}
