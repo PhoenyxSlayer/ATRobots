@@ -45,7 +45,8 @@ public class TestGame implements ILogic{
 	Vector3f cameraInc, modelInc;
 	
 	private static int bulletNumber,
-					   removedBullet = 10;
+					   removedBullet = 10,
+					   entityCount;
 	
 	private static float bulletAngle = 0.0f,
 						 angle = 0;
@@ -83,8 +84,7 @@ public class TestGame implements ILogic{
 		entities = new ArrayList<>();
 		entities.add(new Entity(tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
-		// 0, 0, -400f is center of terrain^^
-		entities.add(new Entity(bulletModel, new Vector3f(0,0,-5f), new Vector3f(0,0,0), 0));
+		
 
 		float lightIntensity = 1.0f;
 		// point light
@@ -112,6 +112,9 @@ public class TestGame implements ILogic{
 		
 		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
 		camera.setRotation(90f, 0f, 0f);
+		
+		
+		entityCount = entities.size();
 	}
 	
 	public static void setTankPos(float x, float z, float y) {
@@ -178,6 +181,7 @@ public class TestGame implements ILogic{
 				angle = 90;
 			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle,0), 1));
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+				
 				bulletEntity = new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle - 90,-90), 1);
 				time = System.currentTimeMillis();	
 				if(time > lastAttack + cooldownTime) {
@@ -189,7 +193,7 @@ public class TestGame implements ILogic{
 			}
 		}
 		
-		for(int bullet = 2; bullet < entities.size(); bullet++) {
+		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
 				switch((int)bulletAngle) {
