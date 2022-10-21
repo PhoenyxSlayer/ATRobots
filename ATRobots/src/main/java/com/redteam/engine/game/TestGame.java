@@ -182,7 +182,7 @@ public class TestGame implements ILogic{
 			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle,0), 1));
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
 				
-				bulletEntity = new Entity(bulletModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle - 90,-90), 1);
+				bulletEntity = new Entity(bulletModel, new Vector3f(x,2.55f,z), new Vector3f(0,angle - 90,-90), 1);
 				time = System.currentTimeMillis();	
 				if(time > lastAttack + cooldownTime) {
 					bulletNumber = entities.size();
@@ -228,8 +228,9 @@ public class TestGame implements ILogic{
 				
 				if((entities.get(bullet).getPos().x <= -Consts.X_BORDER || entities.get(bullet).getPos().x >= Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z <= -Consts.Z_BORDER || entities.get(bullet).getPos().z >= 0)) {
-					//entities.remove(i + 2);
-					System.out.println("BULLET BEING REMOVED AT " + bullet);
+					System.out.println("BULLET <" + bullet + "> BEING REMOVED AT <" + entities.get(bullet).getPos().x + ", "
+							+ entities.get(bullet).getPos().y + ", "
+							+ entities.get(bullet).getPos().z + ">");
 					bulletInside = false;
 					entities.remove(bullet);
 					removedBullet = bullet;
