@@ -70,6 +70,9 @@ public class TestGame implements ILogic{
 	
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
+	private static float MODEL_SPEED = 80.0f * Engine.currentFrameTime,
+						 CAMERA_STEP = 0.25f,
+						 BULLET_SPEED = 80.0f * Engine.currentFrameTime;
 	
 	
 	public TestGame() {
@@ -86,6 +89,7 @@ public class TestGame implements ILogic{
 	
 	@Override
 	public void init() throws Exception {
+		
 		renderer.init();
 		
 		bulletModel = setModel("/models/bullet.obj", "textures/bullet.png");
@@ -127,6 +131,7 @@ public class TestGame implements ILogic{
 	}
 	
 	private static void tankDirect(float x, float z) {
+		
 		if(!spectator) {
 			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A)))
 				tankAngle = 225;
@@ -183,31 +188,31 @@ public class TestGame implements ILogic{
 																 + " AT ANGLE " + bulletAngle);
 				switch((int)bulletAngle) {
 					case 0:
-						entities.get(bullet).incPos(0, 0, Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(0, 0, BULLET_SPEED);
 						break;
 					case 45:
-						entities.get(bullet).incPos(Consts.BULLET_SPEED, 0, Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(BULLET_SPEED, 0, BULLET_SPEED);
 						break;
 					case 90:
-						entities.get(bullet).incPos(Consts.BULLET_SPEED, 0, 0);
+						entities.get(bullet).incPos(BULLET_SPEED, 0, 0);
 						break;
 					case 135:
-						entities.get(bullet).incPos(Consts.BULLET_SPEED, 0, -Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(BULLET_SPEED, 0, -BULLET_SPEED);
 						break;
 					case 180:
-						entities.get(bullet).incPos(0, 0, -Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(0, 0, -BULLET_SPEED);
 						break;
 					case 225:
-						entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, -Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(-BULLET_SPEED, 0, -BULLET_SPEED);
 						break;
 					case 270:
-						entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, 0);
+						entities.get(bullet).incPos(-BULLET_SPEED, 0, 0);
 						break;
 					case 315:
-						entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(-BULLET_SPEED, 0, BULLET_SPEED);
 						break;
 					default:
-						entities.get(bullet).incPos(-Consts.BULLET_SPEED, 0, -Consts.BULLET_SPEED);
+						entities.get(bullet).incPos(-BULLET_SPEED, 0, -BULLET_SPEED);
 						break;
 				}
 				
@@ -234,16 +239,16 @@ public class TestGame implements ILogic{
 		 ||(z < -Consts.Z_BORDER) || (z > 0)){
 			
 			if(x > Consts.X_BORDER) {
-				x -= Consts.CAMERA_STEP * 2f;
+				x -= MODEL_SPEED;
 			}
 			else if(x < -Consts.X_BORDER) {
-				x += Consts.CAMERA_STEP * 2f;
+				x += MODEL_SPEED;
 			}
 			else if(z > 0) {
-				z -= Consts.CAMERA_STEP * 2f;
+				z -= MODEL_SPEED;
 			}
 			else if(z < -Consts.Z_BORDER) {
-				z += Consts.CAMERA_STEP * 2f;
+				z += MODEL_SPEED;
 			}
 			getSound("src/main/resources/sounds/bloop_x.ogg").play();
 			setTankPos(x, z);
@@ -305,41 +310,41 @@ public class TestGame implements ILogic{
 		});
 		
 		if(!spectator) {
-			cameraSpeed = Consts.CAMERA_STEP;
+			cameraSpeed = CAMERA_STEP;
 			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
 			camera.setRotation(90, 0, 0);
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
-				cameraInc.z = -1;
-				modelInc.z = -1;
+				cameraInc.z = -MODEL_SPEED;
+				modelInc.z = -MODEL_SPEED;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
-				cameraInc.z = 1;
-				modelInc.z = 1;
+				cameraInc.z = MODEL_SPEED;
+				modelInc.z = MODEL_SPEED;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
-				cameraInc.x = -1;
-				modelInc.x = -1;
+				cameraInc.x = -MODEL_SPEED;
+				modelInc.x = -MODEL_SPEED;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
-				cameraInc.x = 1;
-				modelInc.x = 1;
+				cameraInc.x = MODEL_SPEED;
+				modelInc.x = MODEL_SPEED;
 			}
 		} else {
-			cameraSpeed = (Consts.CAMERA_STEP * 5);
+			cameraSpeed = (CAMERA_STEP * 5);
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-				cameraInc.z = -1;
+				cameraInc.z = -MODEL_SPEED;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-				cameraInc.z = 1;
+				cameraInc.z = MODEL_SPEED;
 	
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-				cameraInc.x = -1;
+				cameraInc.x = -MODEL_SPEED;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-				cameraInc.x = 1;
+				cameraInc.x = MODEL_SPEED;
 			
 			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL))
-				cameraInc.y = -1;
+				cameraInc.y = -MODEL_SPEED;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
-				cameraInc.y = 1;
+				cameraInc.y = MODEL_SPEED;
 		}
 		
 		return;
@@ -347,6 +352,9 @@ public class TestGame implements ILogic{
 
 	@Override
 	public void update(float interval, MouseInput mouseInput) {
+		MODEL_SPEED = 80.0f * Engine.currentFrameTime;
+		CAMERA_STEP = 0.25f;
+		BULLET_SPEED = 80.0f * Engine.currentFrameTime;
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
