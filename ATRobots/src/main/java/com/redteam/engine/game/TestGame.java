@@ -15,7 +15,6 @@ import com.redteam.engine.utils.Consts;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ public class TestGame implements ILogic{
 	
 	private static boolean spectator = false,
 						   bulletInside;
-	private static GLFWKeyCallback keyCallback;
 	
 	private float cameraSpeed;
 
@@ -320,9 +318,7 @@ public class TestGame implements ILogic{
 		cameraInc.set(0,0,0);
 		modelInc.set(0,0,0);
 		
-		keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
+		GLFW.glfwSetKeyCallback(window.getWindowHandle(), (window, key, scancode, action, mods) -> {
 				if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
 					GLFW.glfwSetWindowShouldClose(window, true);
 				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS)
@@ -335,9 +331,7 @@ public class TestGame implements ILogic{
 						bulletInside = true;
 					}
 				}
-			}
-		};
-		GLFW.glfwSetKeyCallback(window.getWindowHandle(), keyCallback);
+		});
 		
 		if(!spectator) {
 			cameraSpeed = Consts.CAMERA_STEP;

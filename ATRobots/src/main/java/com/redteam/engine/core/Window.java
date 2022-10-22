@@ -69,12 +69,6 @@ public class Window
 			this.setResize(true);
 		});
 		
-		// If the escape key has been pressed
-		GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
-				GLFW.glfwSetWindowShouldClose(window, true);
-		});
-		
 		// Centers the window
 		if(maximised)
 			GLFW.glfwMaximizeWindow(window);
