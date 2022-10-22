@@ -15,9 +15,14 @@ import com.redteam.engine.utils.Consts;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class TestGame implements ILogic{
 	
@@ -39,6 +44,7 @@ public class TestGame implements ILogic{
 	
 	private static boolean spectator = false,
 						   bulletInside;
+	private static GLFWKeyCallback keyCallback;
 	
 	private float cameraSpeed;
 
@@ -52,10 +58,6 @@ public class TestGame implements ILogic{
 						 angle = 0;
 	
 	private static Entity bulletEntity;
-	
-	private static long time,
-						cooldownTime = 250,
-						lastAttack = 0;
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -114,6 +116,9 @@ public class TestGame implements ILogic{
 		camera.setRotation(90f, 0f, 0f);
 		
 		
+		// BORDER CHECK
+		
+		
 		entityCount = entities.size();
 	}
 	
@@ -125,19 +130,19 @@ public class TestGame implements ILogic{
 	
 	public static void tankDirect(float x, float z) {
 		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,225,0), 1));
 			}
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,135,0), 1));
 			}
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) && window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,45,0), 1));
 			}
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) && window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
 				entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
 				entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,315,0), 1));
 			}
@@ -162,40 +167,34 @@ public class TestGame implements ILogic{
 	}
 	
 	public static void turretDirect(float x, float z) {
+		angle = entities.get(0).getRotation().y();
 		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) && window.isKeyPressed(GLFW.GLFW_KEY_LEFT)))
+			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
 				angle = 225;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_UP) && window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)))
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_L)))
 				angle = 135;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_RIGHT) && window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_L) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
 				angle = 45;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_LEFT) && window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_J) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
 				angle = 315;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_UP))
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_I))
 				angle = 180;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT))
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_J))
 				angle = 270;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_DOWN))
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_K))
 				angle = 0;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT))
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_L))
 				angle = 90;
 			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,angle,0), 1));
-			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-				
-				bulletEntity = new Entity(bulletModel, new Vector3f(x,2.55f,z), new Vector3f(0,angle - 90,-90), 1);
-				time = System.currentTimeMillis();	
-				if(time > lastAttack + cooldownTime) {
-					bulletNumber = entities.size();
-					entities.add(bulletNumber, bulletEntity);
-					bulletInside = true;
-					lastAttack = time;
-				}
-			}
 		}
 		
 		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
+				System.out.println("BULLET <" + bullet + "> AT " + entities.get(bullet).getPos().x + ", "
+																 + entities.get(bullet).getPos().y + ", "
+																 + entities.get(bullet).getPos().z + "> "
+																 + " AT ANGLE " + bulletAngle);
 				switch((int)bulletAngle) {
 				case 0:
 					entities.get(bullet).incPos(0, 0, Consts.BULLET_SPEED);
@@ -226,8 +225,8 @@ public class TestGame implements ILogic{
 					break;
 				}
 				
-				if((entities.get(bullet).getPos().x <= -Consts.X_BORDER || entities.get(bullet).getPos().x >= Consts.X_BORDER)
-				 ||(entities.get(bullet).getPos().z <= -Consts.Z_BORDER || entities.get(bullet).getPos().z >= 0)) {
+				if((entities.get(bullet).getPos().x < -Consts.X_BORDER || entities.get(bullet).getPos().x > Consts.X_BORDER)
+				 ||(entities.get(bullet).getPos().z < -Consts.Z_BORDER || entities.get(bullet).getPos().z > 0)) {
 					System.out.println("BULLET <" + bullet + "> BEING REMOVED AT <" + entities.get(bullet).getPos().x + ", "
 							+ entities.get(bullet).getPos().y + ", "
 							+ entities.get(bullet).getPos().z + ">");
@@ -244,24 +243,76 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	public static float getPositionX(float xcord) {
-		xcord = entities.get(0).getPos().x;
-		return xcord;
+	public static void borderCheck(float x, float z) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+		float y = 0;
+		if(x > Consts.X_BORDER){
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+				y = 135;
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))){
+				y = 45;
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_D)){
+				y = 90;
+			}
+			Engine.playSound("bloop_x.wav");
+		 	TestGame.setTankPos(x - Consts.CAMERA_STEP * 2, z, y);
+		}
+		else if(x < -Consts.X_BORDER) {
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+				y = 225;
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_A))){
+				y = 315;
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_A)){
+				y = 270;
+			}
+			Engine.playSound("bloop_x.wav");
+		 	TestGame.setTankPos(x + Consts.CAMERA_STEP * 2, z, y);
+		}
+		else if(z > 0) {
+			if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+				y = 45;
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_A))){
+				y = 315;
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_S)){
+				y = 0;
+			}
+			Engine.playSound("bloop_x.wav");
+		 	TestGame.setTankPos(x, z - Consts.CAMERA_STEP * 2, y);
+		}
+		else if(z <= -Consts.Z_BORDER) {
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+				y = 225;
+			}
+			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))){
+				y = 135;
+			}
+			else if(window.isKeyPressed(GLFW.GLFW_KEY_W)){
+				y = 180;
+			}
+			Engine.playSound("bloop_x.wav");
+		 	TestGame.setTankPos(x, z + Consts.CAMERA_STEP * 2, y);
+		}
 	}
 	
-	public static float getPositionZ(float zcord) {
-		zcord =  entities.get(0).getPos().z;
-		return zcord;
+	public static float getPositionX() {
+		return entities.get(0).getPos().x;
 	}
 	
-	public static float getTurretPositionX(float xcord) {
-		xcord = entities.get(1).getPos().x;
-		return xcord;
+	public static float getPositionZ() {
+		return entities.get(0).getPos().z;
 	}
 	
-	public static float getTurretPositionZ(float zcord) {
-		zcord = entities.get(1).getPos().z;
-		return zcord;
+	public static float getTurretPositionX() {
+		return entities.get(1).getPos().x;
+	}
+	
+	public static float getTurretPositionZ() {
+		return entities.get(1).getPos().z;
 	}
 
 	@Override
@@ -269,14 +320,24 @@ public class TestGame implements ILogic{
 		cameraInc.set(0,0,0);
 		modelInc.set(0,0,0);
 		
-		if(window.isKeyPressed(GLFW.GLFW_KEY_V)) {
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		keyCallback = new GLFWKeyCallback() {
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods) {
+				if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
+					GLFW.glfwSetWindowShouldClose(window, true);
+				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS)
+					spectator = spectator ? false: true;
+				if(!spectator) {
+					if(key == GLFW.GLFW_KEY_SPACE && action == GLFW.GLFW_PRESS) {
+						bulletEntity = new Entity(bulletModel, new Vector3f(getPositionX(),2.55f,getPositionZ()), new Vector3f(0,angle - 90,-90), 1);
+						bulletNumber = entities.size();
+						entities.add(bulletNumber, bulletEntity);
+						bulletInside = true;
+					}
+				}
 			}
-			spectator = spectator ? false: true;
-		}
+		};
+		GLFW.glfwSetKeyCallback(window.getWindowHandle(), keyCallback);
 		
 		if(!spectator) {
 			cameraSpeed = Consts.CAMERA_STEP;
@@ -327,59 +388,37 @@ public class TestGame implements ILogic{
 
 	@Override
 	public void update(float interval, MouseInput mouseInput) {
-		camera.movePosition(cameraInc.x * cameraSpeed,
-				  			cameraInc.y * cameraSpeed,
-							cameraInc.z * cameraSpeed);
-		
-		entities.get(0).incPos(modelInc.x * cameraSpeed,
-							   modelInc.y * cameraSpeed,
-	  					       modelInc.z * cameraSpeed);
-		
-		if(mouseInput.isRightButtonPress() && spectator) {
-			Vector2f rotVec = mouseInput.getDisplVec();
-			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
-		}
-		for(int i = 0; i < entities.size(); i++)
-		entities.get(i).incRotation(0.0f, 0.0f, 0.0f);	
-	//Rotation Control ^^
-		//spotAngle += spotInc * 0.05f;
-		//if(spotAngle > 4) {
-		//	spotInc = -1;
-		//}
-		//else if(spotAngle <= -4)
-		//	spotInc = 1;
 
-		//double spotAngleRad = Math.toRadians(spotAngle);
-		//Vector3f coneDir = spotLights[0].getPointLight().getPosition();
-		//coneDir.y = (float) Math.sin(spotAngleRad);
-		/*
-		lightAngle += 0.5f;
-		if(lightAngle > 90) {
-			directionalLight.setIntensity(0);
-			if(lightAngle >= 360)
-				lightAngle = -90;
-		} else if (lightAngle <= -80 || lightAngle >= 80) {
-			float factor = 1 - (Math.abs(lightAngle) - 80) / 10.0f;
-			directionalLight.setIntensity(factor);
-			directionalLight.getColor().y = Math.max(factor, 0.9f);
-			directionalLight.getColor().z = Math.max(factor, 0.5f);
-		} else {
-			directionalLight.setIntensity(1);
-			directionalLight.getColor().x = 1;
-			directionalLight.getColor().y = 1;
-			directionalLight.getColor().z = 1;
-		}
-		double angRad = Math.toRadians(lightAngle);
-		directionalLight.getDirection().x = (float) Math.sin(angRad);
-		directionalLight.getDirection().y = (float) Math.cos(angRad);
 		
-		*/
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
 
 		for(Terrain terrain : terrains) {
 			renderer.processTerrain(terrain);
+		}
+		camera.movePosition(cameraInc.x * cameraSpeed,
+	  						cameraInc.y * cameraSpeed,
+	  						cameraInc.z * cameraSpeed);
+
+		entities.get(0).incPos(modelInc.x * cameraSpeed,
+							   modelInc.y * cameraSpeed,
+							   modelInc.z * cameraSpeed);
+
+		if(mouseInput.isRightButtonPress() && spectator) {
+			Vector2f rotVec = mouseInput.getDisplVec();
+			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
+		}
+		float x = getPositionX(), z = getPositionZ();
+		
+		
+		
+		tankDirect(x,z);
+		turretDirect(x,z);
+		try {
+			borderCheck(x,z);
+		} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+			e.printStackTrace();
 		}
 	}
 

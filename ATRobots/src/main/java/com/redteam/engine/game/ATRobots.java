@@ -20,7 +20,7 @@ public class ATRobots {
 	// Main function
 	public static void main(String[] args) throws Exception {
 			if(robotName.getFile()) {
-			window = new Window(Consts.TITLE, 1600, 900, true);
+			window = new Window(Consts.TITLE, 1600, 900, false);
 			game = new TestGame();
 			Engine engine = new Engine();
 			engine.start();

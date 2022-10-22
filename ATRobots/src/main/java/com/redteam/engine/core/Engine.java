@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import com.redteam.engine.game.ATRobots;
-import com.redteam.engine.game.TestGame;
 import com.redteam.engine.utils.Consts;
 
 
@@ -21,7 +20,7 @@ public class Engine {
 	public static final long NANOSECOND = 1000000000L;
 	
 	private static int fps;
-	public static final float framerate = 1000;
+	public static final float framerate = Consts.FPS;
 	private static float frametime = 1.0f / framerate;
 	public static float currentFrameTime = 0;
 	private boolean isRunning;
@@ -49,23 +48,14 @@ public class Engine {
 	}
 	
 	public void run() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-		float x = 0;
-		float z = 0;
-		float y = 0;
 		this.isRunning = true;
 		int frames = 0;
 		long frameCounter = 0;
 		// Returns the current value of the system timer, in nanoseconds.
 		long lastTime = System.nanoTime();
 		double unprocessedTime = 0;
-		
-			//playSound("tank.wav");
 			
 		while(isRunning) {	
-			//if((window.isKeyPressed(GLFW.GLFW_KEY_W)) || (window.isKeyPressed(GLFW.GLFW_KEY_A)) || (window.isKeyPressed(GLFW.GLFW_KEY_S)) || (window.isKeyPressed(GLFW.GLFW_KEY_D))){
-				//playSound("TankRunning.wav");
-				//}
-			
 			boolean render = false;
 			long startTime = System.nanoTime();
 			long passedTime = startTime - lastTime;
@@ -74,9 +64,8 @@ public class Engine {
 			unprocessedTime += passedTime / (double)NANOSECOND;
 			frameCounter += passedTime;
 			
-			input();
-			
 			while(unprocessedTime > frametime) {
+				input();
 				render = true;
 				unprocessedTime -= frametime;
 				
@@ -97,63 +86,6 @@ public class Engine {
 				render();
 				frames++;
 			}
-		//Collision Detection
-			x = TestGame.getPositionX(x);
-			z = TestGame.getPositionZ(z);
-			TestGame.tankDirect(x, z);
-			TestGame.turretDirect(x, z);
-			if(x > Consts.X_BORDER){
-					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
-						y = 135;
-					}
-					else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))){
-						y = 45;
-					}
-					else if(window.isKeyPressed(GLFW.GLFW_KEY_D)){
-						y = 90;
-					}
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x - Consts.CAMERA_STEP * 2, z, y);
-				}
-				else if(x < -Consts.X_BORDER) {
-					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
-						y = 225;
-					}
-					else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_A))){
-						y = 315;
-					}
-					else if(window.isKeyPressed(GLFW.GLFW_KEY_A)){
-						y = 270;
-					}
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x + Consts.CAMERA_STEP * 2, z, y);
-				}
-				else if(z > 0) {
-					if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_D))) {
-						y = 45;
-					}
-					else if((window.isKeyPressed(GLFW.GLFW_KEY_S) && window.isKeyPressed(GLFW.GLFW_KEY_A))){
-						y = 315;
-					}
-					else if(window.isKeyPressed(GLFW.GLFW_KEY_S)){
-						y = 0;
-					}
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z - Consts.CAMERA_STEP * 2, y);
-				}
-				else if(z <= -Consts.Z_BORDER) {
-					if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_A))) {
-						y = 225;
-					}
-					else if((window.isKeyPressed(GLFW.GLFW_KEY_W) && window.isKeyPressed(GLFW.GLFW_KEY_D))){
-						y = 135;
-					}
-					else if(window.isKeyPressed(GLFW.GLFW_KEY_W)){
-						y = 180;
-					}
-					playSound("bloop_x.wav");
-				 	TestGame.setTankPos(x, z + Consts.CAMERA_STEP * 2, y);
-				}
 		}
 		cleanup();	
 	}
@@ -191,7 +123,7 @@ public class Engine {
 		Engine.fps = fps;
 	}
 	
-	void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	public static void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 	    File f = new File(soundFile);
 	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
 	    Clip clip = AudioSystem.getClip();

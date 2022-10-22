@@ -11,7 +11,8 @@ public class Consts {
 			MOUSE_SENSITIVITY = 0.2f,
 			CAMERA_STEP = 0.25f,
 			SPECULAR_POWER = 10f,
-			BULLET_SPEED = 1.0f;
+			BULLET_SPEED = 1.0f,
+			FPS = 60;
 
 	public static final int MAX_SPOT_LIGHTS = 5;
 	public static final int MAX_POINT_LIGHTS = 5;
@@ -19,7 +20,7 @@ public class Consts {
 							Z_BORDER = X_BORDER * 2;
 	
 	
-	public static final String TITLE = "ATRobotsV3";
+	public static final String TITLE = "ATRobotsV3D";
 	
 	
 
