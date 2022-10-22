@@ -52,6 +52,7 @@ public class Engine {
 		double unprocessedTime = 0;
 			
 		while(isRunning) {	
+			input();
 			boolean render = false;
 			long startTime = System.nanoTime();
 			long passedTime = startTime - lastTime;
@@ -61,7 +62,7 @@ public class Engine {
 			frameCounter += passedTime;
 			
 			while(unprocessedTime > frametime) {
-				input();
+				
 				render = true;
 				unprocessedTime -= frametime;
 				
