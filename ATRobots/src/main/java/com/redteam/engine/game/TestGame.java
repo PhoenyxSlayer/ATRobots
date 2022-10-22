@@ -12,14 +12,24 @@ import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
 import com.redteam.engine.core.rendering.RenderManager;
 import com.redteam.engine.utils.Consts;
+
+import sounds.Sound;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -58,6 +68,10 @@ public class TestGame implements ILogic{
 	
 	private static Entity bulletEntity;
 	
+	private static Map<String, Sound> sounds = new HashMap<>();
+	
+	
+	
 	public TestGame() {
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
@@ -66,6 +80,8 @@ public class TestGame implements ILogic{
 		cameraInc = new Vector3f(0,0,0);
 		cameraInc.set(0,0,0);
 		modelInc = new Vector3f(0,0,0);
+		
+		return;
 	}
 	
 	@Override
@@ -74,8 +90,8 @@ public class TestGame implements ILogic{
 		
 		bulletModel = setModel("/models/bullet.obj", "textures/bullet.png");
 		
-		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
-		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
+		tankTopModel = setModel("/models/fixedTankTop.obj", "textures/Camo.jpg");
+		tankBotModel = setModel("/models/fixedTankBot.obj", "textures/Camo.jpg");
 		terrains = new ArrayList<>();
 		Terrain terrain = new Terrain(new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
 		terrains.add(terrain);
@@ -94,16 +110,23 @@ public class TestGame implements ILogic{
 		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
 		camera.setRotation(90f, 0f, 0f);
 		
+		addSound("src/main/resources/sounds/bloop_x.ogg", false);
+		
 		entityCount = entities.size();
-	}
-	
-	public static void setTankPos(float x, float z) {
-		entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,getRotationY(),0), 1));
-		entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,getRotationY(),0), 1));
+		
 		return;
 	}
 	
-	public static void tankDirect(float x, float z) {
+	private static void setTankPos(float x, float z) {
+		float y = getRotationY();
+		entities.get(0).setPos(x, 1.3f, z);
+		entities.get(0).setRotation(0, y, 0);
+		entities.get(1).setPos(x, 1.3f, z);
+		entities.get(1).setRotation(0, y, 0);
+		return;
+	}
+	
+	private static void tankDirect(float x, float z) {
 		if(!spectator) {
 			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A)))
 				tankAngle = 225;
@@ -128,8 +151,9 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	public static void turretDirect(float x, float z) {
+	private static void turretDirect(float x, float z) {
 		turretAngle = entities.get(0).getRotation().y();
+		
 		if(!spectator) {
 			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
 				turretAngle = 225;
@@ -205,23 +229,27 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	public static void borderCheck(float x, float z) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-		if(x > Consts.X_BORDER){
-			Engine.playSound("bloop_x.wav");
-		 	setTankPos(x - Consts.CAMERA_STEP * 2, z);
+	private static void borderCheck(float x, float z) {
+		if((x < -Consts.X_BORDER) || (x > Consts.X_BORDER)
+		 ||(z < -Consts.Z_BORDER) || (z > 0)){
+			
+			if(x > Consts.X_BORDER) {
+				x -= Consts.CAMERA_STEP * 2f;
+			}
+			else if(x < -Consts.X_BORDER) {
+				x += Consts.CAMERA_STEP * 2f;
+			}
+			else if(z > 0) {
+				z -= Consts.CAMERA_STEP * 2f;
+			}
+			else if(z < -Consts.Z_BORDER) {
+				z += Consts.CAMERA_STEP * 2f;
+			}
+			getSound("src/main/resources/sounds/bloop_x.ogg").play();
+			setTankPos(x, z);
 		}
-		else if(x < -Consts.X_BORDER) {
-			Engine.playSound("bloop_x.wav");
-		 	setTankPos(x + Consts.CAMERA_STEP * 2, z);
-		}
-		else if(z > 0) {
-			Engine.playSound("bloop_x.wav");
-		 	setTankPos(x, z - Consts.CAMERA_STEP * 2);
-		}
-		else if(z < -Consts.Z_BORDER) {
-			Engine.playSound("bloop_x.wav");
-		 	setTankPos(x, z + Consts.CAMERA_STEP * 2);
-		}
+		
+		return;
 	}
 
 	@Override
@@ -313,6 +341,8 @@ public class TestGame implements ILogic{
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
 				cameraInc.y = 1;
 		}
+		
+		return;
 	}
 
 	@Override
@@ -344,74 +374,116 @@ public class TestGame implements ILogic{
 		
 		tankDirect(x,z);
 		turretDirect(x,z);
-		try {
-			borderCheck(x,z);
-		} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-			e.printStackTrace();
-		}
+		borderCheck(x,z);
+		
+		return;
 	}
 
 	@Override
-	public void render() { renderer.render(camera, directionalLight, pointLights, spotLights); }
+	public void render() { renderer.render(camera, directionalLight, pointLights, spotLights); return; }
 
 	@Override
 	public void cleanup() {
 		renderer.cleanup();
 		loader.cleanup();
+		return;
 	}
 	
-	public Model setModel(String modelOBJ, String texture) throws Exception{
+	private Model setModel(String modelOBJ, String texture) throws Exception{
 		Model model = loader.loadOBJModel(modelOBJ);
 		model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
 		return model;
 	}
 	
-	public static float getPositionX() {
-		return entities.get(0).getPos().x;
-	}
-	
-	public static float getPositionY() {
-		return entities.get(0).getPos().y;
-	}
-	
-	public static float getPositionZ() {
-		return entities.get(0).getPos().z;
-	}
-	
-	public static float getRotationX() {
-		return entities.get(0).getRotation().x;
-	}
-	
-	public static float getRotationY() {
-		return entities.get(0).getRotation().y;
-	}
-	
-	public static float getRotationZ() {
-		return entities.get(0).getRotation().z;
-	}
-	
-	
-	public static float getTurretPositionX() {
+	private static float getPositionX() {
 		return entities.get(1).getPos().x;
 	}
 	
-	public static float getTurretPositionY() {
+	@SuppressWarnings("unused")
+	private static float getPositionY() {
 		return entities.get(1).getPos().y;
 	}
 	
-	public static float getTurretPositionZ() {
+	private static float getPositionZ() {
 		return entities.get(1).getPos().z;
 	}
 	
-	public static float getTurretRotationX() {
+	@SuppressWarnings("unused")
+	private static float getRotationX() {
 		return entities.get(1).getRotation().x;
 	}
 	
-	public static float getTurretRotationY() {
+	private static float getRotationY() {
 		return entities.get(1).getRotation().y;
 	}
 	
-	public static float getTurretRotationZ() {
+	@SuppressWarnings("unused")
+	private static float getRotationZ() {
 		return entities.get(1).getRotation().z;
+	}
+	
+	@SuppressWarnings("unused")
+	private static float getTurretPositionX() {
+		return entities.get(0).getPos().x;
+	}
+	
+	@SuppressWarnings("unused")
+	private static float getTurretPositionY() {
+		return entities.get(0).getPos().y;
+	}
+	
+	@SuppressWarnings("unused")
+	private static float getTurretPositionZ() {
+		return entities.get(0).getPos().z;
+	}
+	
+	@SuppressWarnings("unused")
+	private static float getTurretRotationX() {
+		return entities.get(0).getRotation().x;
+	}
+	
+	@SuppressWarnings("unused")
+	private static float getTurretRotationY() {
+		return entities.get(0).getRotation().y;
+	}
+	
+	@SuppressWarnings("unused")
+	private static float getTurretRotationZ() {
+		return entities.get(0).getRotation().z;
+	}
+	
+	@SuppressWarnings("unused")
+	private static void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	    File f = new File(soundFile);
+	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
+	    Clip clip = AudioSystem.getClip();
+	    clip.open(audioIn);
+	    clip.start();
+	}
+	
+	public static Collection<Sound> getAllSounds() {
+		return sounds.values();  
+	}
+	
+	public static Sound getSound(String soundFile) {
+		File file = new File(soundFile);
+		if(sounds.containsKey(file.getAbsolutePath())) {
+			return sounds.get(file.getAbsolutePath());
+		} else {
+			assert false : "Sound file not added '" + soundFile + "'";
+		}
+		
+		return null;
+	}
+	
+	public static Sound addSound(String soundFile, boolean loops) {
+		File file = new File(soundFile);
+		if(sounds.containsKey(file.getAbsolutePath())) {
+			return sounds.get(file.getAbsolutePath());
+		} else {
+			Sound sound = new Sound(file.getAbsolutePath(), loops);
+			sounds.put(file.getAbsolutePath(), sound);
+			return sound;
+		}
 	}
 }

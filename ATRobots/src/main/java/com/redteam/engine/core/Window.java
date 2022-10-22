@@ -5,8 +5,14 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import static org.lwjgl.openal.ALC10.*;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.system.MemoryUtil;
 
 //https://www.glfw.org/docs/latest/window_guide.html
@@ -15,7 +21,9 @@ public class Window
 	private final String title;
 	
 	private int width, height;
-	private long window;
+	private long window,
+				 audioContext,
+				 audioDevice;
 	
 	private boolean resize, vSync;
 	
@@ -88,6 +96,21 @@ public class Window
 		// Makes window visible
 		GLFW.glfwShowWindow(window);
 		
+		// Initialize the audio device
+		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+		audioDevice = alcOpenDevice(defaultDeviceName);
+		
+		int[] attributes = {0};
+		audioContext = alcCreateContext(audioDevice, attributes);
+		alcMakeContextCurrent(audioContext);
+		
+		ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+		ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+		
+		if(!alCapabilities.OpenAL10) {
+			assert false : "Audio library not supported.";
+		}
+		
 		/* LWJGL detects the context that is current in the current thread,
 		 * creates the GLCapabilities instance and makes the OpenGL
 		 * bindings available for use.
@@ -118,6 +141,8 @@ public class Window
 	}
 	
 	public void cleanup() {
+		alcDestroyContext(audioContext);
+		alcCloseDevice(audioDevice);
 		GLFW.glfwDestroyWindow(window);
 		return;
 	}
