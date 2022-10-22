@@ -13,11 +13,13 @@ import com.redteam.engine.core.lighting.SpotLight;
 import com.redteam.engine.core.rendering.RenderManager;
 import com.redteam.engine.utils.Consts;
 
+import images.image_parser;
 import sounds.Sound;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +76,8 @@ public class TestGame implements ILogic{
 						 CAMERA_STEP = 0.25f,
 						 BULLET_SPEED = 80.0f * Engine.currentFrameTime;
 	
+	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
+	
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -89,13 +93,18 @@ public class TestGame implements ILogic{
 	
 	@Override
 	public void init() throws Exception {
-		
 		renderer.init();
+		
+		GLFWImage iconGLFW = GLFWImage.malloc();
+		GLFWImage.Buffer iconBF = GLFWImage.malloc(1);
+        iconGLFW.set(icon.get_width(), icon.get_heigh(), icon.get_image());
+        iconBF.put(0, iconGLFW);
+        GLFW.glfwSetWindowIcon(window.getWindowHandle(), iconBF);
 		
 		bulletModel = setModel("/models/bullet.obj", "textures/bullet.png");
 		
-		tankTopModel = setModel("/models/fixedTankTop.obj", "textures/Camo.jpg");
-		tankBotModel = setModel("/models/fixedTankBot.obj", "textures/Camo.jpg");
+		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
+		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
 		terrains = new ArrayList<>();
 		Terrain terrain = new Terrain(new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
 		terrains.add(terrain);
@@ -263,10 +272,16 @@ public class TestGame implements ILogic{
 		modelInc.set(0,0,0);
 		
 		GLFW.glfwSetKeyCallback(window.getWindowHandle(), (window, key, scancode, action, mods) -> {
-				if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
+				if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
+					System.out.println("EXITING");
 					GLFW.glfwSetWindowShouldClose(window, true);
-				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS)
+					return;
+				}
+				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS) {
 					spectator = spectator ? false: true;
+					System.out.println("SPECTATOR: " + spectator);
+				}
+					
 				if(!spectator) {
 					if(key == GLFW.GLFW_KEY_SPACE && action == GLFW.GLFW_PRESS) {
 						float x = getPositionX(),
@@ -330,7 +345,7 @@ public class TestGame implements ILogic{
 				modelInc.x = MODEL_SPEED;
 			}
 		} else {
-			cameraSpeed = (CAMERA_STEP * 5);
+			cameraSpeed = (CAMERA_STEP * 2);
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
 				cameraInc.z = -MODEL_SPEED;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_S))
@@ -353,7 +368,6 @@ public class TestGame implements ILogic{
 	@Override
 	public void update(float interval, MouseInput mouseInput) {
 		MODEL_SPEED = 80.0f * Engine.currentFrameTime;
-		CAMERA_STEP = 0.25f;
 		BULLET_SPEED = 80.0f * Engine.currentFrameTime;
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
