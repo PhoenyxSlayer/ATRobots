@@ -77,7 +77,8 @@ public class TestGame implements ILogic{
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
 	private static float tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick()),
-						 bulletSpeed = (float) (Consts.BULLET_SPEED * tick());
+						 bulletSpeed = (float) (Consts.BULLET_SPEED * tick()),
+						 pushBack;
 	
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
@@ -200,8 +201,7 @@ public class TestGame implements ILogic{
 	private static void borderCheck(float x, float z) {
 		if((x < -Consts.X_BORDER) || (x > Consts.X_BORDER)
 		 ||(z < -Consts.Z_BORDER) || (z > 0)){
-			
-			float pushBack = tankSpeed / 4;
+			pushBack = tankSpeed / 4;	
 			if(x > Consts.X_BORDER && z > 0 ) {
 				x -= pushBack;
 				z -= pushBack;
@@ -300,6 +300,8 @@ public class TestGame implements ILogic{
 			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
 			camera.setRotation(90, 0, 0);
 			
+			
+			
 			// TANK MOVEMENT + ROTATION
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
 				tankAngle = 180;
@@ -383,7 +385,11 @@ public class TestGame implements ILogic{
 
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
-		tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick());
+		if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT))
+			tankSpeed = ((float) (Consts.MOVEMENT_SPEED * tick()) * 3);
+		else
+			tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick());
+		
 		bulletSpeed = (float) (Consts.BULLET_SPEED * tick());
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
