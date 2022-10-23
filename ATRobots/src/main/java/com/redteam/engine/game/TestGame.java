@@ -134,9 +134,8 @@ public class TestGame implements ILogic{
 	}
 	
 	private static void setTankPos(float x, float z) {
-		float y = getRotationY();
 		entities.get(0).setPos(x, 1.3f, z);
-		entities.get(0).setRotation(0, y, 0);
+		float y = getRotationY();
 		entities.get(1).setPos(x, 1.3f, z);
 		entities.get(1).setRotation(0, y, 0);
 		return;
