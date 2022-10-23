@@ -142,55 +142,7 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	private static void tankDirect(float x, float z) {
-		
-		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A)))
-				tankAngle = 225;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D)))
-				tankAngle = 135;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S)))
-				tankAngle = 45;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S)))
-				tankAngle = 315;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-				tankAngle = 180;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-				tankAngle = 270;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-				tankAngle = 0;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-				tankAngle = 90;
-			
-			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,tankAngle,0), 1));
-			entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,tankAngle,0), 1));
-		}
-		return;
-	}
-	
-	private static void turretDirect(float x, float z) {
-		turretAngle = entities.get(0).getRotation().y();
-		
-		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
-				turretAngle = 225;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_L)))
-				turretAngle = 135;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_L) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
-				turretAngle = 45;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_J) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
-				turretAngle = 315;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_I))
-				turretAngle = 180;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_J))
-				turretAngle = 270;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_K))
-				turretAngle = 0;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_L))
-				turretAngle = 90;
-			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,turretAngle,0), 1));
-		}
-		
+	private static void turretDirect() {
 		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
@@ -331,22 +283,67 @@ public class TestGame implements ILogic{
 			cameraSpeed = Consts.CAMERA_STEP;
 			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
 			camera.setRotation(90, 0, 0);
+			
+			// TANK MOVEMENT + ROTATION
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
-				cameraInc.z = -tankSpeed;
-				modelInc.z = -tankSpeed;
-			}
-			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
-				cameraInc.z = tankSpeed;
-				modelInc.z = tankSpeed;
+				tankAngle = 180;
+				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
-				cameraInc.x = -tankSpeed;
-				modelInc.x = -tankSpeed;
+				tankAngle = 270;
+				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
+			}
+			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
+				tankAngle = 0;
+				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
-				cameraInc.x = tankSpeed;
-				modelInc.x = tankSpeed;
+				tankAngle = 90;
+				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
 			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+				tankAngle = 225;
+				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
+				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
+			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+				tankAngle = 135;
+				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
+				cameraInc.x =  tankSpeed; modelInc.x = tankSpeed;
+			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+				tankAngle = 45;
+				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
+				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
+			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+				tankAngle = 315;
+				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
+				cameraInc.z =  tankSpeed; modelInc.z = tankSpeed;
+			}
+			entities.get(0).setRotation(0, tankAngle, 0);
+			entities.get(1).setRotation(0, tankAngle, 0);
+			
+			// TURRET ROTATION
+			turretAngle = entities.get(1).getRotation().y();
+			
+			if(window.isKeyPressed(GLFW.GLFW_KEY_UP))
+				turretAngle = 180;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT))
+				turretAngle = 270;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT))
+				turretAngle = 90;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_DOWN))
+				turretAngle = 0;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) & window.isKeyPressed(GLFW.GLFW_KEY_LEFT)))
+				turretAngle = 225;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) & window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)))
+				turretAngle = 135;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_RIGHT) & window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
+				turretAngle = 45;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_LEFT) & window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
+				turretAngle = 315;
+			entities.get(0).setRotation(0, turretAngle, 0);
 		} else {
 			cameraSpeed = (Consts.CAMERA_STEP * 2);
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
@@ -395,11 +392,8 @@ public class TestGame implements ILogic{
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
 		
-		float x = getPositionX(), z = getPositionZ();
-		
-		tankDirect(x,z);
-		turretDirect(x,z);
-		borderCheck(x,z);
+		turretDirect();
+		borderCheck(getPositionX(),getPositionZ());
 		
 		return;
 	}
