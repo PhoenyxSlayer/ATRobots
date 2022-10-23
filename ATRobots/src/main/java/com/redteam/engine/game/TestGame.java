@@ -202,17 +202,34 @@ public class TestGame implements ILogic{
 		if((x < -Consts.X_BORDER) || (x > Consts.X_BORDER)
 		 ||(z < -Consts.Z_BORDER) || (z > 0)){
 			
-			if(x > Consts.X_BORDER) {
-				x -= tankSpeed;
+			float pushBack = tankSpeed / 4;
+			if(x > Consts.X_BORDER && z > 0 ) {
+				x -= pushBack;
+				z -= pushBack;
+			}
+			else if(x > Consts.X_BORDER && z < -Consts.Z_BORDER ) {
+				x -= pushBack;
+				z += pushBack;
+			}
+			else if(x < -Consts.X_BORDER && z > 0 ) {
+				x += pushBack;
+				z -= pushBack;
+			}
+			else if(x < -Consts.X_BORDER && z < -Consts.Z_BORDER ) {
+				x += pushBack;
+				z += pushBack;
+			}
+			else if(x > Consts.X_BORDER) {
+				x -= pushBack;
 			}
 			else if(x < -Consts.X_BORDER) {
-				x += tankSpeed;
+				x += pushBack;
 			}
 			else if(z > 0) {
-				z -= tankSpeed;
+				z -= pushBack;
 			}
 			else if(z < -Consts.Z_BORDER) {
-				z += tankSpeed;
+				z += pushBack;
 			}
 			getSound("src/main/resources/sounds/bloop_x.ogg").play();
 			setTankPos(x, z);
