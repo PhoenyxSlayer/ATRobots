@@ -1,68 +1,32 @@
 package com.redteam.engine.core.entity;
 import java.io.File;
-import java.util.Scanner;
+
+import javax.swing.JFileChooser;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Robot{
-	
-	private String s, dir;
-	private boolean found = false;
-	private File directory;
-	private String[] flist;
-	
+	private String s;
+	private File file;
+	private boolean fSelected = false;
 	
 	public boolean getFile(){
-		Scanner scan = new Scanner(System.in);		
-		System.out.print("Is the Robot you want to run in the src directory?(yes/no): ");
-		String y = new String();
-		y = scan.nextLine();
-		if(y.equalsIgnoreCase("yes")) {		
-			System.out.println("Looking for Robot inside of src...");
-								
-		System.out.print("Enter Name of Robot: ");
-		s = scan.next();
-		
-		directory = new File("src/main/resources/AT2/");
-		
-		scan.close();
-		return directorySearch(flist, directory);
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		else{
-		System.out.print("Enter Directory of Robot: ");
-		 dir = scan.next();
-		        // Type in the name of the AT2 file without the .AT2 part
-		System.out.print("Enter Robot Name: ");
-		s = scan.next();
-		     // Create an object of the File class
-		directory = new File(dir);
-
-		scan.close();
-		                
-		return directorySearch(flist,directory);
-	}
-}
-		
-	private boolean directorySearch(String[] fileList, File fileDirectory) {
-		// store all names with same name
-        flist = directory.list();
-        if (flist == null) {
-        	System.out.println("Empty directory.");
-        	s = null;
-        }
-        else {
-      // Linear search in the array
-        	for (int i = 0; i < flist.length; i++) {
-        		String filename = flist[i];
-        		if (filename.equalsIgnoreCase(s + ".AT2")) {
-        			System.out.println(filename + " found!");
-        			return true;
-        		}
-        	}
-        }
-        if (!found) {
-        	System.err.println("COULD NOT FIND FILE " + s + ".AT2");
-        	System.err.println("Check directory.");
-        }
-        return false;
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text & AT2 files (.txt, .at2, .AT2)", "txt", "at2", "AT2");
+		chooser.setFileFilter(filter);
+		if(chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {
+			file = chooser.getSelectedFile();
+			String fileName = file.getName().substring(0, file.getName().indexOf('.'));
+			System.out.println(file.toString());
+			System.out.println(fileName);
+			fSelected = true;
+		}
+		return fSelected;
 	}
 	
 	public String referenceName() {
