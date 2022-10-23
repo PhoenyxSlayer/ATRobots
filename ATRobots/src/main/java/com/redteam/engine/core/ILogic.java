@@ -6,7 +6,7 @@ public interface ILogic {
 	
 	void input();
 	
-	void update(float interval, MouseInput mouseInput);
+	void update(double interval, MouseInput mouseInput);
 	
 	void render();
 	

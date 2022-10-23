@@ -72,9 +72,9 @@ public class TestGame implements ILogic{
 	
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
-	private static float MODEL_SPEED = 80.0f * Engine.currentFrameTime,
+	private static float MODEL_SPEED = 1.0f,
 						 CAMERA_STEP = 0.25f,
-						 BULLET_SPEED = 80.0f * Engine.currentFrameTime;
+						 BULLET_SPEED = 1.0f;
 	
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
@@ -366,9 +366,9 @@ public class TestGame implements ILogic{
 	}
 
 	@Override
-	public void update(float interval, MouseInput mouseInput) {
-		MODEL_SPEED = 80.0f * Engine.currentFrameTime;
-		BULLET_SPEED = 80.0f * Engine.currentFrameTime;
+	public void update(double interval, MouseInput mouseInput) {
+		MODEL_SPEED = (float) (80.0f * Engine.delta);
+		BULLET_SPEED = (float) (80.0f * Engine.delta);
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
 		}

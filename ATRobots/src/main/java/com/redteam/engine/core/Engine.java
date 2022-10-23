@@ -26,6 +26,9 @@ public class Engine {
 	private GLFWErrorCallback errorCallback;
 	private ILogic gameLogic;
 	
+	private static double lastFrame;
+	public static double delta = getDelta();
+	
 	private void init() throws Exception {
 		GLFW.glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		window = ATRobots.getWindow();
@@ -52,6 +55,7 @@ public class Engine {
 		double unprocessedTime = 0;
 			
 		while(isRunning) {	
+			delta = getDelta();
 			input();
 			boolean render = false;
 			long startTime = System.nanoTime();
@@ -118,5 +122,12 @@ public class Engine {
 	
 	public static void setFps(int fps) {
 		Engine.fps = fps;
+	}
+	
+	private static double getDelta() {
+		double currentTime = GLFW.glfwGetTime();
+		double delta = (double) currentTime - (double) lastFrame;
+		lastFrame = GLFW.glfwGetTime();
+		return delta;
 	}
 }
