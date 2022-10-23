@@ -125,9 +125,9 @@ public class Engine {
 	}
 	
 	private static double getDelta() {
-		double currentTime = GLFW.glfwGetTime();
+		double currentTime = GLFW.glfwGetTime() / 0.02f;
 		double delta = (double) currentTime - (double) lastFrame;
-		lastFrame = GLFW.glfwGetTime();
+		lastFrame = GLFW.glfwGetTime() / 0.02f;
 		return delta;
 	}
 }

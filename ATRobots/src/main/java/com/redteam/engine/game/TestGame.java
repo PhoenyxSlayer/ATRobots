@@ -367,8 +367,8 @@ public class TestGame implements ILogic{
 
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
-		MODEL_SPEED = (float) (80.0f * Engine.delta);
-		BULLET_SPEED = (float) (80.0f * Engine.delta);
+		MODEL_SPEED = (float) (1.0f * Engine.delta);
+		BULLET_SPEED = (float) (1.0f * Engine.delta);
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
