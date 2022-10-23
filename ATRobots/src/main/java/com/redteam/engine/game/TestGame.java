@@ -327,21 +327,21 @@ public class TestGame implements ILogic{
 			// TURRET ROTATION
 			turretAngle = entities.get(1).getRotation().y();
 			
-			if(window.isKeyPressed(GLFW.GLFW_KEY_UP))
+			if(window.isKeyPressed(GLFW.GLFW_KEY_I))
 				turretAngle = 180;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT))
+			if(window.isKeyPressed(GLFW.GLFW_KEY_J))
 				turretAngle = 270;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_RIGHT))
+			if(window.isKeyPressed(GLFW.GLFW_KEY_L))
 				turretAngle = 90;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_DOWN))
+			if(window.isKeyPressed(GLFW.GLFW_KEY_K))
 				turretAngle = 0;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) & window.isKeyPressed(GLFW.GLFW_KEY_LEFT)))
+			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
 				turretAngle = 225;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_UP) & window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)))
+			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_L)))
 				turretAngle = 135;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_RIGHT) & window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
+			if((window.isKeyPressed(GLFW.GLFW_KEY_L) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
 				turretAngle = 45;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_LEFT) & window.isKeyPressed(GLFW.GLFW_KEY_DOWN)))
+			if((window.isKeyPressed(GLFW.GLFW_KEY_J) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
 				turretAngle = 315;
 			entities.get(0).setRotation(0, turretAngle, 0);
 		} else {
