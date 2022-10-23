@@ -13,7 +13,10 @@ public class Consts {
 			Z_FAR = 1000f,
 			MOUSE_SENSITIVITY = 0.2f,
 			SPECULAR_POWER = 10f,
-			FPS = 1000;
+			CAMERA_STEP = 0.25f,
+			FPS = 1000,
+			MOVEMENT_SPEED = 1.5f,
+			BULLET_SPEED = 1.5f;
 
 	public static final int MAX_SPOT_LIGHTS = 5,
 							MAX_POINT_LIGHTS = 5,

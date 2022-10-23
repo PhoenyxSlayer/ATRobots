@@ -16,9 +16,8 @@ public class Engine {
 	public static final long NANOSECOND = 1000000000L;
 	
 	private static int fps;
-	public static final float framerate = Consts.FPS;
+	private static final float framerate = Consts.FPS;
 	private static float frametime = 1.0f / framerate;
-	public static float currentFrameTime = 0;
 	private boolean isRunning;
 	
 	private Window window;
@@ -27,7 +26,7 @@ public class Engine {
 	private ILogic gameLogic;
 	
 	private static double lastFrame;
-	public static double delta = getDelta();
+	private static double delta = getDelta();
 	
 	private void init() throws Exception {
 		GLFW.glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
@@ -75,7 +74,6 @@ public class Engine {
 				
 				if(frameCounter >= NANOSECOND) {
 					setFps(frames);
-					currentFrameTime = 1.0f/fps;
 					window.setTitle(Consts.TITLE + " Engine FPS: " + getFps());
 					frames = 0;
 					frameCounter = 0;
@@ -128,6 +126,10 @@ public class Engine {
 		double currentTime = GLFW.glfwGetTime() / 0.02f;
 		double delta = (double) currentTime - (double) lastFrame;
 		lastFrame = GLFW.glfwGetTime() / 0.02f;
+		return delta;
+	}
+	
+	public static double tick() {
 		return delta;
 	}
 }
