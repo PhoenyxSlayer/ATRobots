@@ -1,9 +1,0 @@
-!start
-	hello there
-	hi
-	bye
-	heelo
-!hello
-	bye
-	cya
-	good bye
