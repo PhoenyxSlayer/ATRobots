@@ -5,6 +5,8 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.redteam.engine.core.Window;
+
 public class Robot{
 	private String s;
 	private File file;
@@ -16,7 +18,8 @@ public class Robot{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JFileChooser chooser = new JFileChooser();
+		String userHome = System.getProperty("user.home");
+		JFileChooser chooser = new JFileChooser(""+userHome+"/Desktop");
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text & AT2 files (.txt, .at2, .AT2)", "txt", "at2", "AT2");
 		chooser.setFileFilter(filter);
 		if(chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {
