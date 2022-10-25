@@ -30,6 +30,7 @@ import com.redteam.engine.core.entity.Material;
 import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.entity.Texture;
 import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.gui.DebugGUI;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
@@ -37,6 +38,8 @@ import com.redteam.engine.core.rendering.RenderManager;
 import com.redteam.engine.utils.Consts;
 
 import images.image_parser;
+import imgui.ImGui;
+import imgui.flag.ImGuiConfigFlags;
 import sounds.Sound;
 
 public class TestGame implements ILogic{
@@ -66,13 +69,15 @@ public class TestGame implements ILogic{
 	
 	private static int bulletNumber,
 					   removedBullet = bulletNumber + 1,
-					   entityCount;
+					   entityCount,
+					   passedBullet = 0;
 	
 	private static float tankAngle = 0.0f,
 						 turretAngle = 0.0f,
 						 bulletAngle = 0.0f;
 	
-	private static Entity bulletEntity;
+	private static Entity bulletEntity,
+						  passedEntity;;
 	
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
@@ -82,6 +87,9 @@ public class TestGame implements ILogic{
 	
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
+	private static DebugGUI deleteBullet,
+							coordinates,
+							spectatorCheck;
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -91,7 +99,9 @@ public class TestGame implements ILogic{
 		cameraInc = new Vector3f(0,0,0);
 		cameraInc.set(0,0,0);
 		modelInc = new Vector3f(0,0,0);
-		
+		deleteBullet = new DebugGUI();
+		coordinates = new DebugGUI();
+		spectatorCheck = new DebugGUI();
 		return;
 	}
 	
@@ -130,6 +140,7 @@ public class TestGame implements ILogic{
 		addSound("src/main/resources/sounds/bloop_x.ogg", false);
 		
 		entityCount = entities.size();
+		
 		
 		return;
 	}
@@ -182,9 +193,8 @@ public class TestGame implements ILogic{
 				
 				if((entities.get(bullet).getPos().x < -Consts.X_BORDER || entities.get(bullet).getPos().x > Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z < -Consts.Z_BORDER || entities.get(bullet).getPos().z > 0)) {
-					System.out.println("BULLET <" + bullet + "> BEING REMOVED AT <" + entities.get(bullet).getPos().x + ", "
-							+ entities.get(bullet).getPos().y + ", "
-							+ entities.get(bullet).getPos().z + ">");
+					passedBullet = bullet;
+					passedEntity = entities.get(bullet);
 					bulletInside = false;
 					entities.remove(bullet);
 					removedBullet = bullet;
@@ -248,10 +258,8 @@ public class TestGame implements ILogic{
 					GLFW.glfwSetWindowShouldClose(window, true);
 					return;
 				}
-				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS) {
+				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS)
 					spectator = spectator ? false: true;
-					System.out.println("SPECTATOR: " + spectator);
-				}
 					
 				if(!spectator) {
 					if(key == GLFW.GLFW_KEY_SPACE && action == GLFW.GLFW_PRESS) {
@@ -379,12 +387,39 @@ public class TestGame implements ILogic{
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
 				cameraInc.y = tankSpeed;
 		}
-		
 		return;
 	}
 
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
+		// GUI Updates
+		window.imGuiGlfw.newFrame();
+		ImGui.newFrame();
+		
+		if(passedBullet >= 2)
+			deleteBullet.passDeletedBullet(passedBullet, passedEntity);
+			
+		passedBullet = 0;
+		deleteBullet.showBulletDebug();
+		
+		coordinates.coords(getPositionX(),getPositionY(),getPositionZ());
+		
+		spectatorCheck.spectator(spectator);
+		
+		ImGui.render();
+		window.imGuiGl3.renderDrawData(ImGui.getDrawData());
+			if(ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+				final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+				ImGui.updatePlatformWindows();
+				ImGui.renderPlatformWindowsDefault();
+				GLFW.glfwMakeContextCurrent(backupWindowPtr);
+		}
+			
+			GLFW.glfwSwapBuffers(window.getWindowHandle());
+			// Tells OpenGL to start rendering all the objects put in a queue
+			GLFW.glfwPollEvents();
+		
+		
 		if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT))
 			tankSpeed = ((float) (Consts.MOVEMENT_SPEED * tick()) * 3);
 		else
@@ -440,7 +475,6 @@ public class TestGame implements ILogic{
 		return entities.get(1).getPos().x;
 	}
 	
-	@SuppressWarnings("unused")
 	private static float getPositionY() {
 		return entities.get(1).getPos().y;
 	}
