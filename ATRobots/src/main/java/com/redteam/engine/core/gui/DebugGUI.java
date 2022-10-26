@@ -1,29 +1,67 @@
 package com.redteam.engine.core.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.redteam.engine.core.entity.Entity;
 
 import imgui.ImGui;
 
 public class DebugGUI {
-	private String totalBulletsRemoved = "";
+	private HashMap<Integer, String> totalBulletsRemoved = new HashMap<Integer, String>(),
+						 totalBulletAngles = new HashMap<Integer, String>();
+	
+	private String currTotalBulletsRemoved,
+				   currTotalBulletAngles;
+	
 	public void init() {
 		return;
 	}
 	
 	public void passDeletedBullet(int bullet, Entity entity) {
-		totalBulletsRemoved += "BULLET <" + bullet + "> BEING REMOVED AT <" + entity.getPos().x + ", "
-				+ entity.getPos().y + ", "
-				+ entity.getPos().z + ">\n";
+		totalBulletsRemoved.clear();
+		totalBulletsRemoved.put(bullet, "BULLET <" + bullet + "> BEING REMOVED AT <"
+								+ entity.getPos().x + ", "
+								+ entity.getPos().y + ", "
+								+ entity.getPos().z + ">\n");
 		return;
 	}
 	
-	public void showBulletDebug() {
-		if(totalBulletsRemoved != "") {
+	public void passBulletAngle(int bullet, float bulletAngle, Entity entity) {
+		totalBulletAngles.put(bullet, "BULLET <" + bullet + "> AT "
+							  + entity.getPos().x + ", "
+						 	  + entity.getPos().y + ", "
+						 	  + entity.getPos().z + "> "
+						 	  + " AT ANGLE " + bulletAngle + "\n");
+		return;
+	}
+	
+	public void showDeletedBulletDebug() {
+		if(!totalBulletsRemoved.isEmpty()) {
 			ImGui.begin("BULLET DEBUG");
-			ImGui.text(totalBulletsRemoved);
+			for(Map.Entry<Integer, String> set :
+				totalBulletsRemoved.entrySet()) {
+				currTotalBulletsRemoved += set.getValue();
+			}
+			ImGui.text(currTotalBulletsRemoved);
+			currTotalBulletsRemoved = "";
 			ImGui.end();
 		}
 		return;
+	}
+	
+	public void showBulletAngleDebug() {
+		if(!totalBulletAngles.isEmpty()) {
+			ImGui.begin("BULLET ANGLE DEBUG");
+			for(Map.Entry<Integer, String> set :
+				totalBulletAngles.entrySet()) {
+				currTotalBulletAngles += set.getValue();
+			}
+			ImGui.text(currTotalBulletAngles);
+			currTotalBulletAngles = "";
+			ImGui.end();
+		} else {
+		}
 	}
 
 	
