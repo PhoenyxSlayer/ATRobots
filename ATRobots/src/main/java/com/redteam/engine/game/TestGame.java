@@ -137,10 +137,13 @@ public class TestGame implements ILogic{
 		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
 		camera.setRotation(90f, 0f, 0f);
 		
+		addSound("src/main/resources/sounds/bullet.ogg", false);
 		addSound("src/main/resources/sounds/bloop_x.ogg", false);
-		
+		addSound("src/main/resources/sounds/tankIdle.ogg", true);
+		addSound("src/main/resources/sounds/tankMove.ogg", true);
+		getSound("src/main/resources/sounds/tankIdle.ogg").play();
+	
 		entityCount = entities.size();
-		
 		
 		return;
 	}
@@ -154,6 +157,20 @@ public class TestGame implements ILogic{
 	}
 	
 	private static void turretDirect() {
+		//Sound Implementation
+		if(!spectator) {
+			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)){
+				getSound("src/main/resources/sounds/bullet.ogg").play();
+			}
+			if(window.isKeyPressed(GLFW.GLFW_KEY_W) || window.isKeyPressed(GLFW.GLFW_KEY_A) || window.isKeyPressed(GLFW.GLFW_KEY_S) || window.isKeyPressed(GLFW.GLFW_KEY_D)) {
+				getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+				getSound("src/main/resources/sounds/tankMove.ogg").play();	
+			}
+			else if(!window.isKeyPressed(GLFW.GLFW_KEY_W) && !window.isKeyPressed(GLFW.GLFW_KEY_A) && !window.isKeyPressed(GLFW.GLFW_KEY_S) && !window.isKeyPressed(GLFW.GLFW_KEY_D)) {
+				getSound("src/main/resources/sounds/tankMove.ogg").stop();
+				getSound("src/main/resources/sounds/tankIdle.ogg").play();
+			}
+		}
 		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
@@ -298,7 +315,7 @@ public class TestGame implements ILogic{
 						bulletEntity = new Entity(bulletModel, new Vector3f(x,2.55f,z), new Vector3f(0,turretAngle - 90,-90), 1);
 						bulletNumber = entities.size();
 						entities.add(bulletNumber, bulletEntity);
-						bulletInside = true;
+						bulletInside = true;	
 					}
 				}
 		});
