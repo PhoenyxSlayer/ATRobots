@@ -69,15 +69,19 @@ public class TestGame implements ILogic{
 	
 	private static int bulletNumber,
 					   removedBullet = bulletNumber + 1,
-					   entityCount,
-					   passedBullet = 0;
+					   passDeletedBulletNum = 0,
+					   passBulletAngleNum = 0;
+	
+	public static int entityCount;
 	
 	private static float tankAngle = 0.0f,
 						 turretAngle = 0.0f,
-						 bulletAngle = 0.0f;
+						 bulletAngle = 0.0f,
+						 passBulletAngle = 0.0f;
 	
 	private static Entity bulletEntity,
-						  passedEntity;;
+						  passDeletedBulletEntity,
+						  passBulletAngleEntity;
 	
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
@@ -88,6 +92,7 @@ public class TestGame implements ILogic{
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
 	private static DebugGUI deleteBullet,
+							angleBullet,
 							coordinates,
 							spectatorCheck;
 	
@@ -100,6 +105,7 @@ public class TestGame implements ILogic{
 		cameraInc.set(0,0,0);
 		modelInc = new Vector3f(0,0,0);
 		deleteBullet = new DebugGUI();
+		angleBullet = new DebugGUI();
 		coordinates = new DebugGUI();
 		spectatorCheck = new DebugGUI();
 		return;
@@ -173,11 +179,18 @@ public class TestGame implements ILogic{
 		}
 		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
+				
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
-				System.out.println("BULLET <" + bullet + "> AT " + entities.get(bullet).getPos().x + ", "
-																 + entities.get(bullet).getPos().y + ", "
-																 + entities.get(bullet).getPos().z + "> "
-																 + " AT ANGLE " + bulletAngle);
+				
+				// passBulletAngleEntity -> angleBullet(debug menu)
+				passBulletAngleEntity = entities.get(bullet);
+				
+				// passBulletAngle -> angleBullet(debug menu)
+				passBulletAngle = bulletAngle;
+				
+				// passBulletAngleNum -> angleBullet(debug menu)
+				passBulletAngleNum = bullet;
+				
 				switch((int)bulletAngle) {
 					case 0:
 						entities.get(bullet).incPos(0, 0, bulletSpeed);
@@ -210,8 +223,10 @@ public class TestGame implements ILogic{
 				
 				if((entities.get(bullet).getPos().x < -Consts.X_BORDER || entities.get(bullet).getPos().x > Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z < -Consts.Z_BORDER || entities.get(bullet).getPos().z > 0)) {
-					passedBullet = bullet;
-					passedEntity = entities.get(bullet);
+					// passDeletedBulletNum -> deleteBullet(debug menu)
+					passDeletedBulletNum = bullet;
+					// passDeletedBulletEntity -> deleteBullet(debug menu)
+					passDeletedBulletEntity = entities.get(bullet);
 					bulletInside = false;
 					entities.remove(bullet);
 					removedBullet = bullet;
@@ -413,11 +428,21 @@ public class TestGame implements ILogic{
 		window.imGuiGlfw.newFrame();
 		ImGui.newFrame();
 		
-		if(passedBullet >= 2)
-			deleteBullet.passDeletedBullet(passedBullet, passedEntity);
+		if(passBulletAngleNum >= entityCount) {
+			angleBullet.passBulletAngle(passBulletAngleNum, passBulletAngle, passBulletAngleEntity);
 			
-		passedBullet = 0;
-		deleteBullet.showBulletDebug();
+		}
+		passBulletAngleNum = 0;
+		passBulletAngle = 0.0f;
+		
+		if(passDeletedBulletNum >= entityCount)
+			deleteBullet.passDeletedBullet(passDeletedBulletNum, passDeletedBulletEntity);
+		
+		passDeletedBulletNum = 0;
+		
+		
+		angleBullet.showBulletAngleDebug();
+		deleteBullet.showDeletedBulletDebug();
 		
 		coordinates.coords(getPositionX(),getPositionY(),getPositionZ());
 		
