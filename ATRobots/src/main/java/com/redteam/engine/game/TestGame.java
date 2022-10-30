@@ -96,6 +96,8 @@ public class TestGame implements ILogic{
 							coordinates,
 							spectatorCheck;
 	
+	private static boolean moving = false;
+	
 	public TestGame() {
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
@@ -162,21 +164,7 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	private static void turretDirect() {
-		//Sound Implementation
-		if(!spectator) {
-			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE)){
-				getSound("src/main/resources/sounds/bullet.ogg").play();
-			}
-			if(window.isKeyPressed(GLFW.GLFW_KEY_W) || window.isKeyPressed(GLFW.GLFW_KEY_A) || window.isKeyPressed(GLFW.GLFW_KEY_S) || window.isKeyPressed(GLFW.GLFW_KEY_D)) {
-				getSound("src/main/resources/sounds/tankIdle.ogg").stop();
-				getSound("src/main/resources/sounds/tankMove.ogg").play();	
-			}
-			else if(!window.isKeyPressed(GLFW.GLFW_KEY_W) && !window.isKeyPressed(GLFW.GLFW_KEY_A) && !window.isKeyPressed(GLFW.GLFW_KEY_S) && !window.isKeyPressed(GLFW.GLFW_KEY_D)) {
-				getSound("src/main/resources/sounds/tankMove.ogg").stop();
-				getSound("src/main/resources/sounds/tankIdle.ogg").play();
-			}
-		}
+	private static void shootBullets() {
 		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
 				
@@ -240,7 +228,9 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	private static void borderCheck(float x, float z) {
+	private static void borderCheck() {
+		float x = getPositionX();
+		float z = getPositionZ();
 		if((x < -Consts.X_BORDER) || (x > Consts.X_BORDER)
 		 ||(z < -Consts.Z_BORDER) || (z > 0)){
 			pushBack = tankSpeed / 4;	
@@ -327,6 +317,8 @@ public class TestGame implements ILogic{
 								z += 3.2f;
 								break;
 						}
+						getSound("src/main/resources/sounds/bullet.ogg").stop();
+						getSound("src/main/resources/sounds/bullet.ogg").play();
 						bulletEntity = new Entity(bulletModel, new Vector3f(x,2.55f,z), new Vector3f(0,turretAngle - 90,-90), 1);
 						bulletNumber = entities.size();
 						entities.add(bulletNumber, bulletEntity);
@@ -339,45 +331,58 @@ public class TestGame implements ILogic{
 			cameraSpeed = Consts.CAMERA_STEP;
 			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
 			camera.setRotation(90, 0, 0);
-			
-			
-			
+			moving = false;
 			// TANK MOVEMENT + ROTATION
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
+				moving = true;
 				tankAngle = 180;
 				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
+				moving = true;
 				tankAngle = 270;
 				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
+				moving = true;
 				tankAngle = 0;
 				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
+				moving = true;
 				tankAngle = 90;
 				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
 			}
 			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+				moving = true;
 				tankAngle = 225;
 				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
 				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
 			}
 			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+				moving = true;
 				tankAngle = 135;
 				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
 				cameraInc.x =  tankSpeed; modelInc.x = tankSpeed;
 			}
 			if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+				moving = true;
 				tankAngle = 45;
 				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
 				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
 			}
 			if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+				moving = true;
 				tankAngle = 315;
 				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
 				cameraInc.z =  tankSpeed; modelInc.z = tankSpeed;
+			}
+			if(moving) {
+				getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+				getSound("src/main/resources/sounds/tankMove.ogg").play();
+			} else {
+				getSound("src/main/resources/sounds/tankMove.ogg").stop();
+				getSound("src/main/resources/sounds/tankIdle.ogg").play();
 			}
 			entities.get(0).setRotation(0, tankAngle, 0);
 			entities.get(1).setRotation(0, tankAngle, 0);
@@ -491,8 +496,8 @@ public class TestGame implements ILogic{
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
 		
-		turretDirect();
-		borderCheck(getPositionX(),getPositionZ());
+		shootBullets();
+		borderCheck();
 		
 		return;
 	}
