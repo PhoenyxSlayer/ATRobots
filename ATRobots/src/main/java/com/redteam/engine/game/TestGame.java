@@ -98,6 +98,8 @@ public class TestGame implements ILogic{
 	
 	private static boolean moving = false;
 	
+	//private static HitBox hitBox = new HitBox(new Vector3f(0f, 1.3f, -75f), 10f, 5f, 10f);
+	
 	public TestGame() {
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
@@ -134,6 +136,8 @@ public class TestGame implements ILogic{
 		entities = new ArrayList<>();
 		entities.add(new Entity(tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
 		
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
