@@ -26,6 +26,7 @@ import com.redteam.engine.core.MouseInput;
 import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
+import com.redteam.engine.core.entity.HitBox;
 import com.redteam.engine.core.entity.Material;
 import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.entity.Texture;
@@ -96,6 +97,9 @@ public class TestGame implements ILogic{
 							coordinates,
 							spectatorCheck;
 	
+	private static HitBox robotHitBox;
+	private static HitBox robotNPCHitBox;
+	
 	private static boolean moving = false;
 	
 	//private static HitBox hitBox = new HitBox(new Vector3f(0f, 1.3f, -75f), 10f, 5f, 10f);
@@ -138,6 +142,9 @@ public class TestGame implements ILogic{
 		entities.add(new Entity(tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
+		
+		robotHitBox = new HitBox(entities.get(0), 5f);
+		robotNPCHitBox = new HitBox(entities.get(2), 5f);
 		
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
@@ -213,6 +220,7 @@ public class TestGame implements ILogic{
 						break;
 				}
 				
+				
 				if((entities.get(bullet).getPos().x < -Consts.X_BORDER || entities.get(bullet).getPos().x > Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z < -Consts.Z_BORDER || entities.get(bullet).getPos().z > 0)) {
 					// passDeletedBulletNum -> deleteBullet(debug menu)
@@ -222,6 +230,18 @@ public class TestGame implements ILogic{
 					bulletInside = false;
 					entities.remove(bullet);
 					removedBullet = bullet;
+					continue;
+				}
+				
+				if(robotNPCHitBox.passThrough(entities.get(bullet))) {
+					// passDeletedBulletNum -> deleteBullet(debug menu)
+					passDeletedBulletNum = bullet;
+					// passDeletedBulletEntity -> deleteBullet(debug menu)
+					passDeletedBulletEntity = entities.get(bullet);
+					bulletInside = false;
+					entities.remove(bullet);
+					removedBullet = bullet;
+					continue;
 				}
 			}
 			else {
@@ -465,18 +485,36 @@ public class TestGame implements ILogic{
 				ImGui.renderPlatformWindowsDefault();
 				GLFW.glfwMakeContextCurrent(backupWindowPtr);
 		}
-			
-			GLFW.glfwSwapBuffers(window.getWindowHandle());
-			// Tells OpenGL to start rendering all the objects put in a queue
-			GLFW.glfwPollEvents();
+		GLFW.glfwSwapBuffers(window.getWindowHandle());
+		// Tells OpenGL to start rendering all the objects put in a queue
+		GLFW.glfwPollEvents();
 		
+		// Tank Speed
 		
 		if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT))
 			tankSpeed = ((float) (Consts.MOVEMENT_SPEED * tick()) * 3);
 		else
 			tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick());
 		
+		// Bullet Speed
+		
 		bulletSpeed = (float) (Consts.BULLET_SPEED * tick());
+		
+		// HitBox Updates
+		
+		robotHitBox.updateHitBox(entities.get(0));
+		robotNPCHitBox.updateHitBox(entities.get(2));
+		
+		if(robotHitBox.passThrough(robotNPCHitBox)) {
+			setTankPos(0, 0);
+		};
+		
+		// Calculates bullets on map and allows for their deletion
+		shootBullets();
+		
+		// Checks if tank is on map
+		borderCheck();
+		
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
@@ -484,24 +522,28 @@ public class TestGame implements ILogic{
 		for(Terrain terrain : terrains) {
 			renderer.processTerrain(terrain);
 		}
+		
+		// Camera Updates
+		
 		camera.movePosition(cameraInc.x * cameraSpeed,
 	  						cameraInc.y * cameraSpeed,
 	  						cameraInc.z * cameraSpeed);
 
+		// Entity moving by Camera Speed
+		
 		entities.get(0).incPos(modelInc.x * cameraSpeed,
 							   modelInc.y * cameraSpeed,
 							   modelInc.z * cameraSpeed);
 		entities.get(1).incPos(modelInc.x * cameraSpeed,
 							   modelInc.y * cameraSpeed,
 							   modelInc.z * cameraSpeed);
-
+		
+		// Spectator Camera Rotation (Using Right Click)
+		
 		if(mouseInput.isRightButtonPress() && spectator) {
 			Vector2f rotVec = mouseInput.getDisplVec();
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
-		
-		shootBullets();
-		borderCheck();
 		
 		return;
 	}
