@@ -233,15 +233,20 @@ public class TestGame implements ILogic{
 					continue;
 				}
 				
-				if(robotNPCHitBox.passThrough(entities.get(bullet))) {
-					// passDeletedBulletNum -> deleteBullet(debug menu)
-					passDeletedBulletNum = bullet;
-					// passDeletedBulletEntity -> deleteBullet(debug menu)
-					passDeletedBulletEntity = entities.get(bullet);
-					bulletInside = false;
-					entities.remove(bullet);
-					removedBullet = bullet;
-					continue;
+				try {
+					if(robotNPCHitBox.passThrough(new HitBox(entities.get(bullet), 1f))) {
+						// passDeletedBulletNum -> deleteBullet(debug menu)
+						passDeletedBulletNum = bullet;
+						// passDeletedBulletEntity -> deleteBullet(debug menu)
+						passDeletedBulletEntity = entities.get(bullet);
+						bulletInside = false;
+						entities.remove(bullet);
+						removedBullet = bullet;
+						continue;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			else {

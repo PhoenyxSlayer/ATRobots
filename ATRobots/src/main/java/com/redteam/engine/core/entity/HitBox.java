@@ -120,7 +120,7 @@ public class HitBox {
 		}
 		if(collide) {
 			System.out.println("BOX COLLISION AT X: " + getEntity().getPos().x + " Y: " + getEntity().getPos().y + " Z: " + getEntity().getPos().z +
-							   "\nWITH ENTITY AT X: " + box.getEntity().getPos().x + " Y: " + box.getEntity().getPos().y + " Z: " + box.getEntity().getPos().z);
+							   "\nWITH ENTITY: " + box.getEntity());
 			return true;
 		}
 		return false;
