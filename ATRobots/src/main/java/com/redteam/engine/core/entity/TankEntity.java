@@ -190,7 +190,7 @@ public class TankEntity extends HittableEntity {
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 				tankAngle = 315;
-				movement.x = -tankSpeed;					// MOVES DOWN-LEFT
+				movement.x = -tankSpeed;				// MOVES DOWN-LEFT
 				movement.z = tankSpeed;
 			}
 
