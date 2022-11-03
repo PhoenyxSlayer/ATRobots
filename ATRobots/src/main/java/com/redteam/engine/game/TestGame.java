@@ -174,8 +174,8 @@ public class TestGame implements ILogic{
 		for(Entity entity : entities) {
 			if(entity instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
-				renderer.processEntity(new Entity("tankBot", ((TankEntity) entity).getBase(), ((TankEntity) entity).getBasePos(), ((TankEntity) entity).getBaseRotation(), 1f));
-				renderer.processEntity(new Entity("tankTop", ((TankEntity) entity).getTop(), ((TankEntity) entity).getTurretPos(), ((TankEntity) entity).getTurretRotation(), 1f));
+				renderer.processEntity(new Entity("tankBot", ((TankEntity) entity).getBase(), ((TankEntity) entity).getPos(), ((TankEntity) entity).getBaseRotation(), 1f));
+				renderer.processEntity(new Entity("tankTop", ((TankEntity) entity).getTop(), ((TankEntity) entity).getPos(), ((TankEntity) entity).getTurretRotation(), 1f));
 			} else {
 				renderer.processEntity(entity);
 			}
@@ -205,11 +205,19 @@ public class TestGame implements ILogic{
 	}
 
 	public void addEntity(Entity ent) {
-		entities.add(ent); // add the entity to a set of entities
+		entities.add(ent);	 // add the entity to a set of entities
+	}
+	
+	public void removeEntity(Entity ent) {
+		entities.remove(ent); // remove the entity to a set of entities
 	}
 
 	public void addTerrain(Terrain ent) {
-		terrains.add(ent); // add the terrain to a set of terrains
+		terrains.add(ent);	 // add the terrain to a set of terrains
+	}
+	
+	public void removeTerrain(Terrain ent) {
+		terrains.add(ent);	 // remove the terrain to a set of terrains
 	}
 
 	public void gameTick() {

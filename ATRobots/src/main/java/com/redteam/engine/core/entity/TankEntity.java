@@ -9,81 +9,32 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Vector3f;
 
-
-
 public class TankEntity extends HittableEntity {
-	private Model[] tank;
-	private Vector3f basePosition,
-					 baseRotation,
-					 turretPositon,
+	
+	private Vector3f baseRotation,
 					 turretRotation = new Vector3f(0,0,0);
 
-	private float tankAngle,
-				  turretAngle;
 	private Model top, base;
 
 	private float tankSpeed = (float)(MOVEMENT_SPEED * Engine.tick());
-
-	private Vector3f movement = new Vector3f(0,0,0);
 
 	public TankEntity(String id, Model top, Model base, Vector3f basePosition, Vector3f baseRotation, float scale, float hitboxScale) {
 		super(id, base, basePosition, baseRotation, scale, hitboxScale);
 		this.top = top;
 		this.base = base;
-		this.basePosition = basePosition;
 		this.baseRotation = baseRotation;
-		turretPositon = basePosition;
-		tank = new Model[] {top, base};
 	}
-
-	public void incPos(float x, float y, float z) {
-        incBasePosition(x,y,z);
-		incTurretPosition(x,y,z);
-	}
-
-	public void setPos(float x, float y, float z) {
-        setBasePosition(x,y,z);
-		setTurretPosition(x,y,z);
-	}
-
+	
+	@Override
 	public void incRotation(float x, float y, float z) {
         incBaseRotation(x,y,z);
 		incTurretRotation(x,y,z);
 	}
-
+	
+	@Override
 	public void setRotation(float x, float y, float z) {
         setBaseRotation(x,y,z);
 		setTurretRotation(x,y,z);
-	}
-
-	// BASE + TURRET POSITION
-
-	// BASE OF TANK POSITION BEING INCREMENTING
-	public void incBasePosition(float x, float y, float z) {
-		this.basePosition.x += x;
-		this.basePosition.y += y;
-		this.basePosition.z += z;
-	}
-
-	// BASE OF TANK POSITION BEING SET
-	public void setBasePosition(float x, float y, float z) {
-		this.basePosition.x = x;
-		this.basePosition.y = y;
-		this.basePosition.z = z;
-	}
-
-	// TURRET OF TANK POSITION BEING INCREMENTING
-	public void incTurretPosition(float x, float y, float z) {
-		this.turretPositon.x += x;
-		this.turretPositon.y += y;
-		this.turretPositon.z += z;
-	}
-	
-	// TURRET OF TANK POSITION BEING SET
-	public void setTurretPosition(float x, float y, float z) {
-		this.turretPositon.x = x;
-		this.turretPositon.y = y;
-		this.turretPositon.z = z;
 	}
 
 	// BASE + TURRET ROTATION
@@ -94,19 +45,19 @@ public class TankEntity extends HittableEntity {
 		this.baseRotation.y += y;
 		this.baseRotation.z += z;
 	}
+	
+	// TURRET OF TANK ROTATION BEING INCREMENTING
+	public void incTurretRotation(float x, float y, float z) {
+		this.turretRotation.x += x;
+		this.turretRotation.y += y;
+		this.turretRotation.z += z;
+	}
 
 	// BASE OF TANK ROTATION BEING SET
 	public void setBaseRotation(float x, float y, float z) {
 		this.baseRotation.x = x;
 		this.baseRotation.y = y;
 		this.baseRotation.z = z;
-	}
-
-	// TURRET OF TANK ROTATION BEING INCREMENTING
-	public void incTurretRotation(float x, float y, float z) {
-		this.turretRotation.x += x;
-		this.turretRotation.y += y;
-		this.turretRotation.z += z;
 	}
 	
 	// TURRET OF TANK ROTATION BEING SET
@@ -116,10 +67,6 @@ public class TankEntity extends HittableEntity {
 		this.turretRotation.z = z;
 	}
 	
-	public Model[] getTankModels() {
-		return tank;
-	}
-	
 	public Model getTop() {
 		return top;
 	}
@@ -127,15 +74,7 @@ public class TankEntity extends HittableEntity {
 	public Model getBase() {
 		return base;
 	}
-
-	public Vector3f getBasePos() {
-		return basePosition;
-	}
-
-	public Vector3f getTurretPos() {
-		return turretPositon;
-	}
-
+	
 	public Vector3f getBaseRotation() {
 		return baseRotation;
 	}
@@ -147,6 +86,12 @@ public class TankEntity extends HittableEntity {
 	public void gameTick() {
 		// TODO
 	}
+	
+	
+	private Vector3f movement = new Vector3f(0,0,0);
+	
+	private float tankAngle,
+	  			  turretAngle;
 
 	public void debugGameTick() {
 		if(!TestGame.getSpectator()) {
@@ -222,7 +167,7 @@ public class TankEntity extends HittableEntity {
 
 			setTurretRotation(0, turretAngle, 0);
 
-			TestGame.camera.setPosition(getBasePos().x, getBasePos().y + 50f, getBasePos().z);
+			TestGame.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
 			// TODO
 		}
 	}
