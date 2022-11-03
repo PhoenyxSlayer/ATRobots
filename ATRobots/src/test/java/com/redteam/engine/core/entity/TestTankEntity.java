@@ -86,7 +86,7 @@ class TestTankEntity {
 		assertEquals(1.0f, tank.getRotation().y, 0.01f);
 		assertEquals(23.0f, tank.getRotation().z, 0.01f);
 		
-		// SPECIAL TO ROTATIONPOS
+		// SPECIAL TO INCROTATION
 		tank.incRotation(30.0f, 20.0f, 1.0f);
 				
 		assertEquals(40.0f, tank.getRotation().x, 0.01f);
