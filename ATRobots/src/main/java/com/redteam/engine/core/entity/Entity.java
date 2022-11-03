@@ -4,11 +4,13 @@ import org.joml.Vector3f;
 
 public class Entity {
 
+	private String id;
     private Model model;
     private Vector3f pos, rotation;
     private float scale;
-
-    public Entity(Model model, Vector3f pos, Vector3f rotation, float scale) {
+    
+    public Entity(String id, Model model, Vector3f pos, Vector3f rotation, float scale) {
+    	this.id = id;
         this.model = model;
         this.pos = pos;
         this.rotation = rotation;
@@ -37,6 +39,10 @@ public class Entity {
         this.rotation.x = x;
         this.rotation.y = y;
         this.rotation.z = z;
+    }
+    
+    public String getID() {
+    	return id;
     }
 
     public Model getModel() {

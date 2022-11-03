@@ -138,13 +138,10 @@ public class TestGame implements ILogic{
 		terrains.add(terrain);
 
 		entities = new ArrayList<>();
-		entities.add(new Entity(tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
-		entities.add(new Entity(tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
-		entities.add(new Entity(tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
-		entities.add(new Entity(tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
-		
-		robotHitBox = new HitBox(entities.get(0), 5f);
-		robotNPCHitBox = new HitBox(entities.get(2), 5f);
+		entities.add(new Entity("TankTop", tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1, 5f));
+		entities.add(new Entity("TankBottom", tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1, 5f));
+		entities.add(new Entity("DummyTankTop", tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1, 5f));
+		entities.add(new Entity("DummyTankBottom", tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1, 5f));
 		
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
