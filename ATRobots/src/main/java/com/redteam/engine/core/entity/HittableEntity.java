@@ -109,4 +109,11 @@ public class HittableEntity extends Entity {
 		return hitboxScale;
 	}
 
+	public void gameTick() {
+		// TODO
+	}
+
+	public void debugGameTick() {
+		// TODO
+    }
 }

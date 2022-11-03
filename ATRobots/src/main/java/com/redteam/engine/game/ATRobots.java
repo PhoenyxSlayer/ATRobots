@@ -7,7 +7,7 @@ import com.redteam.engine.core.entity.Robot;
 
 public class ATRobots {
 	private static Robot robotName = new Robot();
-	private static Window window;
+	public static Window window;
 	private static TestGame game;
 	
 

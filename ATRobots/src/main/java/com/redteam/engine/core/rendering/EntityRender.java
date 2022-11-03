@@ -66,6 +66,25 @@ public class EntityRender implements IRenderer {
     }
 
     @Override
+    public void render(Camera camera, DirectionalLight directionalLight) {
+        shader.bind();
+        shader.setUniform("projectionMatrix", ATRobots.getWindow().updateProjectionMatrix());
+        RenderManager.renderLights(directionalLight, shader);
+        for(Model model : entities.keySet()) {
+            bind(model);
+            List<Entity> entityList = entities.get(model);
+            for(Entity entity : entityList) {
+                prepare(entity, camera);
+                GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+            }
+            unbind();
+        }
+        entities.clear();
+        shader.unbind();
+    }
+
+
+    @Override
     public void bind(Model model) {
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);

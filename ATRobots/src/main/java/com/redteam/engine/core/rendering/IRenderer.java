@@ -13,6 +13,8 @@ public interface IRenderer<T> {
     public void render(Camera camera, PointLight[] pointLights, SpotLight[] spotLights,
                        DirectionalLight directionalLight);
 
+    public void render(Camera camera, DirectionalLight directionalLight);
+
     abstract void bind(Model model);
 
     public void unbind();

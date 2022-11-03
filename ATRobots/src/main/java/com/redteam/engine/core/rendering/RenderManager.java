@@ -50,6 +50,12 @@ public class RenderManager {
 		}
 		shader.setUniform("directionalLight", directionalLight);
 	}
+
+	public static void renderLights(DirectionalLight directionalLight, Shader shader) {
+		shader.setUniform("ambientLight", Consts.AMBIENT_LIGHT);
+		shader.setUniform("specularPower", Consts.SPECULAR_POWER);
+		shader.setUniform("directionalLight", directionalLight);
+	}
 	
 	public void render(Camera camera, DirectionalLight directionalLight, PointLight[] pointLights, SpotLight[] spotLights) {
 		clear();
@@ -61,6 +67,18 @@ public class RenderManager {
 
 		entityRenderer.render(camera, pointLights, spotLights, directionalLight);
 		terrainRenderer.render(camera, pointLights, spotLights, directionalLight);
+	}
+
+	public void render(Camera camera, DirectionalLight directionalLight) {
+		clear();
+
+		if(window.isResize()) {
+			glViewport(0, 0, window.getWidth(), window.getHeight());
+			window.setResize(true);
+		}
+
+		entityRenderer.render(camera, directionalLight);
+		terrainRenderer.render(camera, directionalLight);
 	}
 
 	public void processEntity(Entity entity) {

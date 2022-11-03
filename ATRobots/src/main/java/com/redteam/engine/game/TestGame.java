@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -26,9 +28,9 @@ import com.redteam.engine.core.MouseInput;
 import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
-import com.redteam.engine.core.entity.HitBox;
 import com.redteam.engine.core.entity.Material;
 import com.redteam.engine.core.entity.Model;
+import com.redteam.engine.core.entity.TankEntity;
 import com.redteam.engine.core.entity.Texture;
 import com.redteam.engine.core.entity.terrain.Terrain;
 import com.redteam.engine.core.gui.DebugGUI;
@@ -48,510 +50,146 @@ public class TestGame implements ILogic{
 	private final RenderManager renderer;
 	private final ObjectLoader loader;
 
-	private static List<Entity> entities;
-	private List<Terrain> terrains;
+	public Set<Entity> entities = new HashSet<Entity>();
+	public Set<Terrain> terrains = new HashSet<Terrain>();
 
-	private Camera camera;
+	public static Camera camera;
 
 	private DirectionalLight directionalLight;
-	private PointLight[] pointLights;
-	private SpotLight[] spotLights;
-	
-	private float cameraSpeed;
 
-	Vector3f cameraInc, modelInc;
+	private Vector3f cameraInc = new Vector3f(0,0,0);;
 	
 	public static Window window;
 	
-	public static Model tankTopModel, tankBotModel, bulletModel;
+	public static Model tankTopModel, tankBotModel;
 	
-	private static boolean spectator = false,
-						   bulletInside;
+	private static boolean spectator = false;
 	
-	private static int bulletNumber,
-					   removedBullet = bulletNumber + 1,
-					   passDeletedBulletNum = 0,
-					   passBulletAngleNum = 0;
+	private static int bulletNumber;
 	
 	public static int entityCount;
-	
-	private static float tankAngle = 0.0f,
-						 turretAngle = 0.0f,
-						 bulletAngle = 0.0f,
-						 passBulletAngle = 0.0f;
-	
+
 	private static Entity bulletEntity,
 						  passDeletedBulletEntity,
 						  passBulletAngleEntity;
 	
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
-	private static float tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick()),
-						 bulletSpeed = (float) (Consts.BULLET_SPEED * tick()),
-						 pushBack;
+	private float cameraSpeed = (float)((Consts.CAMERA_STEP) * tick());
 	
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
-	
-	private static DebugGUI deleteBullet,
-							angleBullet,
-							coordinates,
-							spectatorCheck;
-	
-	private static HitBox robotHitBox;
-	private static HitBox robotNPCHitBox;
-	
-	private static boolean moving = false;
-	
-	//private static HitBox hitBox = new HitBox(new Vector3f(0f, 1.3f, -75f), 10f, 5f, 10f);
 	
 	public TestGame() {
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
 		loader = new ObjectLoader();
 		camera = new Camera();
-		cameraInc = new Vector3f(0,0,0);
-		cameraInc.set(0,0,0);
-		modelInc = new Vector3f(0,0,0);
-		deleteBullet = new DebugGUI();
-		angleBullet = new DebugGUI();
-		coordinates = new DebugGUI();
-		spectatorCheck = new DebugGUI();
+		camera.setRotation(90f, 0, 0);
 		return;
 	}
 	
 	@Override
 	public void init() throws Exception {
 		renderer.init();
-		
-		GLFWImage iconGLFW = GLFWImage.malloc();
-		GLFWImage.Buffer iconBF = GLFWImage.malloc(1);
-        iconGLFW.set(icon.get_width(), icon.get_heigh(), icon.get_image());
-        iconBF.put(0, iconGLFW);
-        GLFW.glfwSetWindowIcon(window.getWindowHandle(), iconBF);
-		
-		bulletModel = setModel("/models/bullet.obj", "textures/bullet.png");
-		
+
+		// Model Rendering
 		tankTopModel = setModel("/models/tankTop.obj", "textures/Camo.jpg");
 		tankBotModel = setModel("/models/tankBot.obj", "textures/Camo.jpg");
-		terrains = new ArrayList<>();
+
+		// Terrain Adding
 		Terrain terrain = new Terrain(new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
 		terrains.add(terrain);
 
-		entities = new ArrayList<>();
-		entities.add(new Entity("TankTop", tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1, 5f));
-		entities.add(new Entity("TankBottom", tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1, 5f));
-		entities.add(new Entity("DummyTankTop", tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1, 5f));
-		entities.add(new Entity("DummyTankBottom", tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1, 5f));
+		// Entity Adding
+		entities.add(new TankEntity("tank", tankTopModel, tankBotModel, new Vector3f(70f,1.3f,-50f), new Vector3f(0,0,0), 1, 5f));
+		entities.add(new Entity("DummyTankTop", tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity("DummyTankBottom", tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
 		
-		float lightIntensity = 1.0f;
-		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
-		Vector3f lightColor = new Vector3f(1,1,1); 
-		lightPosition = new Vector3f(-1, -10, 0);
-		lightColor = new Vector3f(1,1,1);
-		directionalLight = new DirectionalLight(lightColor, lightPosition, lightIntensity);
-		
-		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
-		camera.setRotation(90f, 0f, 0f);
-		
-		addSound("src/main/resources/sounds/bullet.ogg", false);
-		addSound("src/main/resources/sounds/bloop_x.ogg", false);
-		addSound("src/main/resources/sounds/tankIdle.ogg", true);
-		addSound("src/main/resources/sounds/tankMove.ogg", true);
-		getSound("src/main/resources/sounds/tankIdle.ogg").play();
-	
-		entityCount = entities.size();
-		
-		return;
-	}
-	
-	private static void setTankPos(float x, float z) {
-		entities.get(0).setPos(x, 1.3f, z);
-		float y = getRotationY();
-		entities.get(1).setPos(x, 1.3f, z);
-		entities.get(1).setRotation(0, y, 0);
-		return;
-	}
-	
-	private static void shootBullets() {
-		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
-			if(bulletInside || (bullet < removedBullet)) {
-				
-				bulletAngle = entities.get(bullet).getRotation().y + 90;
-				
-				// passBulletAngleEntity -> angleBullet(debug menu)
-				passBulletAngleEntity = entities.get(bullet);
-				
-				// passBulletAngle -> angleBullet(debug menu)
-				passBulletAngle = bulletAngle;
-				
-				// passBulletAngleNum -> angleBullet(debug menu)
-				passBulletAngleNum = bullet;
-				
-				switch((int)bulletAngle) {
-					case 0:
-						entities.get(bullet).incPos(0, 0, bulletSpeed);
-						break;
-					case 45:
-						entities.get(bullet).incPos(bulletSpeed, 0, bulletSpeed);
-						break;
-					case 90:
-						entities.get(bullet).incPos(bulletSpeed, 0, 0);
-						break;
-					case 135:
-						entities.get(bullet).incPos(bulletSpeed, 0, -bulletSpeed);
-						break;
-					case 180:
-						entities.get(bullet).incPos(0, 0, -bulletSpeed);
-						break;
-					case 225:
-						entities.get(bullet).incPos(-bulletSpeed, 0, -bulletSpeed);
-						break;
-					case 270:
-						entities.get(bullet).incPos(-bulletSpeed, 0, 0);
-						break;
-					case 315:
-						entities.get(bullet).incPos(-bulletSpeed, 0, bulletSpeed);
-						break;
-					default:
-						entities.get(bullet).incPos(-bulletSpeed, 0, -bulletSpeed);
-						break;
-				}
-				
-				
-				if((entities.get(bullet).getPos().x < -Consts.X_BORDER || entities.get(bullet).getPos().x > Consts.X_BORDER)
-				 ||(entities.get(bullet).getPos().z < -Consts.Z_BORDER || entities.get(bullet).getPos().z > 0)) {
-					// passDeletedBulletNum -> deleteBullet(debug menu)
-					passDeletedBulletNum = bullet;
-					// passDeletedBulletEntity -> deleteBullet(debug menu)
-					passDeletedBulletEntity = entities.get(bullet);
-					bulletInside = false;
-					entities.remove(bullet);
-					removedBullet = bullet;
-					continue;
-				}
-				
-				try {
-					if(robotNPCHitBox.passThrough(new HitBox(entities.get(bullet), 1f))) {
-						// passDeletedBulletNum -> deleteBullet(debug menu)
-						passDeletedBulletNum = bullet;
-						// passDeletedBulletEntity -> deleteBullet(debug menu)
-						passDeletedBulletEntity = entities.get(bullet);
-						bulletInside = false;
-						entities.remove(bullet);
-						removedBullet = bullet;
-						continue;
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else {
-				bullet--;
-				bulletInside = true;
-			}
-		}
-		return;
-	}
-	
-	private static void borderCheck() {
-		float x = getPositionX();
-		float z = getPositionZ();
-		if((x < -Consts.X_BORDER) || (x > Consts.X_BORDER)
-		 ||(z < -Consts.Z_BORDER) || (z > 0)){
-			pushBack = tankSpeed / 4;	
-			if(x > Consts.X_BORDER && z > 0 ) {
-				x -= pushBack;
-				z -= pushBack;
-			}
-			else if(x > Consts.X_BORDER && z < -Consts.Z_BORDER ) {
-				x -= pushBack;
-				z += pushBack;
-			}
-			else if(x < -Consts.X_BORDER && z > 0 ) {
-				x += pushBack;
-				z -= pushBack;
-			}
-			else if(x < -Consts.X_BORDER && z < -Consts.Z_BORDER ) {
-				x += pushBack;
-				z += pushBack;
-			}
-			else if(x > Consts.X_BORDER) {
-				x -= pushBack;
-			}
-			else if(x < -Consts.X_BORDER) {
-				x += pushBack;
-			}
-			else if(z > 0) {
-				z -= pushBack;
-			}
-			else if(z < -Consts.Z_BORDER) {
-				z += pushBack;
-			}
-			getSound("src/main/resources/sounds/bloop_x.ogg").play();
-			setTankPos(x, z);
-		}
+		// Light for the Map
+		// 1st Argument Light Color, 2nd Light Positioning, 3rd Light Intensity
+		directionalLight = new DirectionalLight(new Vector3f(1,1,1), new Vector3f(-1, -10, 0), 1.0f);
 		
 		return;
 	}
 
 	@Override
 	public void input() {
-		cameraInc.set(0,0,0);
-		modelInc.set(0,0,0);
-		
 		GLFW.glfwSetKeyCallback(window.getWindowHandle(), (window, key, scancode, action, mods) -> {
 				if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
 					System.out.println("EXITING");
 					GLFW.glfwSetWindowShouldClose(window, true);
-					return;
+					return;														// QUITS GAME
 				}
 				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS)
-					spectator = spectator ? false: true;
-					
-				if(!spectator) {
-					if(key == GLFW.GLFW_KEY_SPACE && action == GLFW.GLFW_PRESS) {
-						float x = getPositionX(),
-							  z = getPositionZ();
-						switch((int)turretAngle) {
-							case 0:
-								z += 4.3f;
-								break;
-							case 45:
-								x += 3.2f;
-								z += 3.2f;
-								break;
-							case 90:
-								x += 4.3f;
-								break;
-							case 135:
-								x += 3.2f;
-								z -= 3.2f;
-								break;
-							case 180:
-								z -= 4.3f;
-								break;
-							case 225:
-								x -= 3.2f;
-								z -= 3.2f;
-								break;
-							case 270:
-								x -= 4.3f;
-								break;
-							case 315:
-								x -= 3.2f;
-								z += 3.2f;
-								break;
-						}
-						getSound("src/main/resources/sounds/bullet.ogg").stop();
-						getSound("src/main/resources/sounds/bullet.ogg").play();
-						bulletEntity = new Entity(bulletModel, new Vector3f(x,2.55f,z), new Vector3f(0,turretAngle - 90,-90), 1);
-						bulletNumber = entities.size();
-						entities.add(bulletNumber, bulletEntity);
-						bulletInside = true;	
-					}
-				}
+					spectator = spectator ? false: true;						// SPECTATOR MODE W/ V PRESS
 		});
-		
-		if(!spectator) {
-			cameraSpeed = Consts.CAMERA_STEP;
-			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
-			camera.setRotation(90, 0, 0);
-			moving = false;
-			// TANK MOVEMENT + ROTATION
-			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
-				moving = true;
-				tankAngle = 180;
-				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
-			}
-			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
-				moving = true;
-				tankAngle = 270;
-				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
-			}
-			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
-				moving = true;
-				tankAngle = 0;
-				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
-			}
-			if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
-				moving = true;
-				tankAngle = 90;
-				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
-			}
-			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A))) {
-				moving = true;
-				tankAngle = 225;
-				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
-				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
-			}
-			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D))) {
-				moving = true;
-				tankAngle = 135;
-				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
-				cameraInc.x =  tankSpeed; modelInc.x = tankSpeed;
-			}
-			if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
-				moving = true;
-				tankAngle = 45;
-				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
-				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
-			}
-			if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
-				moving = true;
-				tankAngle = 315;
-				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
-				cameraInc.z =  tankSpeed; modelInc.z = tankSpeed;
-			}
-			if(moving) {
-				getSound("src/main/resources/sounds/tankIdle.ogg").stop();
-				getSound("src/main/resources/sounds/tankMove.ogg").play();
-			} else {
-				getSound("src/main/resources/sounds/tankMove.ogg").stop();
-				getSound("src/main/resources/sounds/tankIdle.ogg").play();
-			}
-			entities.get(0).setRotation(0, tankAngle, 0);
-			entities.get(1).setRotation(0, tankAngle, 0);
-			
-			// TURRET ROTATION
-			turretAngle = entities.get(1).getRotation().y();
-			
-			if(window.isKeyPressed(GLFW.GLFW_KEY_I))
-				turretAngle = 180;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_J))
-				turretAngle = 270;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_L))
-				turretAngle = 90;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_K))
-				turretAngle = 0;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
-				turretAngle = 225;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_L)))
-				turretAngle = 135;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_L) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
-				turretAngle = 45;
-			if((window.isKeyPressed(GLFW.GLFW_KEY_J) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
-				turretAngle = 315;
-			entities.get(0).setRotation(0, turretAngle, 0);
-		} else {
-			cameraSpeed = (Consts.CAMERA_STEP * 2);
+
+		if(spectator) {															// SPECTATOR CONTROLS
+			cameraSpeed = (float)((Consts.CAMERA_STEP) * tick());
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-				cameraInc.z = -tankSpeed;
+				cameraInc.z = -cameraSpeed;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-				cameraInc.z = tankSpeed;
+				cameraInc.z = cameraSpeed;
 	
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-				cameraInc.x = -tankSpeed;
+				cameraInc.x = -cameraSpeed;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-				cameraInc.x = tankSpeed;
+				cameraInc.x = cameraSpeed;
 			
 			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL))
-				cameraInc.y = -tankSpeed;
+				cameraInc.y = -cameraSpeed;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
-				cameraInc.y = tankSpeed;
+				cameraInc.y = cameraSpeed;
 		}
 		return;
 	}
 
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
-		// GUI Updates
-		window.imGuiGlfw.newFrame();
-		ImGui.newFrame();
-		
-		if(passBulletAngleNum >= entityCount) {
-			angleBullet.passBulletAngle(passBulletAngleNum, passBulletAngle, passBulletAngleEntity);
-			
-		}
-		passBulletAngleNum = 0;
-		passBulletAngle = 0.0f;
-		
-		if(passDeletedBulletNum >= entityCount)
-			deleteBullet.passDeletedBullet(passDeletedBulletNum, passDeletedBulletEntity);
-		
-		passDeletedBulletNum = 0;
-		
-		
-		angleBullet.showBulletAngleDebug();
-		deleteBullet.showDeletedBulletDebug();
-		
-		coordinates.coords(getPositionX(),getPositionY(),getPositionZ());
-		
-		spectatorCheck.spectator(spectator);
-		
-		ImGui.render();
-		window.imGuiGl3.renderDrawData(ImGui.getDrawData());
-			if(ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-				final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
-				ImGui.updatePlatformWindows();
-				ImGui.renderPlatformWindowsDefault();
-				GLFW.glfwMakeContextCurrent(backupWindowPtr);
-		}
-		GLFW.glfwSwapBuffers(window.getWindowHandle());
-		// Tells OpenGL to start rendering all the objects put in a queue
-		GLFW.glfwPollEvents();
-		
-		// Tank Speed
-		
-		if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT))
-			tankSpeed = ((float) (Consts.MOVEMENT_SPEED * tick()) * 3);
-		else
-			tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick());
-		
-		// Bullet Speed
-		
-		bulletSpeed = (float) (Consts.BULLET_SPEED * tick());
-		
-		// HitBox Updates
-		
-		robotHitBox.updateHitBox(entities.get(0));
-		robotNPCHitBox.updateHitBox(entities.get(2));
-		
-		if(robotHitBox.passThrough(robotNPCHitBox)) {
-			setTankPos(0, 0);
-		};
-		
-		// Calculates bullets on map and allows for their deletion
-		shootBullets();
-		
-		// Checks if tank is on map
-		borderCheck();
-		
-		for(Entity entity : entities) {
-			renderer.processEntity(entity);
-		}
-
-		for(Terrain terrain : terrains) {
-			renderer.processTerrain(terrain);
-		}
-		
-		// Camera Updates
-		
-		camera.movePosition(cameraInc.x * cameraSpeed,
-	  						cameraInc.y * cameraSpeed,
-	  						cameraInc.z * cameraSpeed);
-
-		// Entity moving by Camera Speed
-		
-		entities.get(0).incPos(modelInc.x * cameraSpeed,
-							   modelInc.y * cameraSpeed,
-							   modelInc.z * cameraSpeed);
-		entities.get(1).incPos(modelInc.x * cameraSpeed,
-							   modelInc.y * cameraSpeed,
-							   modelInc.z * cameraSpeed);
-		
 		// Spectator Camera Rotation (Using Right Click)
-		
 		if(mouseInput.isRightButtonPress() && spectator) {
 			Vector2f rotVec = mouseInput.getDisplVec();
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
+
+		// Camera Updates
+		camera.movePosition( cameraInc.x,
+	  						 cameraInc.y,
+	  						 cameraInc.z );
+		cameraInc.zero();	// Resets the Vector3f to all zeros
+
+		gameTick(); 		// Updates each entity with their game functionalities(ticks)
 		
 		return;
 	}
 
 	@Override
-	public void render() { renderer.render(camera, directionalLight, pointLights, spotLights); return; }
+	public void render() {
+
+		GLFW.glfwSwapBuffers(window.getWindowHandle());
+		// Tells OpenGL to start rendering all the objects put in a queue
+		GLFW.glfwPollEvents();
+
+		// Entity Rendering
+		for(Entity entity : entities) {
+			if(entity instanceof TankEntity) {
+				// TankEntity consists of two models; resulting in the need of two entities being rendered
+				renderer.processEntity(new Entity("tankBot", ((TankEntity) entity).getBase(), ((TankEntity) entity).getBasePos(), ((TankEntity) entity).getBaseRotation(), 1f));
+				renderer.processEntity(new Entity("tankTop", ((TankEntity) entity).getTop(), ((TankEntity) entity).getTurretPos(), ((TankEntity) entity).getTurretRotation(), 1f));
+			} else {
+				renderer.processEntity(entity);
+			}
+			
+		}
+
+		// Terrain Rendering
+		for(Terrain terrain : terrains) {
+			renderer.processTerrain(terrain);
+		}
+
+		renderer.render(camera, directionalLight);
+		return;
+	}
 
 	@Override
 	public void cleanup() {
@@ -565,63 +203,30 @@ public class TestGame implements ILogic{
 		model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
 		return model;
 	}
-	
-	private static float getPositionX() {
-		return entities.get(1).getPos().x;
+
+	public void addEntity(Entity ent) {
+		entities.add(ent); // add the entity to a set of entities
 	}
-	
-	private static float getPositionY() {
-		return entities.get(1).getPos().y;
+
+	public void addTerrain(Terrain ent) {
+		terrains.add(ent); // add the terrain to a set of terrains
 	}
-	
-	private static float getPositionZ() {
-		return entities.get(1).getPos().z;
+
+	public void gameTick() {
+		for(Entity ent : entities) { // for EVERY entity
+			ent.debugGameTick();	 // Updates each entity with their game functionalities(ticks)
+		}
 	}
-	
-	@SuppressWarnings("unused")
-	private static float getRotationX() {
-		return entities.get(1).getRotation().x;
+
+	public static boolean getSpectator() {
+		return spectator;
 	}
-	
-	private static float getRotationY() {
-		return entities.get(1).getRotation().y;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getRotationZ() {
-		return entities.get(1).getRotation().z;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getTurretPositionX() {
-		return entities.get(0).getPos().x;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getTurretPositionY() {
-		return entities.get(0).getPos().y;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getTurretPositionZ() {
-		return entities.get(0).getPos().z;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getTurretRotationX() {
-		return entities.get(0).getRotation().x;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getTurretRotationY() {
-		return entities.get(0).getRotation().y;
-	}
-	
-	@SuppressWarnings("unused")
-	private static float getTurretRotationZ() {
-		return entities.get(0).getRotation().z;
-	}
-	
+
+
+
+
+	// SOUND RELEATED
+
 	@SuppressWarnings("unused")
 	private static void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 	    File f = new File(soundFile);

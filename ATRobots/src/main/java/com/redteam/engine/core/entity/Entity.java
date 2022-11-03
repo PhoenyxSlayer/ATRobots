@@ -60,4 +60,12 @@ public class Entity {
     public float getScale() {
         return scale;
     }
+
+    public void gameTick() {
+
+    }
+
+    public void debugGameTick() {
+
+    }
 }

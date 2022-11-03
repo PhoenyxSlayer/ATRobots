@@ -64,6 +64,21 @@ public class TerrainRender implements IRenderer {
     }
 
     @Override
+    public void render(Camera camera, DirectionalLight directionalLight) {
+        shader.bind();
+        shader.setUniform("projectionMatrix", ATRobots.getWindow().updateProjectionMatrix());
+        RenderManager.renderLights(directionalLight, shader);
+        for(Terrain terrain : terrains) {
+            bind(terrain.getModel());
+            prepare(terrain, camera);
+            GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+            unbind();
+        }
+        terrains.clear();
+        shader.unbind();
+    }
+
+    @Override
     public void bind(Model model) {
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);
