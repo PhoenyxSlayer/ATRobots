@@ -10,7 +10,7 @@ class TestTankEntity {
 	Vector3f originalPos = new Vector3f(0,0,0);
 	Vector3f originalRotation = new Vector3f(0,0,0);
 	
-	TankEntity tank = new TankEntity("tank", null, null, originalPos, originalRotation, 1f, 5f);
+	TankEntity tank = new TankEntity("tank", originalPos, originalRotation, 1f);
 	
 	
 	Vector3f updatedPos = new Vector3f(50,20,10);

@@ -190,6 +190,11 @@ public class Window {
 	public boolean isKeyPressed(int keycode) {
 		return GLFW.glfwGetKey(windowPtr, keycode) == GLFW.GLFW_PRESS;
 	}
+
+
+	public boolean isKeyReleased(int keycode) {
+		return GLFW.glfwGetKey(windowPtr, keycode) == GLFW.GLFW_RELEASE;
+	}
 	
 	public boolean windowShouldClose() {
 		return GLFW.glfwWindowShouldClose(windowPtr);
