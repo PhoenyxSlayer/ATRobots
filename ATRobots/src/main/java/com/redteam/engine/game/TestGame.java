@@ -36,8 +36,8 @@ import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.rendering.RenderManager;
 import com.redteam.engine.utils.Consts;
 
-import images.image_parser;
-import sounds.Sound;
+import com.redteam.engine.core.rendering.image_parser;
+import com.redteam.engine.core.sound.Sound;
 
 public class TestGame implements ILogic{
 	
@@ -51,8 +51,8 @@ public class TestGame implements ILogic{
 
 	private DirectionalLight directionalLight;
 
-	private Vector3f cameraInc = new Vector3f(0,0,0);;
-	
+	private final Vector3f cameraInc = new Vector3f(0,0,0);
+
 	public static Window window;
 	
 	public static Model tankModel;
@@ -61,7 +61,7 @@ public class TestGame implements ILogic{
 	
 	public static int entityCount;
 
-	private static Map<String, Sound> sounds = new HashMap<>();
+	private static final Map<String, Sound> sounds = new HashMap<>();
 	
 	private float cameraSpeed = (float)((Consts.CAMERA_STEP) * tick());
 	
@@ -73,7 +73,6 @@ public class TestGame implements ILogic{
 		loader = new ObjectLoader();
 		camera = new Camera();
 		camera.setRotation(90f, 0, 0);
-		return;
 	}
 	
 	@Override
@@ -105,8 +104,7 @@ public class TestGame implements ILogic{
 		// Light for the Map
 		// 1st Argument Light Color, 2nd Light Positioning, 3rd Light Intensity
 		directionalLight = new DirectionalLight(new Vector3f(1,1,1), new Vector3f(-1, -10, 0), 1.0f);
-		
-		return;
+
 	}
 
 	private GLFWKeyCallback keyCallback;
@@ -121,25 +119,15 @@ public class TestGame implements ILogic{
 					if(key == GLFW.GLFW_KEY_ESCAPE) {
 						System.out.println("EXITING");
 						GLFW.glfwSetWindowShouldClose(window, true);
-						return;														// QUITS GAME
+						// QUITS GAME
 					}
-				}
-			}
-		};
-
-		GLFW.glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
-
-		keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if(action == GLFW.GLFW_RELEASE) {
 					if(key == GLFW.GLFW_KEY_V) {
-						spectator = spectator ? false: true;						// SPECTATOR MODE W/ V PRESS
+						spectator = !spectator;						// SPECTATOR MODE W/ V PRESS
 					}
 				}
 			}
 		};
-
+		void key_callback(long window, int key, int scancode, int action, int mods)
 		GLFW.glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
 
 		if(spectator) {															// SPECTATOR CONTROLS
@@ -159,7 +147,6 @@ public class TestGame implements ILogic{
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
 				cameraInc.y = cameraSpeed;
 		}
-		return;
 	}
 
 	@Override
@@ -177,8 +164,7 @@ public class TestGame implements ILogic{
 		cameraInc.zero();	// Resets the Vector3f to all zeros
 
 		gameTick(); 		// Updates each entity with their game functionalities(ticks)
-		
-		return;
+
 	}
 
 	@Override
@@ -192,8 +178,8 @@ public class TestGame implements ILogic{
 		for(Entity entity : entities) {
 			if(entity instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
-				renderer.processEntity(new Entity("tankBot", ((TankEntity) entity).getBase(), ((TankEntity) entity).getPos(), ((TankEntity) entity).getBaseRotation(), 1f));
-				renderer.processEntity(new Entity("tankTop", ((TankEntity) entity).getTop(), ((TankEntity) entity).getPos(), ((TankEntity) entity).getTurretRotation(), 1f));
+				renderer.processEntity(new Entity("tankBot", ((TankEntity) entity).getBase(), entity.getPos(), ((TankEntity) entity).getBaseRotation(), 1f));
+				renderer.processEntity(new Entity("tankTop", ((TankEntity) entity).getTop(), entity.getPos(), ((TankEntity) entity).getTurretRotation(), 1f));
 			}
 			else {
 				renderer.processEntity(entity);
@@ -207,14 +193,12 @@ public class TestGame implements ILogic{
 		}
 
 		renderer.render(camera, directionalLight);
-		return;
 	}
 
 	@Override
 	public void cleanup() {
 		renderer.cleanup();
 		loader.cleanup();
-		return;
 	}
 	
 	private Model setModel(String modelOBJ, String texture) throws Exception{
@@ -243,7 +227,7 @@ public class TestGame implements ILogic{
 		for(Entity ent : entities) {
 			if(ent instanceof HittableEntity) {
 				if(((HittableEntity) ent).collisionCheck()) {
-					continue;
+					break;
 				}
 			}	
 							     // for EVERY entity
@@ -294,5 +278,11 @@ public class TestGame implements ILogic{
 			sounds.put(file.getAbsolutePath(), sound);
 			return sound;
 		}
+	}
+
+	boolean keysArePressed[] = new int[];
+	void key_callback(long window, int key, int scancode, int action, int mods)
+	{
+		keysArePressed[key] = (GLFW.glfwGetKey(window, key) == GLFW.GLFW_PRESS);
 	}
 }

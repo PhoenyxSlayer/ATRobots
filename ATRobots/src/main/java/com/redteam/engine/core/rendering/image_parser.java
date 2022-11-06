@@ -1,6 +1,6 @@
 // https://discourse.glfw.org/t/set-window-icon-in-lwjgl-3-1/863/3
 
-package images;
+package com.redteam.engine.core.rendering;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

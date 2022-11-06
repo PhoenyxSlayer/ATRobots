@@ -1,4 +1,4 @@
-package sounds;
+package com.redteam.engine.core.sound;
 
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;

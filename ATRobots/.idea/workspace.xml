@@ -28,7 +28,7 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="ATRobotsV3" type="f1a62948:ProjectNode" />
+                <item name="ATRobots" type="f1a62948:ProjectNode" />
               </path>
             </expand>
             <select />
@@ -45,10 +45,14 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2FahpngegzXy2Sv7jodBmwJWt6A" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -67,7 +71,8 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "discord-application"
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "copyright"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -79,6 +84,8 @@
       <recent name="C:\Users\Daniel\IdeaProjects\ATRobotsV3\src\main\java\com\redteam\test" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/redteam/engine/core/rendering" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/redteam/engine/core/sound" />
       <recent name="C:\Users\Daniel\IdeaProjects\ATRobotsV3\textures" />
       <recent name="C:\Users\Daniel\IdeaProjects\ATRobotsV3\src\main\resources\models" />
     </key>
@@ -92,8 +99,10 @@
   </component>
   <component name="RunManager">
     <configuration name="ATRobots" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.redteam.engine.game.ATRobots" />
-      <module name="ATRobotsV3.main" />
+      <module name="ATRobots.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.redteam.engine.game.*" />
@@ -122,10 +131,27 @@
       <workItem from="1664736474637" duration="3363000" />
       <workItem from="1664739874038" duration="20239000" />
       <workItem from="1664762504826" duration="18968000" />
+      <workItem from="1667598791545" duration="113000" />
+      <workItem from="1667600202976" duration="4675000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

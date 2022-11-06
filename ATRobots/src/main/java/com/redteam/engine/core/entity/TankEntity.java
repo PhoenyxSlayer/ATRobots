@@ -106,14 +106,13 @@ public class TankEntity extends HittableEntity {
 	@Override
 	public void collision(Entity entity) {
 		// TODO
-		System.out.println("huh in tankentity in collision");
 	}
 
 	@Override
 	public void debugCollision(Entity entity) {
 		// TODO
 		if(entity.getID().equals("dummyTank")) {
-			entity.setPos(0, 0, 0);
+			TestGame.removeEntity(entity);
 		}
 	}
 
@@ -205,6 +204,7 @@ public class TankEntity extends HittableEntity {
 			setTurretRotation(0, turretAngle, 0);
 
 			TestGame.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
+			TestGame.camera.setRotation(90.0f, 0, 0);
 			// TODO
 		}
 	}
