@@ -63,11 +63,7 @@ public class Entity {
         return scale;
     }
 
-    public void gameTick() {
+    public void gameTick() { return; }
 
-    }
-
-    public void debugGameTick() {
-
-    }
+    public void debugGameTick() { return; }
 }

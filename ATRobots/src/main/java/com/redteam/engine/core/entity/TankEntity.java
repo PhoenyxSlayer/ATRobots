@@ -23,12 +23,9 @@ public class TankEntity extends HittableEntity {
 
 	private float tankSpeed = (float)(MOVEMENT_SPEED * Engine.tick());
 
-	private float hitBoxScale;
-
 	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation, float scale) {
 		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, scale, scale * 5f);
 		this.baseRotation = baseRotation;
-		hitBoxScale = scale * 5f;
 
 		top = setModel("/models/tankTop.obj", "textures/Camo.jpg");
 	    base = setModel("/models/tankBot.obj", "textures/Camo.jpg");
@@ -61,59 +58,42 @@ public class TankEntity extends HittableEntity {
 	
 	// BASE OF TANK ROTATION BEING INCREMENTING
 	public void incBaseRotation(float x, float y, float z) {
-		this.baseRotation.x += x;
-		this.baseRotation.y += y;
-		this.baseRotation.z += z;
+		this.baseRotation.add(new Vector3f(x, y, z));
 	}
 	
 	// TURRET OF TANK ROTATION BEING INCREMENTING
 	public void incTurretRotation(float x, float y, float z) {
-		this.turretRotation.x += x;
-		this.turretRotation.y += y;
-		this.turretRotation.z += z;
+		this.turretRotation.add(new Vector3f(x, y, z));
 	}
 
 	// BASE OF TANK ROTATION BEING SET
 	public void setBaseRotation(float x, float y, float z) {
-		this.baseRotation.x = x;
-		this.baseRotation.y = y;
-		this.baseRotation.z = z;
+		this.baseRotation = new Vector3f(x,y,z);
 	}
 	
 	// TURRET OF TANK ROTATION BEING SET
 	public void setTurretRotation(float x, float y, float z) {
-		this.turretRotation.x = x;
-		this.turretRotation.y = y;
-		this.turretRotation.z = z;
+		this.turretRotation = new Vector3f(x,y,z);
 	}
 	
-	public Model getTop() {
-		return top;
-	}
+	public Model getTop() { return top; }
 	
-	public Model getBase() {
-		return base;
-	}
+	public Model getBase() { return base; }
 	
-	public Vector3f getBaseRotation() {
-		return baseRotation;
-	}
+	public Vector3f getBaseRotation() { return baseRotation; }
 
-	public Vector3f getTurretRotation() {
-		return turretRotation;
-	}
+	public Vector3f getTurretRotation() { return turretRotation; }
 
 	@Override
 	public void collision(Entity entity) {
 		// TODO
+		return;
 	}
 
 	@Override
 	public void debugCollision(Entity entity) {
 		// TODO
-		if(entity.getID().equals("dummyTank")) {
-			TestGame.removeEntity(entity);
-		}
+		return;
 	}
 
 	public void gameTick() {

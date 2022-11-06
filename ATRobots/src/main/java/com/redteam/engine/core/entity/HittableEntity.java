@@ -86,11 +86,7 @@ public class HittableEntity extends Entity {
 		return collide;
 		
 	}
-
-	public void collision(Entity entity){ return; }
-
-	public void debugCollision(Entity entity) { return; }
-
+	
 	public Vector3f[] getBox() {
 		return hitBox;
 	}
@@ -99,19 +95,25 @@ public class HittableEntity extends Entity {
 		return hitboxScale;
 	}
 
-	public void gameTick() {
-		formCube();
-		// TODO
-	}
+	public void collision(Entity entity){ return; }
+	public void debugCollision(Entity entity) { return; }
 
+	public void gameTick() { return; }
+	public void debugGameTick() { return; }
+
+
+	// Collision Detection
+
+	Object entitiiesArray[];
+	
 	public boolean collisionCheck() {
-		test = TestGame.entities.toArray();
+		entitiiesArray = TestGame.entities.toArray();
 		formCube();
-		for(int i = 0; i < test.length; i++) {
-			if((Entity)test[i] instanceof HittableEntity) {
-				for(int j = i; j < test.length; j++) {
-					if(passThrough((HittableEntity)test[j])) {
-						((HittableEntity)test[j]).debugCollision((Entity)test[i]);
+		for(int i = 0; i < entitiiesArray.length; i++) {
+			if((Entity)entitiiesArray[i] instanceof HittableEntity) {
+				for(int j = i; j < entitiiesArray.length; j++) {
+					if(passThrough((HittableEntity)entitiiesArray[j])) {
+						((HittableEntity)entitiiesArray[j]).debugCollision((Entity)entitiiesArray[i]);
 						return true;
 					}
 				}
@@ -119,10 +121,4 @@ public class HittableEntity extends Entity {
 		}
 		return false;
 	}
-
-	Object test[];
-
-	public void debugGameTick() {
-		
-    }
 }

@@ -2,11 +2,7 @@ package com.redteam.engine.game;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -16,7 +12,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
+
+import static com.redteam.engine.utils.Consts.CAMERA_STEP;
+import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 import com.redteam.engine.core.Camera;
@@ -63,7 +61,7 @@ public class TestGame implements ILogic{
 
 	private static final Map<String, Sound> sounds = new HashMap<>();
 	
-	private float cameraSpeed = (float)((Consts.CAMERA_STEP) * tick());
+	private float cameraSpeed = (float)((CAMERA_STEP) * tick());
 	
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
@@ -72,7 +70,6 @@ public class TestGame implements ILogic{
 		window = ATRobots.getWindow();
 		loader = new ObjectLoader();
 		camera = new Camera();
-		camera.setRotation(90f, 0, 0);
 	}
 	
 	@Override
@@ -115,18 +112,23 @@ public class TestGame implements ILogic{
 		keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if (action == GLFW.GLFW_RELEASE) {
-					if (key == GLFW.GLFW_KEY_ESCAPE) {
+				if (action == GLFW_RELEASE) {
+					if (key == GLFW_KEY_ESCAPE) {
 						System.out.println("EXITING");
-						GLFW.glfwSetWindowShouldClose(window, true);
+						glfwSetWindowShouldClose(window, true);
 						// QUITS GAME
 					}
-					if (key == GLFW.GLFW_KEY_V) {
+					if (key == GLFW_KEY_V) {
 						spectator = !spectator;                        // SPECTATOR MODE W/ V PRESS
 					}
 				}
 			}
 		};
+		glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
+
+		if(spectator) {
+			spectatorMovement();
+		}
 	}
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
@@ -145,25 +147,23 @@ public class TestGame implements ILogic{
 		gameTick(); 		// Updates each entity with their game functionalities(ticks)
 
 	}
-
 	@Override
 	public void render() {
-
-		GLFW.glfwSwapBuffers(window.getWindowHandle());
+		glfwSwapBuffers(window.getWindowHandle());
 		// Tells OpenGL to start rendering all the objects put in a queue
-		GLFW.glfwPollEvents();
-
+		glfwPollEvents();
 		// Entity Rendering
-		for(Entity entity : entities) {
-			if(entity instanceof TankEntity) {
+
+		for(Iterator<Entity> i = entities.iterator(); i.hasNext();) {
+			Entity ent = i.next();
+			if(ent instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
-				renderer.processEntity(new Entity("tankBot", ((TankEntity) entity).getBase(), entity.getPos(), ((TankEntity) entity).getBaseRotation(), 1f));
-				renderer.processEntity(new Entity("tankTop", ((TankEntity) entity).getTop(), entity.getPos(), ((TankEntity) entity).getTurretRotation(), 1f));
+				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
+				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f));
 			}
 			else {
-				renderer.processEntity(entity);
+				renderer.processEntity(ent);
 			}
-			
 		}
 
 		// Terrain Rendering
@@ -202,21 +202,47 @@ public class TestGame implements ILogic{
 		terrains.add(ent);	 // remove the terrain to a set of terrains
 	}
 
+	public static Iterator<Entity> iGameTick;
 	public void gameTick() {
-		for(Entity ent : entities) {
+		iGameTick = entities.iterator();
+
+		while(iGameTick.hasNext()) {
+			Entity ent = iGameTick.next();
 			if(ent instanceof HittableEntity) {
-				if(((HittableEntity) ent).collisionCheck()) {
-					break;
-				}
-			}	
-							     // for EVERY entity
-			ent.debugGameTick();	 // Updates each entity with their game functionalities(ticks)
-			
+				ent.debugGameTick();
+				((HittableEntity) ent).collisionCheck();
+			} else { // for EVERY entity
+				ent.debugGameTick();
+			}// Updates each entity with their game functionalities(ticks)
 		}
+	}
+
+	public static void gameTickRemoval() {
+		iGameTick.remove();
 	}
 
 	public static boolean getSpectator() {
 		return spectator;
+	}
+
+	public void spectatorMovement() {
+		cameraSpeed = (float)((CAMERA_STEP) * tick());
+
+		if(window.isKeyPressed(GLFW_KEY_W))
+			cameraInc.z = -cameraSpeed;
+		if(window.isKeyPressed(GLFW_KEY_S))
+			cameraInc.z = cameraSpeed;
+
+		if(window.isKeyPressed(GLFW_KEY_A))
+			cameraInc.x = -cameraSpeed;
+		if(window.isKeyPressed(GLFW_KEY_D))
+			cameraInc.x = cameraSpeed;
+
+		if(window.isKeyPressed(GLFW_KEY_LEFT_CONTROL))
+			cameraInc.y = -cameraSpeed;
+		if(window.isKeyPressed(GLFW_KEY_SPACE))
+			cameraInc.y = cameraSpeed;
+		return;
 	}
 
 
