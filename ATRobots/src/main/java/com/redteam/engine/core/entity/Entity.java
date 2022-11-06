@@ -1,7 +1,5 @@
 package com.redteam.engine.core.entity;
 
-import java.util.function.Consumer;
-
 import org.joml.Vector3f;
 
 public class Entity {

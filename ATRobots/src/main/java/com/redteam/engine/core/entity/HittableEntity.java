@@ -2,6 +2,8 @@ package com.redteam.engine.core.entity;
 
 import com.redteam.engine.game.TestGame;
 
+import java.util.Iterator;
+
 import org.joml.Vector3f;
 
 public class HittableEntity extends Entity {
@@ -113,6 +115,7 @@ public class HittableEntity extends Entity {
 			if((Entity)entitiiesArray[i] instanceof HittableEntity) {
 				for(int j = i; j < entitiiesArray.length; j++) {
 					if(passThrough((HittableEntity)entitiiesArray[j])) {
+						((HittableEntity)entitiiesArray[i]).debugCollision((Entity)entitiiesArray[j]);
 						((HittableEntity)entitiiesArray[j]).debugCollision((Entity)entitiiesArray[i]);
 						return true;
 					}
@@ -120,5 +123,16 @@ public class HittableEntity extends Entity {
 			}
 		}
 		return false;
+	}
+
+	public void removeEntity(Entity entity) {
+		// Searches through the gameTick Iterator to find the entity for removal
+		Iterator<Entity> it = TestGame.gIterator();
+		while (it.hasNext()) {
+            if (it.next().equals(entity)) {
+                it.remove();
+				break;
+            }
+        }
 	}
 }

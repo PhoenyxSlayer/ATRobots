@@ -16,7 +16,7 @@ public class Consts {
 			CAMERA_STEP = 0.5f,
 			FPS = 1000,
 			MOVEMENT_SPEED = 0.25f,
-			BULLET_SPEED = 1.5f;
+			BULLET_SPEED = 0.2f;
 
 	public static final int MAX_SPOT_LIGHTS = 5,
 							MAX_POINT_LIGHTS = 5,

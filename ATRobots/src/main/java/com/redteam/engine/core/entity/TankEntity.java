@@ -23,8 +23,8 @@ public class TankEntity extends HittableEntity {
 
 	private float tankSpeed = (float)(MOVEMENT_SPEED * Engine.tick());
 
-	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation, float scale) {
-		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, scale, scale * 5f);
+	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation) {
+		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, 1, 5f);
 		this.baseRotation = baseRotation;
 
 		top = setModel("/models/tankTop.obj", "textures/Camo.jpg");
@@ -86,18 +86,24 @@ public class TankEntity extends HittableEntity {
 
 	@Override
 	public void collision(Entity entity) {
-		// TODO
+		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
 		return;
 	}
 
 	@Override
 	public void debugCollision(Entity entity) {
-		// TODO
+		if(entity instanceof Bullet) {
+			removeEntity(entity);
+			// TODO : REDUCES HEALTH
+		}
+		else if(entity instanceof TankEntity) {
+			// TODO : MAKE IT SO IT DOESN'T GO THROUGH EACHOTHER
+		}
 		return;
 	}
 
 	public void gameTick() {
-		// TODO
+		// TODO : REAL-GAMES GAME TICK IMPLEMENTATION
 	}
 	
 
@@ -185,7 +191,7 @@ public class TankEntity extends HittableEntity {
 
 			TestGame.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
 			TestGame.camera.setRotation(90.0f, 0, 0);
-			// TODO
+			// TODO : ADD SHOOTING
 		}
 	}
 }

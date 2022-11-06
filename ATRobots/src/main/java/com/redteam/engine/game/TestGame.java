@@ -23,6 +23,7 @@ import com.redteam.engine.core.ILogic;
 import com.redteam.engine.core.MouseInput;
 import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.Window;
+import com.redteam.engine.core.entity.Bullet;
 import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.entity.Material;
@@ -37,11 +38,12 @@ import com.redteam.engine.utils.Consts;
 import com.redteam.engine.core.rendering.image_parser;
 import com.redteam.engine.core.sound.Sound;
 
-public class TestGame implements ILogic{
+public class TestGame implements ILogic {
 	
 	private final RenderManager renderer;
 	public final ObjectLoader loader;
 
+	// TODO : MAKE ENTITIIES, TERRAINS, AND LIGHTS OF THE MAP THEIR OWN CLASSES
 	public static Set<Entity> entities = new HashSet<Entity>();
 	public static Set<Terrain> terrains = new HashSet<Terrain>();
 
@@ -53,7 +55,8 @@ public class TestGame implements ILogic{
 
 	public static Window window;
 	
-	public static Model tankModel;
+	public static Model tankModel,
+						bulletModel;
 	
 	private static boolean spectator = false;
 	
@@ -79,6 +82,7 @@ public class TestGame implements ILogic{
 
 		// Model Rendering
 		tankModel = setModel("/models/tank.obj", "textures/Camo.jpg");
+		bulletModel = setModel("/models/bullet.obj", "textures/bullet.png");
 
 		// Terrain Adding
 		Terrain terrain = new Terrain(new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
@@ -87,8 +91,7 @@ public class TestGame implements ILogic{
 		// Entity Adding
 		entities.add(new TankEntity("tank",										// ID
 									new Vector3f(70f,1.3f,-50f),				// POSITION
-									new Vector3f(0,0,0),					// ROTATION
-									1										// SCALE
+									new Vector3f(0,0,0)					// ROTATION
 									));
 
 		entities.add(new HittableEntity("dummyTank",							// ID
@@ -98,6 +101,12 @@ public class TestGame implements ILogic{
 											1,								// SCALE
 											5f							// HITBOX SCALE
 											));
+
+
+		entities.add(new Bullet		   (	"bullet",								// ID
+											new Vector3f(60f,2.55f,-50f),		// POSITION
+											new Vector3f(90,0,0)			// ROTATION
+											));
 		
 		// Light for the Map
 		// 1st Argument Light Color, 2nd Light Positioning, 3rd Light Intensity
@@ -105,12 +114,10 @@ public class TestGame implements ILogic{
 
 	}
 
-	private GLFWKeyCallback keyCallback;
-
 	@Override
 	public void input() {
-
-		keyCallback = new GLFWKeyCallback() {
+		// TODO : IMPLEMENT ADDING KEYSTROKES FROM OTHER CLASSES/FUNCTIONS TO THIS
+		GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_RELEASE) {
@@ -127,8 +134,9 @@ public class TestGame implements ILogic{
 		};
 		glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
 
+		
 		if(spectator) {
-			spectatorMovement();
+			spectatorMovement();										// IF V IS PRESSED IT WILL ENABLE/ DISABLE THIS
 		}
 	}
 	@Override
@@ -153,8 +161,8 @@ public class TestGame implements ILogic{
 		glfwSwapBuffers(window.getWindowHandle());
 		// Tells OpenGL to start rendering all the objects put in a queue
 		glfwPollEvents();
-		// Entity Rendering
 
+		// Entity Rendering
 		for(Iterator<Entity> i = entities.iterator(); i.hasNext();) {
 			Entity ent = i.next();
 			if(ent instanceof TankEntity) {
@@ -218,10 +226,18 @@ public class TestGame implements ILogic{
 		}
 	}
 
-	public static void gameTickRemoval() {
-		iGameTick.remove();
+	// Grabs iGameTick Iterator
+	public static Iterator<Entity> gIterator() {
+		return iGameTick;
 	}
 
+	// *Used for Entity Classes* removes themselves
+	public static void gameTickRemoval() {
+		iGameTick.remove();
+		return;
+	}
+
+	
 	public static boolean getSpectator() {
 		return spectator;
 	}
