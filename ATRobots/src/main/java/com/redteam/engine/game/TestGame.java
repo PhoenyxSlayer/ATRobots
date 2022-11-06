@@ -115,40 +115,19 @@ public class TestGame implements ILogic{
 		keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if(action == GLFW.GLFW_RELEASE) {
-					if(key == GLFW.GLFW_KEY_ESCAPE) {
+				if (action == GLFW.GLFW_RELEASE) {
+					if (key == GLFW.GLFW_KEY_ESCAPE) {
 						System.out.println("EXITING");
 						GLFW.glfwSetWindowShouldClose(window, true);
 						// QUITS GAME
 					}
-					if(key == GLFW.GLFW_KEY_V) {
-						spectator = !spectator;						// SPECTATOR MODE W/ V PRESS
+					if (key == GLFW.GLFW_KEY_V) {
+						spectator = !spectator;                        // SPECTATOR MODE W/ V PRESS
 					}
 				}
 			}
 		};
-		void key_callback(long window, int key, int scancode, int action, int mods)
-		GLFW.glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
-
-		if(spectator) {															// SPECTATOR CONTROLS
-			cameraSpeed = (float)((Consts.CAMERA_STEP) * tick());
-			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-				cameraInc.z = -cameraSpeed;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-				cameraInc.z = cameraSpeed;
-	
-			if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-				cameraInc.x = -cameraSpeed;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-				cameraInc.x = cameraSpeed;
-			
-			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL))
-				cameraInc.y = -cameraSpeed;
-			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
-				cameraInc.y = cameraSpeed;
-		}
 	}
-
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
 		// Spectator Camera Rotation (Using Right Click)
@@ -271,18 +250,12 @@ public class TestGame implements ILogic{
 	
 	public static Sound addSound(String soundFile, boolean loops) {
 		File file = new File(soundFile);
-		if(sounds.containsKey(file.getAbsolutePath())) {
+		if (sounds.containsKey(file.getAbsolutePath())) {
 			return sounds.get(file.getAbsolutePath());
 		} else {
 			Sound sound = new Sound(file.getAbsolutePath(), loops);
 			sounds.put(file.getAbsolutePath(), sound);
 			return sound;
 		}
-	}
-
-	boolean keysArePressed[] = new int[];
-	void key_callback(long window, int key, int scancode, int action, int mods)
-	{
-		keysArePressed[key] = (GLFW.glfwGetKey(window, key) == GLFW.GLFW_PRESS);
 	}
 }
