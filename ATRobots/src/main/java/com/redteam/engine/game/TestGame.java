@@ -75,6 +75,7 @@ public class TestGame implements ILogic{
 	@Override
 	public void init() throws Exception {
 		renderer.init();
+		window.updateLogo(icon);
 
 		// Model Rendering
 		tankModel = setModel("/models/tank.obj", "textures/Camo.jpg");

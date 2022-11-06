@@ -12,6 +12,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -21,6 +22,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
+import com.redteam.engine.core.rendering.image_parser;
 import com.redteam.engine.utils.Consts;
 
 import imgui.ImGui;
@@ -236,5 +238,13 @@ public class Window {
 	public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
 		float aspectRatio = (float) width / height;
 		return matrix.setPerspective(Consts.FOV, aspectRatio, Consts.Z_NEAR, Consts.Z_FAR);
+	}
+
+	public void updateLogo(image_parser icon) {
+		GLFWImage iconGLFW = GLFWImage.malloc();
+		GLFWImage.Buffer iconBF = GLFWImage.malloc(1);
+        iconGLFW.set(icon.get_width(), icon.get_heigh(), icon.get_image());
+        iconBF.put(0, iconGLFW);
+        GLFW.glfwSetWindowIcon(this.getWindowHandle(), iconBF);
 	}
 }
