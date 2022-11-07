@@ -2,8 +2,8 @@ package com.redteam.engine.core.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.redteam.engine.core.ObjectLoader;
-import com.redteam.engine.core.rendering.RenderManager;
+//import com.redteam.engine.core.ObjectLoader;
+//import com.redteam.engine.core.rendering.RenderManager;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
