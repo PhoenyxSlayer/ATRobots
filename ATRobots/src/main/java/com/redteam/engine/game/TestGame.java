@@ -1,25 +1,6 @@
 package com.redteam.engine.game;
 
-import com.redteam.engine.core.*;
-import com.redteam.engine.core.entity.Entity;
-import com.redteam.engine.core.entity.Material;
-import com.redteam.engine.core.entity.Model;
-import com.redteam.engine.core.entity.Texture;
-
-import com.redteam.engine.core.entity.terrain.Terrain;
-import com.redteam.engine.core.lighting.DirectionalLight;
-import com.redteam.engine.core.lighting.PointLight;
-import com.redteam.engine.core.lighting.SpotLight;
-import com.redteam.engine.core.rendering.RenderManager;
-import com.redteam.engine.utils.Consts;
-
-import images.image_parser;
-import sounds.Sound;
-
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWImage;
+import static com.redteam.engine.core.Engine.tick;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +15,34 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
+
+import com.redteam.engine.core.Camera;
+import com.redteam.engine.core.ILogic;
+import com.redteam.engine.core.MouseInput;
+import com.redteam.engine.core.ObjectLoader;
+import com.redteam.engine.core.Window;
+import com.redteam.engine.core.entity.Entity;
+import com.redteam.engine.core.entity.HitBox;
+import com.redteam.engine.core.entity.Material;
+import com.redteam.engine.core.entity.Model;
+import com.redteam.engine.core.entity.Texture;
+import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.gui.DebugGUI;
+import com.redteam.engine.core.lighting.DirectionalLight;
+import com.redteam.engine.core.lighting.PointLight;
+import com.redteam.engine.core.lighting.SpotLight;
+import com.redteam.engine.core.rendering.RenderManager;
+import com.redteam.engine.utils.Consts;
+
+import images.image_parser;
+import imgui.ImGui;
+import imgui.flag.ImGuiConfigFlags;
+import sounds.Sound;
 
 public class TestGame implements ILogic{
 	
@@ -62,22 +71,37 @@ public class TestGame implements ILogic{
 	
 	private static int bulletNumber,
 					   removedBullet = bulletNumber + 1,
-					   entityCount;
+					   passDeletedBulletNum = 0,
+					   passBulletAngleNum = 0;
+	
+	public static int entityCount;
 	
 	private static float tankAngle = 0.0f,
 						 turretAngle = 0.0f,
-						 bulletAngle = 0.0f;
+						 bulletAngle = 0.0f,
+						 passBulletAngle = 0.0f;
 	
-	private static Entity bulletEntity;
+	private static Entity bulletEntity,
+						  passDeletedBulletEntity,
+						  passBulletAngleEntity;
 	
 	private static Map<String, Sound> sounds = new HashMap<>();
 	
-	private static float MODEL_SPEED = 80.0f * Engine.currentFrameTime,
-						 CAMERA_STEP = 0.25f,
-						 BULLET_SPEED = 80.0f * Engine.currentFrameTime;
+	private static float tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick()),
+						 bulletSpeed = (float) (Consts.BULLET_SPEED * tick()),
+						 pushBack;
 	
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
+	private static DebugGUI deleteBullet, angleBullet, coordinates, spectatorCheck;
+	private static MainMenu menu = new MainMenu();
+	
+	private static HitBox robotHitBox;
+	private static HitBox robotNPCHitBox;
+	
+	private static boolean moving = false;
+	
+	//private static HitBox hitBox = new HitBox(new Vector3f(0f, 1.3f, -75f), 10f, 5f, 10f);
 	
 	public TestGame() {
 		renderer = new RenderManager();
@@ -87,7 +111,10 @@ public class TestGame implements ILogic{
 		cameraInc = new Vector3f(0,0,0);
 		cameraInc.set(0,0,0);
 		modelInc = new Vector3f(0,0,0);
-		
+		deleteBullet = new DebugGUI();
+		angleBullet = new DebugGUI();
+		coordinates = new DebugGUI();
+		spectatorCheck = new DebugGUI();
 		return;
 	}
 	
@@ -112,6 +139,11 @@ public class TestGame implements ILogic{
 		entities = new ArrayList<>();
 		entities.add(new Entity(tankTopModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
 		entities.add(new Entity(tankBotModel, new Vector3f(0f,1.3f,-(float)Consts.Z_BORDER / 2), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankTopModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
+		entities.add(new Entity(tankBotModel, new Vector3f(50f,1.3f,-50f), new Vector3f(0,0,0), 1));
+		
+		robotHitBox = new HitBox(entities.get(0), 5f);
+		robotNPCHitBox = new HitBox(entities.get(2), 5f);
 		
 		float lightIntensity = 1.0f;
 		Vector3f lightPosition = new Vector3f(-0.5f,-0.5f,-3.2f);
@@ -123,116 +155,98 @@ public class TestGame implements ILogic{
 		camera.setPosition(entities.get(0).getPos().x, entities.get(0).getPos().y + 50f, entities.get(0).getPos().z);
 		camera.setRotation(90f, 0f, 0f);
 		
+		addSound("src/main/resources/sounds/bullet.ogg", false);
 		addSound("src/main/resources/sounds/bloop_x.ogg", false);
-		
+		addSound("src/main/resources/sounds/tankIdle.ogg", true);
+		addSound("src/main/resources/sounds/tankMove.ogg", true);
+		getSound("src/main/resources/sounds/tankIdle.ogg").play();
+	
 		entityCount = entities.size();
 		
 		return;
 	}
 	
 	private static void setTankPos(float x, float z) {
-		float y = getRotationY();
 		entities.get(0).setPos(x, 1.3f, z);
-		entities.get(0).setRotation(0, y, 0);
+		float y = getRotationY();
 		entities.get(1).setPos(x, 1.3f, z);
 		entities.get(1).setRotation(0, y, 0);
 		return;
 	}
 	
-	private static void tankDirect(float x, float z) {
-		
-		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A)))
-				tankAngle = 225;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D)))
-				tankAngle = 135;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S)))
-				tankAngle = 45;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S)))
-				tankAngle = 315;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-				tankAngle = 180;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-				tankAngle = 270;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-				tankAngle = 0;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-				tankAngle = 90;
-			
-			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,tankAngle,0), 1));
-			entities.set(1,new Entity(tankBotModel, new Vector3f(x,1.3f,z), new Vector3f(0,tankAngle,0), 1));
-		}
-		return;
-	}
-	
-	private static void turretDirect(float x, float z) {
-		turretAngle = entities.get(0).getRotation().y();
-		
-		if(!spectator) {
-			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
-				turretAngle = 225;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_L)))
-				turretAngle = 135;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_L) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
-				turretAngle = 45;
-			else if((window.isKeyPressed(GLFW.GLFW_KEY_J) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
-				turretAngle = 315;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_I))
-				turretAngle = 180;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_J))
-				turretAngle = 270;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_K))
-				turretAngle = 0;
-			else if(window.isKeyPressed(GLFW.GLFW_KEY_L))
-				turretAngle = 90;
-			entities.set(0,new Entity(tankTopModel, new Vector3f(x,1.3f,z), new Vector3f(0,turretAngle,0), 1));
-		}
-		
+	private static void shootBullets() {
 		for(int bullet = entityCount; bullet < entities.size(); bullet++) {
 			if(bulletInside || (bullet < removedBullet)) {
+				
 				bulletAngle = entities.get(bullet).getRotation().y + 90;
-				System.out.println("BULLET <" + bullet + "> AT " + entities.get(bullet).getPos().x + ", "
-																 + entities.get(bullet).getPos().y + ", "
-																 + entities.get(bullet).getPos().z + "> "
-																 + " AT ANGLE " + bulletAngle);
+				
+				// passBulletAngleEntity -> angleBullet(debug menu)
+				passBulletAngleEntity = entities.get(bullet);
+				
+				// passBulletAngle -> angleBullet(debug menu)
+				passBulletAngle = bulletAngle;
+				
+				// passBulletAngleNum -> angleBullet(debug menu)
+				passBulletAngleNum = bullet;
+				
 				switch((int)bulletAngle) {
 					case 0:
-						entities.get(bullet).incPos(0, 0, BULLET_SPEED);
+						entities.get(bullet).incPos(0, 0, bulletSpeed);
 						break;
 					case 45:
-						entities.get(bullet).incPos(BULLET_SPEED, 0, BULLET_SPEED);
+						entities.get(bullet).incPos(bulletSpeed, 0, bulletSpeed);
 						break;
 					case 90:
-						entities.get(bullet).incPos(BULLET_SPEED, 0, 0);
+						entities.get(bullet).incPos(bulletSpeed, 0, 0);
 						break;
 					case 135:
-						entities.get(bullet).incPos(BULLET_SPEED, 0, -BULLET_SPEED);
+						
+						entities.get(bullet).incPos(bulletSpeed, 0, -bulletSpeed);
 						break;
 					case 180:
-						entities.get(bullet).incPos(0, 0, -BULLET_SPEED);
+						entities.get(bullet).incPos(0, 0, -bulletSpeed);
 						break;
 					case 225:
-						entities.get(bullet).incPos(-BULLET_SPEED, 0, -BULLET_SPEED);
+						entities.get(bullet).incPos(-bulletSpeed, 0, -bulletSpeed);
 						break;
 					case 270:
-						entities.get(bullet).incPos(-BULLET_SPEED, 0, 0);
+						entities.get(bullet).incPos(-bulletSpeed, 0, 0);
 						break;
 					case 315:
-						entities.get(bullet).incPos(-BULLET_SPEED, 0, BULLET_SPEED);
+						entities.get(bullet).incPos(-bulletSpeed, 0, bulletSpeed);
 						break;
 					default:
-						entities.get(bullet).incPos(-BULLET_SPEED, 0, -BULLET_SPEED);
+						entities.get(bullet).incPos(-bulletSpeed, 0, -bulletSpeed);
 						break;
 				}
 				
+				
 				if((entities.get(bullet).getPos().x < -Consts.X_BORDER || entities.get(bullet).getPos().x > Consts.X_BORDER)
 				 ||(entities.get(bullet).getPos().z < -Consts.Z_BORDER || entities.get(bullet).getPos().z > 0)) {
-					System.out.println("BULLET <" + bullet + "> BEING REMOVED AT <" + entities.get(bullet).getPos().x + ", "
-							+ entities.get(bullet).getPos().y + ", "
-							+ entities.get(bullet).getPos().z + ">");
+					// passDeletedBulletNum -> deleteBullet(debug menu)
+					passDeletedBulletNum = bullet;
+					// passDeletedBulletEntity -> deleteBullet(debug menu)
+					passDeletedBulletEntity = entities.get(bullet);
 					bulletInside = false;
 					entities.remove(bullet);
 					removedBullet = bullet;
+					continue;
+				}
+				
+				try {
+					if(robotNPCHitBox.passThrough(new HitBox(entities.get(bullet), 1f))) {
+						// passDeletedBulletNum -> deleteBullet(debug menu)
+						passDeletedBulletNum = bullet;
+						// passDeletedBulletEntity -> deleteBullet(debug menu)
+						passDeletedBulletEntity = entities.get(bullet);
+						bulletInside = false;
+						entities.remove(bullet);
+						removedBullet = bullet;
+						continue;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			else {
@@ -243,21 +257,39 @@ public class TestGame implements ILogic{
 		return;
 	}
 	
-	private static void borderCheck(float x, float z) {
+	private static void borderCheck() {
+		float x = getPositionX();
+		float z = getPositionZ();
 		if((x < -Consts.X_BORDER) || (x > Consts.X_BORDER)
 		 ||(z < -Consts.Z_BORDER) || (z > 0)){
-			
-			if(x > Consts.X_BORDER) {
-				x -= MODEL_SPEED;
+			pushBack = tankSpeed / 4;	
+			if(x > Consts.X_BORDER && z > 0 ) {
+				x -= pushBack;
+				z -= pushBack;
+			}
+			else if(x > Consts.X_BORDER && z < -Consts.Z_BORDER ) {
+				x -= pushBack;
+				z += pushBack;
+			}
+			else if(x < -Consts.X_BORDER && z > 0 ) {
+				x += pushBack;
+				z -= pushBack;
+			}
+			else if(x < -Consts.X_BORDER && z < -Consts.Z_BORDER ) {
+				x += pushBack;
+				z += pushBack;
+			}
+			else if(x > Consts.X_BORDER) {
+				x -= pushBack;
 			}
 			else if(x < -Consts.X_BORDER) {
-				x += MODEL_SPEED;
+				x += pushBack;
 			}
 			else if(z > 0) {
-				z -= MODEL_SPEED;
+				z -= pushBack;
 			}
 			else if(z < -Consts.Z_BORDER) {
-				z += MODEL_SPEED;
+				z += pushBack;
 			}
 			getSound("src/main/resources/sounds/bloop_x.ogg").play();
 			setTankPos(x, z);
@@ -277,10 +309,8 @@ public class TestGame implements ILogic{
 					GLFW.glfwSetWindowShouldClose(window, true);
 					return;
 				}
-				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS) {
+				if(key == GLFW.GLFW_KEY_V && action == GLFW.GLFW_PRESS)
 					spectator = spectator ? false: true;
-					System.out.println("SPECTATOR: " + spectator);
-				}
 					
 				if(!spectator) {
 					if(key == GLFW.GLFW_KEY_SPACE && action == GLFW.GLFW_PRESS) {
@@ -316,59 +346,182 @@ public class TestGame implements ILogic{
 								z += 3.2f;
 								break;
 						}
+						getSound("src/main/resources/sounds/bullet.ogg").stop();
+						getSound("src/main/resources/sounds/bullet.ogg").play();
 						bulletEntity = new Entity(bulletModel, new Vector3f(x,2.55f,z), new Vector3f(0,turretAngle - 90,-90), 1);
 						bulletNumber = entities.size();
 						entities.add(bulletNumber, bulletEntity);
-						bulletInside = true;
+						bulletInside = true;	
 					}
 				}
 		});
 		
 		if(!spectator) {
-			cameraSpeed = CAMERA_STEP;
+			cameraSpeed = Consts.CAMERA_STEP;
 			camera.setPosition(entities.get(0).getPos().x,50f,entities.get(0).getPos().z);
 			camera.setRotation(90, 0, 0);
+			moving = false;
+			// TANK MOVEMENT + ROTATION
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W)) {
-				cameraInc.z = -MODEL_SPEED;
-				modelInc.z = -MODEL_SPEED;
-			}
-			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
-				cameraInc.z = MODEL_SPEED;
-				modelInc.z = MODEL_SPEED;
+				moving = true;
+				tankAngle = 180;
+				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A)) {
-				cameraInc.x = -MODEL_SPEED;
-				modelInc.x = -MODEL_SPEED;
+				moving = true;
+				tankAngle = 270;
+				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
+			}
+			if(window.isKeyPressed(GLFW.GLFW_KEY_S)) {
+				moving = true;
+				tankAngle = 0;
+				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
 			}
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D)) {
-				cameraInc.x = MODEL_SPEED;
-				modelInc.x = MODEL_SPEED;
+				moving = true;
+				tankAngle = 90;
+				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
 			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_A))) {
+				moving = true;
+				tankAngle = 225;
+				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
+				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
+			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_W) & window.isKeyPressed(GLFW.GLFW_KEY_D))) {
+				moving = true;
+				tankAngle = 135;
+				cameraInc.z = -tankSpeed; modelInc.z = -tankSpeed;
+				cameraInc.x =  tankSpeed; modelInc.x = tankSpeed;
+			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_D) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+				moving = true;
+				tankAngle = 45;
+				cameraInc.x = tankSpeed; modelInc.x = tankSpeed;
+				cameraInc.z = tankSpeed; modelInc.z = tankSpeed;
+			}
+			if((window.isKeyPressed(GLFW.GLFW_KEY_A) & window.isKeyPressed(GLFW.GLFW_KEY_S))) {
+				moving = true;
+				tankAngle = 315;
+				cameraInc.x = -tankSpeed; modelInc.x = -tankSpeed;
+				cameraInc.z =  tankSpeed; modelInc.z = tankSpeed;
+			}
+			if(moving) {
+				getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+				getSound("src/main/resources/sounds/tankMove.ogg").play();
+			} else {
+				getSound("src/main/resources/sounds/tankMove.ogg").stop();
+				getSound("src/main/resources/sounds/tankIdle.ogg").play();
+			}
+			entities.get(0).setRotation(0, tankAngle, 0);
+			entities.get(1).setRotation(0, tankAngle, 0);
+			
+			// TURRET ROTATION
+			turretAngle = entities.get(1).getRotation().y();
+			
+			if(window.isKeyPressed(GLFW.GLFW_KEY_I))
+				turretAngle = 180;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_J))
+				turretAngle = 270;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_L))
+				turretAngle = 90;
+			if(window.isKeyPressed(GLFW.GLFW_KEY_K))
+				turretAngle = 0;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_J)))
+				turretAngle = 225;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_I) & window.isKeyPressed(GLFW.GLFW_KEY_L)))
+				turretAngle = 135;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_L) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
+				turretAngle = 45;
+			if((window.isKeyPressed(GLFW.GLFW_KEY_J) & window.isKeyPressed(GLFW.GLFW_KEY_K)))
+				turretAngle = 315;
+			entities.get(0).setRotation(0, turretAngle, 0);
 		} else {
-			cameraSpeed = (CAMERA_STEP * 2);
+			cameraSpeed = (Consts.CAMERA_STEP * 2);
 			if(window.isKeyPressed(GLFW.GLFW_KEY_W))
-				cameraInc.z = -MODEL_SPEED;
+				cameraInc.z = -tankSpeed;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_S))
-				cameraInc.z = MODEL_SPEED;
+				cameraInc.z = tankSpeed;
 	
 			if(window.isKeyPressed(GLFW.GLFW_KEY_A))
-				cameraInc.x = -MODEL_SPEED;
+				cameraInc.x = -tankSpeed;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_D))
-				cameraInc.x = MODEL_SPEED;
+				cameraInc.x = tankSpeed;
 			
 			if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL))
-				cameraInc.y = -MODEL_SPEED;
+				cameraInc.y = -tankSpeed;
 			if(window.isKeyPressed(GLFW.GLFW_KEY_SPACE))
-				cameraInc.y = MODEL_SPEED;
+				cameraInc.y = tankSpeed;
 		}
-		
 		return;
 	}
 
 	@Override
-	public void update(float interval, MouseInput mouseInput) {
-		MODEL_SPEED = 80.0f * Engine.currentFrameTime;
-		BULLET_SPEED = 80.0f * Engine.currentFrameTime;
+	public void update(double interval, MouseInput mouseInput) {
+		// GUI Updates
+		window.imGuiGlfw.newFrame();
+		ImGui.newFrame();
+		
+		if(passBulletAngleNum >= entityCount) {
+			angleBullet.passBulletAngle(passBulletAngleNum, passBulletAngle, passBulletAngleEntity);
+			
+		}
+		passBulletAngleNum = 0;
+		passBulletAngle = 0.0f;
+		
+		if(passDeletedBulletNum >= entityCount)
+			deleteBullet.passDeletedBullet(passDeletedBulletNum, passDeletedBulletEntity);
+		
+		passDeletedBulletNum = 0;
+		
+		
+		angleBullet.showBulletAngleDebug();
+		deleteBullet.showDeletedBulletDebug();
+		
+		coordinates.coords(getPositionX(),getPositionY(),getPositionZ());
+		
+		spectatorCheck.spectator(spectator);
+		
+		menu.showMenu();
+		
+		ImGui.render();
+		window.imGuiGl3.renderDrawData(ImGui.getDrawData());
+			if(ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+				final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+				ImGui.updatePlatformWindows();
+				ImGui.renderPlatformWindowsDefault();
+				GLFW.glfwMakeContextCurrent(backupWindowPtr);
+		}
+		GLFW.glfwSwapBuffers(window.getWindowHandle());
+		// Tells OpenGL to start rendering all the objects put in a queue
+		GLFW.glfwPollEvents();
+		
+		// Tank Speed
+		
+		if(window.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT))
+			tankSpeed = ((float) (Consts.MOVEMENT_SPEED * tick()) * 3);
+		else
+			tankSpeed = (float) (Consts.MOVEMENT_SPEED * tick());
+		
+		// Bullet Speed
+		
+		bulletSpeed = (float) (Consts.BULLET_SPEED * tick());
+		
+		// HitBox Updates
+		
+		robotHitBox.updateHitBox(entities.get(0));
+		robotNPCHitBox.updateHitBox(entities.get(2));
+		
+		if(robotHitBox.passThrough(robotNPCHitBox)) {
+			setTankPos(0, 0);
+		};
+		
+		// Calculates bullets on map and allows for their deletion
+		shootBullets();
+		
+		// Checks if tank is on map
+		borderCheck();
+		
 		for(Entity entity : entities) {
 			renderer.processEntity(entity);
 		}
@@ -376,27 +529,28 @@ public class TestGame implements ILogic{
 		for(Terrain terrain : terrains) {
 			renderer.processTerrain(terrain);
 		}
+		
+		// Camera Updates
+		
 		camera.movePosition(cameraInc.x * cameraSpeed,
 	  						cameraInc.y * cameraSpeed,
 	  						cameraInc.z * cameraSpeed);
 
+		// Entity moving by Camera Speed
+		
 		entities.get(0).incPos(modelInc.x * cameraSpeed,
 							   modelInc.y * cameraSpeed,
 							   modelInc.z * cameraSpeed);
 		entities.get(1).incPos(modelInc.x * cameraSpeed,
 							   modelInc.y * cameraSpeed,
 							   modelInc.z * cameraSpeed);
-
+		
+		// Spectator Camera Rotation (Using Right Click)
+		
 		if(mouseInput.isRightButtonPress() && spectator) {
 			Vector2f rotVec = mouseInput.getDisplVec();
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
-		
-		float x = getPositionX(), z = getPositionZ();
-		
-		tankDirect(x,z);
-		turretDirect(x,z);
-		borderCheck(x,z);
 		
 		return;
 	}
@@ -421,7 +575,6 @@ public class TestGame implements ILogic{
 		return entities.get(1).getPos().x;
 	}
 	
-	@SuppressWarnings("unused")
 	private static float getPositionY() {
 		return entities.get(1).getPos().y;
 	}
