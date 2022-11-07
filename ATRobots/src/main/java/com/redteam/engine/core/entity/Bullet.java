@@ -10,26 +10,30 @@ import org.joml.Vector3f;
 
 public class Bullet extends HittableEntity {
 
-	private static ObjectLoader loader = new ObjectLoader();
+	private static final ObjectLoader loader = new ObjectLoader();
 
-	private Model bulletModel;
+	private final Model bulletModel;
 
 	private boolean isMoving;
 
-	private float bulletSpeed = (float) (BULLET_SPEED * Engine.tick());;
-
 	public Bullet(String id, Vector3f pos, Vector3f rotation, boolean moving) {
-		super(id, setModel("/models/untitled.obj", "textures/bullet.png"), pos, rotation, 1, 3f);
+		super(id, setModel(), pos, rotation, 1, 3f);
 
-		bulletModel = setModel("/models/untitled.obj", "textures/bullet.png");
-
+		bulletModel = setModel();
 		isMoving = moving;
 	}
 
-	private static Model setModel(String modelOBJ, String texture) {
-		Model model = loader.loadOBJModel(modelOBJ);
+	public Bullet(String id, Model bulletModel, Vector3f pos, Vector3f rotation, boolean moving) {
+		super(id, bulletModel, pos, rotation, 1, 3f);
+
+		this.bulletModel = bulletModel;
+		isMoving = moving;
+	}
+
+	private static Model setModel() {
+		Model model = loader.loadOBJModel("/models/untitled.obj");
 		try {
-			model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
+			model.setTexture(new Texture(loader.loadTexture("textures/bullet.png")), 1f);
 			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,25 +41,23 @@ public class Bullet extends HittableEntity {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public Model getBulletModel() { return bulletModel; }
-
+	@SuppressWarnings("unused")
 	public boolean getIfMoving() {
 		return isMoving;
 	}
-
+	@SuppressWarnings("unused")
 	public void setMoving(boolean move) {
 		isMoving = move;
-		return;
 	}
 
 	@Override
 	public void collision(Entity entity) {
-		return;
 	}
 
 	@Override
 	public void debugCollision(Entity entity) {
-		return;
 	}
 
 	@Override
@@ -65,44 +67,22 @@ public class Bullet extends HittableEntity {
 	
 	@Override
 	public void debugGameTick() {
-		if(!inBorder()) {
+		if(outOfBorder()) {
 			TestGame.entityIteratorRemoval();
 		}
 		
 		if(isMoving) {
-			bulletSpeed = (float) (BULLET_SPEED * Engine.tick());
-			switch((int)(getRotation().y + 90)) {
-				case 0:
-					incPos(0, 0, bulletSpeed);
-					break;
-				case 45:
-					incPos(bulletSpeed, 0, bulletSpeed);
-					break;
-				case 90:
-					incPos(bulletSpeed, 0, 0);
-					break;
-				case 135:
-					incPos(bulletSpeed, 0, -bulletSpeed);
-					break;
-				case 180:
-					incPos(0, 0, -bulletSpeed);
-					break;
-				case 225:
-					incPos(-bulletSpeed, 0, -bulletSpeed);
-					break;
-				case 270:
-					incPos(-bulletSpeed, 0, 0);
-					break;
-				case 315:
-					incPos(-bulletSpeed, 0, bulletSpeed);
-					break;
-				default:
-					incPos(-bulletSpeed, 0, -bulletSpeed);
-					break;
+			float bulletSpeed = (float) (BULLET_SPEED * Engine.tick());
+			switch ((int) (getRotation().y + 90)) {
+				case 0 -> incPos(0, 0, bulletSpeed);
+				case 45 -> incPos(bulletSpeed, 0, bulletSpeed);
+				case 90 -> incPos(bulletSpeed, 0, 0);
+				case 135 -> incPos(bulletSpeed, 0, -bulletSpeed);
+				case 180 -> incPos(0, 0, -bulletSpeed);
+				case 225 -> incPos(-bulletSpeed, 0, -bulletSpeed);
+				case 270 -> incPos(-bulletSpeed, 0, 0);
+				case 315 -> incPos(-bulletSpeed, 0, bulletSpeed);
 			}
 		}
-
-		return;
-		
 	}
 }
