@@ -2,8 +2,6 @@ package com.redteam.engine.core.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//import com.redteam.engine.core.ObjectLoader;
-//import com.redteam.engine.core.rendering.RenderManager;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
@@ -24,11 +22,20 @@ class TestTankEntity {
 	// TankEntity CONSTRUCTOR TEST
 	@Test
 	void testConstructor() {
-		fail("Not yet implemented");
+		TankEntity firstTank = new TankEntity("tank", null, null, originalPos, originalRotation);
+
+		assertEquals("tank", firstTank.getID());
+		assertEquals(originalPos, firstTank.getPos());
+		assertEquals(originalRotation, firstTank.getRotation());
+
+		TankEntity secondTank = new TankEntity("newTank", null, null, updatedPos, updatedRotation);
+
+		assertEquals("newTank", secondTank.getID());
+		assertEquals(updatedPos, secondTank.getPos());
+		assertEquals(updatedRotation, secondTank.getRotation());
 	}
 	
 	// TANK POSITIONING TEST
-	
 	@Test
 	void testIncPos() {
 		tank.setPos(originalPos.x, originalPos.y, originalPos.z);
@@ -51,7 +58,8 @@ class TestTankEntity {
 		assertEquals(40.0f, tank.getPos().y, 0.01f);
 		assertEquals(11.0f, tank.getPos().z, 0.01f);
 	}
-	
+
+	// TANK POSITIONING TEST
 	@Test
 	void testSetPos() {
 		tank.setPos(originalPos.x, originalPos.y, originalPos.z);
@@ -75,7 +83,6 @@ class TestTankEntity {
 	}
 	
 	// TANK ROTATION TEST
-	
 	@Test
 	void testIncRotation() {
 		tank.setRotation(originalRotation.x, originalRotation.y, originalRotation.z);
@@ -84,8 +91,6 @@ class TestTankEntity {
 		assertEquals(0.0f, tank.getRotation().y, 0.01f);
 		assertEquals(0.0f, tank.getRotation().z, 0.01f);
 
-
-		// Vector3f updatedRotation = new Vector3f(10,1,23);
 		tank.incRotation(updatedRotation.x, updatedRotation.y, updatedRotation.z);
 		
 		assertEquals(10.0f, tank.getRotation().x, 0.01f);
@@ -99,7 +104,8 @@ class TestTankEntity {
 		assertEquals(21.0f, tank.getRotation().y, 0.01f);
 		assertEquals(24.0f, tank.getRotation().z, 0.01f);
 	}
-	
+
+	// TANK ROTATION TEST
 	@Test
 	void testSetRotation() {
 		tank.setRotation(originalRotation.x, originalRotation.y, originalRotation.z);
@@ -123,7 +129,6 @@ class TestTankEntity {
 	}
 	
 	// BASE ROTATION TEST
-	
 	@Test
 	void testIncBaseRotation() {
 		tank.setBaseRotation(ogBaseRotation.x, ogBaseRotation.y, ogBaseRotation.z);
@@ -145,7 +150,8 @@ class TestTankEntity {
 		assertEquals(75.0f, tank.getBaseRotation().y, 0.01f);
 		assertEquals(110.0f, tank.getBaseRotation().z, 0.01f);
 	}
-	
+
+	// BASE ROTATION TEST
 	@Test
 	void testSetBaseRotation() {
 		tank.setBaseRotation(ogBaseRotation.x, ogBaseRotation.y, ogBaseRotation.z);
@@ -160,17 +166,15 @@ class TestTankEntity {
 		assertEquals(73.0f, tank.getBaseRotation().y, 0.01f);
 		assertEquals(106.0f, tank.getBaseRotation().z, 0.01f);
 		
-		//SPEICAL TO SETBASEROTATION
+		//SPECIAL TO SETBASEROTATION
 		tank.setBaseRotation(91.0f, 32.0f, 7.0f);
 		
 		assertEquals(91.0f, tank.getBaseRotation().x, 0.01f);
 		assertEquals(32.0f, tank.getBaseRotation().y, 0.01f);
 		assertEquals(7.0f, tank.getBaseRotation().z, 0.01f);
 	}
-	
-	
+
 	// TURRET ROTATION TEST
-	
 	@Test
 	void testIncTurretRotation() {
 		tank.setTurretRotation(ogTurretRotation.x, ogTurretRotation.y, ogTurretRotation.z);
@@ -192,7 +196,8 @@ class TestTankEntity {
 		assertEquals(80.0f, tank.getTurretRotation().y, 0.01f);
 		assertEquals(120.0f, tank.getTurretRotation().z, 0.01f);
 	}
-	
+
+	// TURRET ROTATION TEST
 	@Test
 	void testSetTurretRotation() {
 		tank.setTurretRotation(ogTurretRotation.x, ogTurretRotation.y, ogTurretRotation.z);
@@ -207,7 +212,7 @@ class TestTankEntity {
 		assertEquals(49.0f, tank.getTurretRotation().y, 0.01f);
 		assertEquals(92.0f, tank.getTurretRotation().z, 0.01f);
 		
-		// SPECIAL SETTURRETROTATION
+		// SPECIAL TO SETTURRETROTATION
 		tank.setTurretRotation(100.0f, 13.0f, 69.0f);
 		
 		assertEquals(100.0f, tank.getTurretRotation().x, 0.01f);
