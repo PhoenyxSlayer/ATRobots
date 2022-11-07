@@ -1,8 +1,7 @@
 package com.redteam.engine.core.entity;
 
 import com.redteam.engine.game.TestGame;
-
-import java.util.Iterator;
+import static com.redteam.engine.utils.Consts.*;
 
 import org.joml.Vector3f;
 
@@ -125,14 +124,12 @@ public class HittableEntity extends Entity {
 		return false;
 	}
 
-	public void removeEntity(Entity entity) {
-		// Searches through the gameTick Iterator to find the entity for removal
-		Iterator<Entity> it = TestGame.gIterator();
-		while (it.hasNext()) {
-            if (it.next().equals(entity)) {
-                it.remove();
-				break;
-            }
-        }
+	public boolean inBorder() {
+		if((getPos().x <= -X_BORDER || getPos().x >= X_BORDER)
+		|| (getPos().z <= -Z_BORDER || getPos().z >= 0))
+		{
+			return false;
+		}
+		return true;
 	}
 }

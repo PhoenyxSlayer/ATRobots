@@ -15,7 +15,6 @@ import org.joml.Vector3f;
 
 import static com.redteam.engine.utils.Consts.CAMERA_STEP;
 import static org.lwjgl.glfw.GLFW.*;
-import org.lwjgl.glfw.GLFWKeyCallback;
 
 import com.redteam.engine.core.Camera;
 import static com.redteam.engine.core.Engine.*;
@@ -23,7 +22,6 @@ import com.redteam.engine.core.ILogic;
 import com.redteam.engine.core.MouseInput;
 import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.Window;
-import com.redteam.engine.core.entity.Bullet;
 import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.entity.Material;
@@ -46,6 +44,11 @@ public class TestGame implements ILogic {
 	// TODO : MAKE ENTITIIES, TERRAINS, AND LIGHTS OF THE MAP THEIR OWN CLASSES
 	public static Set<Entity> entities = new HashSet<Entity>();
 	public static Set<Terrain> terrains = new HashSet<Terrain>();
+	public static Set<Entity> additionEntities = new HashSet<Entity>();
+
+	public static Iterator<Entity> iRenderEntities,
+								   iAdditionalEntities;
+	public static Iterator<Terrain> iRenderTerrains;
 
 	public static Camera camera;
 
@@ -77,36 +80,22 @@ public class TestGame implements ILogic {
 	
 	@Override
 	public void init() throws Exception {
-		renderer.init();
-		window.updateLogo(icon);
-
-		// Model Rendering
-		tankModel = setModel("/models/tank.obj", "textures/Camo.jpg");
-		bulletModel = setModel("/models/bullet.obj", "textures/bullet.png");
+		renderer.init();					// INITIALIZATION OF RENDERER
+		window.updateLogo(icon);			// WINDOW ICON
 
 		// Terrain Adding
-		Terrain terrain = new Terrain(new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER), loader, new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f));
-		terrains.add(terrain);
+		terrains.add( new Terrain		(
+												new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER),	// POSITION
+												loader,													// OBJECT LOADER
+												new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f)	// TEXTURE
+								  		));
 
 		// Entity Adding
-		entities.add(new TankEntity("tank",										// ID
-									new Vector3f(70f,1.3f,-50f),				// POSITION
-									new Vector3f(0,0,0)					// ROTATION
-									));
-
-		entities.add(new HittableEntity("dummyTank",							// ID
-											tankModel,								// MODEL
-											new Vector3f(50f,1.3f,-50f),		// POSITION
-											new Vector3f(0,0,0),			// ROTATION
-											1,								// SCALE
-											5f							// HITBOX SCALE
-											));
-
-
-		entities.add(new Bullet		   (	"bullet",								// ID
-											new Vector3f(60f,2.55f,-50f),		// POSITION
-											new Vector3f(90,0,0)			// ROTATION
-											));
+		entities.add( new TankEntity	(
+												"tank",										// ID
+												new Vector3f(70f,1.3f,-50f),				// POSITION
+												new Vector3f(0,0,0)					// ROTATION
+									 	));
 		
 		// Light for the Map
 		// 1st Argument Light Color, 2nd Light Positioning, 3rd Light Intensity
@@ -116,31 +105,14 @@ public class TestGame implements ILogic {
 
 	@Override
 	public void input() {
-		// TODO : IMPLEMENT ADDING KEYSTROKES FROM OTHER CLASSES/FUNCTIONS TO THIS
-		GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if (action == GLFW_RELEASE) {
-					if (key == GLFW_KEY_ESCAPE) {
-						System.out.println("EXITING");
-						glfwSetWindowShouldClose(window, true);
-						// QUITS GAME
-					}
-					if (key == GLFW_KEY_V) {
-						spectator = !spectator;                        // SPECTATOR MODE W/ V PRESS
-					}
-				}
-			}
-		};
-		glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
-
-		
 		if(spectator) {
 			spectatorMovement();										// IF V IS PRESSED IT WILL ENABLE/ DISABLE THIS
 		}
 	}
+
 	@Override
 	public void update(double interval, MouseInput mouseInput) {
+
 		// Spectator Camera Rotation (Using Right Click)
 		if(mouseInput.isRightButtonPress() && spectator) {
 			Vector2f rotVec = mouseInput.getDisplVec();
@@ -156,15 +128,19 @@ public class TestGame implements ILogic {
 		gameTick(); 		// Updates each entity with their game functionalities(ticks)
 
 	}
+
 	@Override
 	public void render() {
 		glfwSwapBuffers(window.getWindowHandle());
 		// Tells OpenGL to start rendering all the objects put in a queue
 		glfwPollEvents();
 
+		// **RENDERING CODE**
+		iRenderEntities = entities.iterator();
+
 		// Entity Rendering
-		for(Iterator<Entity> i = entities.iterator(); i.hasNext();) {
-			Entity ent = i.next();
+		while(iRenderEntities.hasNext()) {
+			Entity ent = iRenderEntities.next();
 			if(ent instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
 				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
@@ -175,10 +151,11 @@ public class TestGame implements ILogic {
 			}
 		}
 
+		iRenderTerrains = terrains.iterator();
+
 		// Terrain Rendering
-		for(Terrain terrain : terrains) {
-			renderer.processTerrain(terrain);
-		}
+		while(iRenderTerrains.hasNext())
+			renderer.processTerrain(iRenderTerrains.next());
 
 		renderer.render(camera, directionalLight);
 	}
@@ -188,7 +165,8 @@ public class TestGame implements ILogic {
 		renderer.cleanup();
 		loader.cleanup();
 	}
-	
+
+	@SuppressWarnings("unused")
 	private Model setModel(String modelOBJ, String texture) throws Exception{
 		Model model = loader.loadOBJModel(modelOBJ);
 		model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
@@ -210,36 +188,61 @@ public class TestGame implements ILogic {
 	public void removeTerrain(Terrain ent) {
 		terrains.add(ent);	 // remove the terrain to a set of terrains
 	}
-
-	public static Iterator<Entity> iGameTick;
+	
 	public void gameTick() {
-		iGameTick = entities.iterator();
+		iRenderEntities = entities.iterator();
 
-		while(iGameTick.hasNext()) {
-			Entity ent = iGameTick.next();
+		while(iRenderEntities.hasNext()) {
+			Entity ent = iRenderEntities.next();
+
+			// TODO: REMOVE
+
 			if(ent instanceof HittableEntity) {
 				ent.debugGameTick();
-				((HittableEntity) ent).collisionCheck();
+				((HittableEntity) ent).collisionCheck();	// Checks Collisions on only HittableEntities and their children
 			} else { // for EVERY entity
 				ent.debugGameTick();
-			}// Updates each entity with their game functionalities(ticks)
+			}		 // Updates each entity with their game functionalities(ticks)
 		}
+
+		iAdditionalEntities = additionEntities.iterator();
+
+		while(iAdditionalEntities.hasNext()) {
+			entities.add(iAdditionalEntities.next());
+		}
+
+		additionEntities.clear();
+
 	}
 
 	// Grabs iGameTick Iterator
-	public static Iterator<Entity> gIterator() {
-		return iGameTick;
-	}
+	public static Iterator<Entity> gEntityIterator() { return iRenderEntities; }
 
 	// *Used for Entity Classes* removes themselves
-	public static void gameTickRemoval() {
-		iGameTick.remove();
-		return;
+	public static void entityIteratorRemoval() { iRenderEntities.remove(); }
+
+	public static void addAdditionalEntity(Entity ent) { additionEntities.add(ent); }
+	public static void removeAdditionalEntity(Entity ent) { additionEntities.remove(ent); }
+
+	public static void findAndRemoveEntity(Entity entity) {
+		
+		// TODO : FIX
+		Iterator<Entity> test2 = iRenderEntities;
+		// Searches through the gameTick Iterator to find the entity for removal
+		while (test2.hasNext()) {
+			Entity ent = test2.next();
+            if (ent.equals(entity)) {
+                test2.remove();
+				continue;
+            }
+        }
 	}
 
 	
-	public static boolean getSpectator() {
-		return spectator;
+	public static boolean getSpectator() { return spectator; }
+
+	public static boolean updateSpectator() {
+		return spectator = spectator ? false: true;
 	}
 
 	public void spectatorMovement() {
@@ -276,9 +279,7 @@ public class TestGame implements ILogic {
 	    clip.start();
 	}
 	
-	public static Collection<Sound> getAllSounds() {
-		return sounds.values();  
-	}
+	public static Collection<Sound> getAllSounds() { return sounds.values(); }
 	
 	public static Sound getSound(String soundFile) {
 		File file = new File(soundFile);

@@ -10,6 +10,7 @@ import static com.redteam.engine.utils.Consts.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class TankEntity extends HittableEntity {
 	
@@ -22,6 +23,8 @@ public class TankEntity extends HittableEntity {
 				  base;
 
 	private float tankSpeed = (float)(MOVEMENT_SPEED * Engine.tick());
+
+	// TODO : MAKE TANKS HAVE RANDOMIZED TEXTURES
 
 	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation) {
 		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, 1, 5f);
@@ -89,11 +92,14 @@ public class TankEntity extends HittableEntity {
 		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
 		return;
 	}
-
+	int i = 0;
 	@Override
 	public void debugCollision(Entity entity) {
-		if(entity instanceof Bullet) {
-			removeEntity(entity);
+		//System.out.println(entity.getID());
+		
+		if(entity.getID().trim().equals("bullet")) {
+			System.out.println("i've been hit " + i++);
+			TestGame.findAndRemoveEntity(entity);
 			// TODO : REDUCES HEALTH
 		}
 		else if(entity instanceof TankEntity) {
@@ -102,26 +108,123 @@ public class TankEntity extends HittableEntity {
 		return;
 	}
 
+	@Override
 	public void gameTick() {
 		// TODO : REAL-GAMES GAME TICK IMPLEMENTATION
+		// THIS IS WHERE FUNCTION CONVERSION FROM .AT2 CODE WILL GO
 	}
 	
 
 	// debugGameTick Variables
 	
-	private Vector3f movement = new Vector3f(0,0,0);
+	private Vector3f pushBack = new Vector3f(0,0,0),
+					 movement = new Vector3f(0,0,0),
+					 bulletPos = new Vector3f(0,0,0);
 	
 	private float tankAngle,
 	  			  turretAngle;
 
+	GLFWKeyCallback keyCallback;
+
+	@Override
 	public void debugGameTick() {
 		
 		if(!TestGame.getSpectator()) {
-			// SPRINT
+			// SPEED/SPRINT
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 				tankSpeed = ((float) (MOVEMENT_SPEED * Engine.tick()) * 3);
 			else
 				tankSpeed = (float) (MOVEMENT_SPEED * Engine.tick());
+
+			// MAKES SURE ENTITY IS IN BORDER
+			if(!inBorder()) {
+				pushBack = getPos();
+				if(getPos().x > X_BORDER && getPos().z > 0 )
+					pushBack.add(-tankSpeed, 0, -tankSpeed);
+				else if(getPos().x > X_BORDER && getPos().z < -Z_BORDER )
+					pushBack.add(-tankSpeed, 0, tankSpeed);
+				else if(getPos().x < -X_BORDER && getPos().z > 0 )
+					pushBack.add(tankSpeed, 0, -tankSpeed);
+				else if(getPos().x < -X_BORDER && getPos().z < -Z_BORDER )
+					pushBack.add(tankSpeed, 0, tankSpeed);
+				else if(getPos().x > X_BORDER)
+					pushBack.add(-tankSpeed, 0, 0);
+				else if(getPos().x < -X_BORDER)
+					pushBack.add(tankSpeed, 0, -tankSpeed);
+				else if(getPos().z > 0)
+					pushBack.add(0, 0, -tankSpeed);
+				else if(getPos().z < -Z_BORDER)
+					pushBack.add(0 , 0, tankSpeed);
+				
+				setPos(pushBack.x, pushBack.y, pushBack.z);
+			}
+
+			// SHOOTING
+
+			// TODO : IMPLEMENT ADDING KEYSTROKES FROM OTHER CLASSES/FUNCTIONS TO THIS
+			keyCallback = new GLFWKeyCallback() {
+				@Override
+				public void invoke(long window, int key, int scancode, int action, int mods) {
+					if(action == GLFW_PRESS) {
+
+						if(key == GLFW_KEY_V)
+							TestGame.updateSpectator();
+						if(!TestGame.getSpectator()) {
+							if(key == GLFW_KEY_SPACE) {
+								bulletPos.x = getPos().x;
+								bulletPos.z = getPos().z;
+								switch((int)turretAngle) {
+									case 0:
+										bulletPos.z += 5.3f;
+										break;
+									case 45:
+										bulletPos.x += 4.2f;
+										bulletPos.z += 4.2f;
+										break;
+									case 90:
+										bulletPos.x += 5.3f;
+										break;
+									case 135:
+										bulletPos.x += 4.2f;
+										bulletPos.z -= 4.2f;
+										break;
+									case 180:
+										bulletPos.z -= 5.3f;
+										break;
+									case 225:
+										bulletPos.x -= 4.2f;
+										bulletPos.z -= 4.2f;
+										break;
+									case 270:
+										bulletPos.x -= 5.3f;
+										break;
+									case 315:
+										bulletPos.x -= 4.2f;
+										bulletPos.z += 4.2f;
+										break;
+								}
+								TestGame.addAdditionalEntity(
+								new Bullet(
+								"bullet",											// ID
+									new Vector3f(bulletPos.x,2.55f,bulletPos.z),		// POSITION
+									new Vector3f(0,turretAngle -90, -90),	 		// ROTATION
+									true										// IS IT MOVING?
+								));
+							}
+						}
+					}
+					if (action == GLFW_RELEASE) {
+						if(key == GLFW_KEY_ESCAPE) {
+							System.out.println("EXITING");
+							glfwSetWindowShouldClose(window, true);
+							return;
+						}
+						
+					}
+				}
+			};
+
+			glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
 
 			// MOVING + ROTATION OF TANK
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_W)) {
@@ -191,7 +294,6 @@ public class TankEntity extends HittableEntity {
 
 			TestGame.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
 			TestGame.camera.setRotation(90.0f, 0, 0);
-			// TODO : ADD SHOOTING
 		}
 	}
 }
