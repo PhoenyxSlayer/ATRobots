@@ -1,0 +1,33 @@
+;
+; CIRCLES - runs in circles firing if enemy is detected.
+;
+; by William "Amos" Confer
+; inspired by original robot by Ed T. Toton III 02/04/97
+
+#def turn_rate
+#def chance    ; chance of switching directions is 1:chance
+
+     mov  turn_rate,     10        ; Set turn rate to 10 degrees
+     mov  chance,        40        ; 1:40 chance of switching directions
+     opo  p_scanarc,     6         ; Set scan arc to 6 degrees.
+
+!main
+     opo  p_throttle,    100       ; Full speed ahead!
+     opo  p_steering,    turn_rate ; Steer a few degrees in current direction
+
+     ipo  p_scan,   ax             ; Scan for bots... closest range in ax
+     cmp  ax,       1500           ; Check to see if enemy is in range
+     jge  !keep_going              ; Skip shooting if no enemy in range
+
+; fire!!!!
+     opo  p_weapon, 0              ; Shoot w. 0 degree offset... i.e., straight ahead :-)
+
+!keep_going
+     ipo  p_random, ax             ; Get a random number into ax
+     mod  ax,       chance
+     cmp  ax,       0              ; switch directions if 0
+     jne  !main                    ; if not, skip along.
+
+; switch directions
+     neg  turn_rate                ; Now steer in the opposite direction
+     jmp  !main
