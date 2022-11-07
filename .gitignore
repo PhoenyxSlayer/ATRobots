@@ -139,3 +139,4 @@ ATRobots/.gradle/buildOutputCleanup/buildOutputCleanup.lock
 ATRobots/.idea/workspace.xml
 ATRobots/build/tmp/compileJava/previous-compilation-data.bin
 ATRobots/.attach_pid8189
+*.class
