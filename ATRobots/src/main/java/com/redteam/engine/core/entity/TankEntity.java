@@ -84,7 +84,7 @@ public class TankEntity extends HittableEntity {
 	
 	// TURRET OF TANK ROTATION BEING SET
 	public void setTurretRotation(float x, float y, float z) {
-		this.turretRotation = new Vector3f(x,y,z);
+		this.turretRotation.set(x,y,z);
 	}
 	
 	public Model getTop() { return top; }
