@@ -482,8 +482,6 @@ public class TestGame implements ILogic{
 		
 		spectatorCheck.spectator(spectator);
 		
-		menu.showMenu();
-		
 		ImGui.render();
 		window.imGuiGl3.renderDrawData(ImGui.getDrawData());
 			if(ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
