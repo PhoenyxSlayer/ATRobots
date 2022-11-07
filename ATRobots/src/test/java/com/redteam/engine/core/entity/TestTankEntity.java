@@ -2,21 +2,21 @@ package com.redteam.engine.core.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.redteam.engine.core.ObjectLoader;
+import com.redteam.engine.core.rendering.RenderManager;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
 class TestTankEntity {
-	
 	Vector3f originalPos = new Vector3f(0,0,0);
 	Vector3f originalRotation = new Vector3f(0,0,0);
 	
-	TankEntity tank = new TankEntity("tank", originalPos, originalRotation);
+	TankEntity tank = new TankEntity("tank", null, null, originalPos, originalRotation);
 	
 	
 	Vector3f updatedPos = new Vector3f(50,20,10);
 	Vector3f updatedRotation = new Vector3f(10,1,23);
-	
-	
+
 	// TankEntity CONSTRUCTOR TEST
 	@Test
 	void testConstructor() {
