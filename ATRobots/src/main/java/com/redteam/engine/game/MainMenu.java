@@ -16,9 +16,9 @@ public class MainMenu implements ILogic {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
-	public void update(float interval, MouseInput mouseInput) {
+	public void update(double interval, MouseInput mouseInput) {
 		// TODO Auto-generated method stub
 		
 	}
