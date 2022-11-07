@@ -69,7 +69,7 @@ public class TankEntity extends HittableEntity {
 	
 	// BASE OF TANK ROTATION BEING INCREMENTING
 	public void incBaseRotation(float x, float y, float z) {
-		this.baseRotation.add(new Vector3f(x, y, z));
+		super.incRotation(x,y,z);
 	}
 	
 	// TURRET OF TANK ROTATION BEING INCREMENTING
@@ -79,7 +79,7 @@ public class TankEntity extends HittableEntity {
 
 	// BASE OF TANK ROTATION BEING SET
 	public void setBaseRotation(float x, float y, float z) {
-		this.baseRotation = new Vector3f(x,y,z);
+		super.setRotation(x,y,z);
 	}
 	
 	// TURRET OF TANK ROTATION BEING SET

@@ -28,7 +28,12 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ATRobots" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -95,29 +100,21 @@
       <recent name="com.redteam.engine.core.rendering" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TestTankEntity.testIncRotation">
-    <configuration name="TestTankEntity.testSetRotation" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.redteam.engine.core.entity.TestTankEntity.testSetRotation&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
+  <component name="RunManager" selected="JUnit.TestTankEntity">
+    <configuration name="TestTankEntity" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ATRobots.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.redteam.engine.core.entity.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.redteam.engine.core.entity" />
+      <option name="MAIN_CLASS_NAME" value="com.redteam.engine.core.entity.TestTankEntity" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="TestTankEntity.testConstructor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ATRobots.test" />
@@ -185,11 +182,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestTankEntity" />
         <item itemvalue="JUnit.TestTankEntity.testIncRotation" />
         <item itemvalue="JUnit.TestTankEntity.testSetPos" />
         <item itemvalue="JUnit.TestTankEntity.testIncPos" />
         <item itemvalue="JUnit.TestTankEntity.testConstructor" />
-        <item itemvalue="Gradle.TestTankEntity.testSetRotation" />
       </list>
     </recent_temporary>
   </component>
@@ -210,6 +207,7 @@
       <workItem from="1667758502807" duration="90000" />
       <workItem from="1667758601210" duration="264000" />
       <workItem from="1667845358282" duration="2101000" />
+      <workItem from="1667848045825" duration="909000" />
     </task>
     <servers />
   </component>

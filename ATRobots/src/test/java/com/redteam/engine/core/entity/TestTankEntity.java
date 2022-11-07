@@ -79,7 +79,9 @@ class TestTankEntity {
 		assertEquals(0.0f, tank.getRotation().x, 0.01f);
 		assertEquals(0.0f, tank.getRotation().y, 0.01f);
 		assertEquals(0.0f, tank.getRotation().z, 0.01f);
-		
+
+
+		// Vector3f updatedRotation = new Vector3f(10,1,23);
 		tank.incRotation(updatedRotation.x, updatedRotation.y, updatedRotation.z);
 		
 		assertEquals(10.0f, tank.getRotation().x, 0.01f);
