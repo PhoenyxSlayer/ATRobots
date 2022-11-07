@@ -49,6 +49,7 @@ public class Robot{
 		boolean isValid = false;
 		
 		//Read in AT2 file line by line, remove any comment or blank lines and turn the file into an array;
+		//if(getFile() == null) return isValid;
 		try (BufferedReader br = new BufferedReader(new FileReader(getFile()))) {
 			String line = "";
 			
@@ -121,6 +122,7 @@ public class Robot{
 			String[] rfLines = runFirst.get(i).strip().split(" ");
 			for(String rf : rfLines) {
 				if(!(rf.isBlank() || rf.matches("\\d+|-\\d+|\\d+.+|\\d+.+\\d+|@\\d+|!.+|:\\d+|[a-zA-Z]_.+") || rf.contains(",") || rf.toLowerCase().matches("ax|bx|cx|dx|ex|fx|sp") || userVars.containsKey(rf)||rf.equalsIgnoreCase("maxint")||rf.equalsIgnoreCase("minint"))) {
+					System.out.println("instruction: " + rf);
 					rfInstructs.add(rf);
 				}
 			}
@@ -206,7 +208,7 @@ public class Robot{
 				String[] lines = code.get(i).get(j).strip().split(" ");
 				for(String l : lines) {
 					if(!(l.isBlank() || l.matches("\\d+|-\\d+|\\d+.+|\\d+.+\\d+|@\\d+|!.+|:\\d+|[a-zA-Z]_.+") || l.contains(",") || l.toLowerCase().matches("ax|bx|cx|dx|ex|fx|sp") || userVars.containsKey(l) || l.equalsIgnoreCase("maxint") || l.equalsIgnoreCase("minint"))) {
-						System.out.println(l);
+						System.out.println("instruction: " + l);
 						instructs.add(l);
 					}
 				}
@@ -310,6 +312,15 @@ public class Robot{
 		System.out.println("User variables: "+userVars+"");
 		System.out.println("Number of labels: "+labels.size()+"");
 		System.out.println("Number of code arrays: "+code.size()+"");
+		
+		code.clear();
+		labels.clear();
+		text.clear();
+		runFirst.clear();
+		rfInstructs.clear();
+		instructs.clear();
+		functions.clear();
+		labels.clear();
 		
 		return isCompiled;
 	}
