@@ -183,21 +183,21 @@ public class DebugMode implements ILogic {
 	public void removeTerrain(Terrain ent) {
 		terrains.add(ent);	 // remove the terrain to a set of terrains
 	}
-	
+
 	public void gameTick() {
 		iRenderEntities = entities.iterator();
 
 		while(iRenderEntities.hasNext()) {
 			Entity ent = iRenderEntities.next();
-
-			// TODO: REMOVE
-
 			if(ent instanceof HittableEntity) {
 				ent.debugGameTick();
-				((HittableEntity) ent).collisionCheck();	// Checks Collisions on only HittableEntities and their children
+				((HittableEntity) ent).debugCollisionCheck();	// Checks Collisions on only HittableEntities and their children
 			} else { // for EVERY entity
 				ent.debugGameTick();
 			}		 // Updates each entity with their game functionalities(ticks)
+			if(ent.isRemoved()) {
+				iRenderEntities.remove();
+			}
 		}
 
 		iAdditionalEntities = additionEntities.iterator();
@@ -220,20 +220,6 @@ public class DebugMode implements ILogic {
 	public static void addAdditionalEntity(Entity ent) { additionEntities.add(ent); }
 	@SuppressWarnings("unused")
 	public static void removeAdditionalEntity(Entity ent) { additionEntities.remove(ent); }
-
-	public static void findAndRemoveEntity(Entity entity) {
-		
-		// TODO : FIX
-		Iterator<Entity> test2 = iRenderEntities;
-		// Searches through the gameTick Iterator to find the entity for removal
-		while (test2.hasNext()) {
-			Entity ent = test2.next();
-            if (ent.equals(entity)) {
-                test2.remove();
-			}
-        }
-	}
-
 	
 	public static boolean isSpectator() { return spectator; }
 

@@ -10,6 +10,8 @@ public class Entity {
     private final Vector3f pos;
     private final Vector3f rotation;
     private final float scale;
+
+    private boolean removed;
     
     public Entity(String id, Model model, Vector3f pos, Vector3f rotation, float scale) {
     	this.id = id;
@@ -67,5 +69,13 @@ public class Entity {
     }
 
     public void debugGameTick() {
+    }
+
+    public void remove() {
+        removed = true;
+    }
+
+    public boolean isRemoved() {
+        return removed;
     }
 }

@@ -2,9 +2,10 @@ package com.redteam.engine.core.entity;
 
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
-import static com.redteam.engine.utils.Consts.*;
-
 import org.joml.Vector3f;
+
+import static com.redteam.engine.utils.Consts.X_BORDER;
+import static com.redteam.engine.utils.Consts.Z_BORDER;
 
 public class HittableEntity extends Entity {
 	
@@ -20,7 +21,7 @@ public class HittableEntity extends Entity {
 
 	// ALL BELOW HIT BOX CODE
     
-    private void formCube() {
+    protected void formCube() {
 		
 		float halfSideLength = hitBoxScale / 2f;
 		
@@ -110,23 +111,28 @@ public class HittableEntity extends Entity {
 	public void debugGameTick() {
 	}
 
-
 	// Collision Detection
-
-	Object[] entitiesArray;
-	
+	@SuppressWarnings("unused")
 	public void collisionCheck() {
-		entitiesArray = DebugMode.entities.toArray();
+		Object[] entitiesArray = DebugMode.entities.toArray();
 		formCube();
-		for(int i = 0; i < entitiesArray.length; i++) {
-			if(entitiesArray[i] instanceof HittableEntity) {
-				for(int j = i; j < entitiesArray.length; j++) {
-					if(passThrough((HittableEntity)entitiesArray[j])) {
-						((HittableEntity)entitiesArray[i]).debugCollision((Entity)entitiesArray[j]);
-						((HittableEntity)entitiesArray[j]).debugCollision((Entity)entitiesArray[i]);
-						return;
-					}
-				}
+		for (Object ent : entitiesArray) {
+			if (ent instanceof HittableEntity &&
+					passThrough((HittableEntity) ent)) {
+				this.collision((HittableEntity) ent);
+				return;
+			}
+		}
+	}
+
+	public void debugCollisionCheck() {
+		Object[] entitiesArray = DebugMode.entities.toArray();
+		formCube();
+		for (Object ent : entitiesArray) {
+			if (ent instanceof HittableEntity &&
+					passThrough((HittableEntity) ent)) {
+				this.debugCollision((HittableEntity) ent);
+				return;
 			}
 		}
 	}

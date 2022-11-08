@@ -100,14 +100,12 @@ public class TankEntity extends HittableEntity {
 	public void collision(Entity entity) {
 		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
 	}
-	int i = 0;
+
 	@Override
 	public void debugCollision(Entity entity) {
-		//System.out.println(entity.getID());
-		
-		if(entity.getID().trim().equals("bullet")) {
-			System.out.println("i've been hit " + i++);
-			DebugMode.findAndRemoveEntity(entity);
+
+		if(entity instanceof BulletEntity) {
+			entity.remove();
 			// TODO : REDUCES HEALTH
 		}
 		else if(entity instanceof TankEntity) {
