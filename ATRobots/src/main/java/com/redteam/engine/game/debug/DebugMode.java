@@ -40,12 +40,10 @@ import com.redteam.engine.core.sound.Sound;
 public class DebugMode implements ILogic {
 	
 	private final RenderManager renderer;
-	public final ObjectLoader loader;
+	public static ObjectLoader loader;
 
-	// TODO : MAKE ENTITIES, TERRAINS, AND LIGHTS OF THE MAP THEIR OWN CLASSES
-	public static Set<Entity> entities = new HashSet<>();
-	public static Set<Terrain> terrains = new HashSet<>();
-	public static Set<Entity> additionEntities = new HashSet<>();
+	public static DebugObjectMap objectMap = new DebugObjectMap();
+	private static HashSet<Entity> additionalEntities = new HashSet<>();
 
 	public static Iterator<Entity> iRenderEntities,
 								   iAdditionalEntities;
@@ -53,14 +51,13 @@ public class DebugMode implements ILogic {
 
 	public static Camera camera;
 
-	private DirectionalLight directionalLight;
-
 	private final Vector3f cameraInc = new Vector3f(0,0,0);
 
 	public static Window window;
 
 	private static boolean spectator = false;
 
+	// TODO : MAKE SOUND HAVE ITS OWN MAP FILE
 	private static final Map<String, Sound> sounds = new HashMap<>();
 
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
@@ -76,25 +73,7 @@ public class DebugMode implements ILogic {
 	public void init() throws Exception {
 		renderer.init();					// INITIALIZATION OF RENDERER
 		window.updateLogo(icon);			// WINDOW ICON
-
-		// Terrain Adding
-		terrains.add( new Terrain		(
-												new Vector3f(-Constants.X_BORDER,0,-Constants.Z_BORDER),	// POSITION
-												loader,													// OBJECT LOADER
-												new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f)	// TEXTURE
-								  		));
-
-		// Entity Adding
-		entities.add( new TankEntity	(
-												"tank",										// ID
-												new Vector3f(70f,1.3f,-50f),				// POSITION
-												new Vector3f(0,0,0)					// ROTATION
-									 	));
-		
-		// Light for the Map
-		// 1st Argument Light Color, 2nd Light Positioning, 3rd Light Intensity
-		directionalLight = new DirectionalLight(new Vector3f(1,1,1), new Vector3f(-1, -10, 0), 1.0f);
-
+		objectMap.init();
 	}
 
 	@Override
@@ -129,12 +108,8 @@ public class DebugMode implements ILogic {
 		// Tells OpenGL to start rendering all the objects put in a queue
 		glfwPollEvents();
 
-		// **RENDERING CODE**
-		iRenderEntities = entities.iterator();
-
 		// Entity Rendering
-		while(iRenderEntities.hasNext()) {
-			Entity ent = iRenderEntities.next();
+		for(Entity ent : objectMap.entityMap()) {
 			if(ent instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
 				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
@@ -145,13 +120,13 @@ public class DebugMode implements ILogic {
 			}
 		}
 
-		iRenderTerrains = terrains.iterator();
+		iRenderTerrains = objectMap.terrainMap().iterator();
 
 		// Terrain Rendering
-		while(iRenderTerrains.hasNext())
-			renderer.processTerrain(iRenderTerrains.next());
+		for(Terrain ter : objectMap.terrainMap())
+			renderer.processTerrain(ter);
 
-		renderer.render(camera, directionalLight);
+		renderer.render(camera, objectMap.lightMap());
 	}
 
 	@Override
@@ -160,66 +135,33 @@ public class DebugMode implements ILogic {
 		loader.cleanup();
 	}
 
-	@SuppressWarnings("unused")
-	private Model setModel(String modelOBJ, String texture) throws Exception{
-		Model model = loader.loadOBJModel(modelOBJ);
-		model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
-		return model;
-	}
-
-	@SuppressWarnings("unused")
-	public void addEntity(Entity ent) {
-		entities.add(ent);	 // add the entity to a set of entities
-	}
-	@SuppressWarnings("unused")
-	public static void removeEntity(Entity ent) {
-		entities.remove(ent); // remove the entity to a set of entities
-	}
-	@SuppressWarnings("unused")
-	public void addTerrain(Terrain ent) {
-		terrains.add(ent);	 // add the terrain to a set of terrains
-	}
-	@SuppressWarnings("unused")
-	public void removeTerrain(Terrain ent) {
-		terrains.add(ent);	 // remove the terrain to a set of terrains
-	}
-
 	public void gameTick() {
-		iRenderEntities = entities.iterator();
+		iRenderEntities = objectMap.entityMap().iterator();
 
 		while(iRenderEntities.hasNext()) {
 			Entity ent = iRenderEntities.next();
+			if(ent.isRemoved()) {
+				iRenderEntities.remove();
+				continue;
+			}
 			if(ent instanceof HittableEntity) {
 				ent.debugGameTick();
 				((HittableEntity) ent).debugCollisionCheck();	// Checks Collisions on only HittableEntities and their children
 			} else { // for EVERY entity
 				ent.debugGameTick();
 			}		 // Updates each entity with their game functionalities(ticks)
-			if(ent.isRemoved()) {
-				iRenderEntities.remove();
-			}
 		}
 
-		iAdditionalEntities = additionEntities.iterator();
+		for(Entity ent : additionalEntities)
+			objectMap.addEntity(ent);
 
-		while(iAdditionalEntities.hasNext()) {
-			entities.add(iAdditionalEntities.next());
-		}
-
-		additionEntities.clear();
-
+		additionalEntities.clear();
 	}
-
-	// Grabs iGameTick Iterator
-	@SuppressWarnings("unused")
-	public static Iterator<Entity> gEntityIterator() { return iRenderEntities; }
 
 	// *Used for Entity Classes* removes themselves
 	public static void entityIteratorRemoval() { iRenderEntities.remove(); }
 
-	public static void addAdditionalEntity(Entity ent) { additionEntities.add(ent); }
-	@SuppressWarnings("unused")
-	public static void removeAdditionalEntity(Entity ent) { additionEntities.remove(ent); }
+	public static void addAdditionalEntity(Entity ent) { additionalEntities.add(ent); }
 	
 	public static boolean isSpectator() { return spectator; }
 
@@ -246,7 +188,9 @@ public class DebugMode implements ILogic {
 			cameraInc.y = cameraSpeed;
 	}
 
-
+	public static ObjectLoader getObjectLoader() {
+		return loader;
+	}
 
 
 	// SOUND RELATED

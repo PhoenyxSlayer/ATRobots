@@ -114,19 +114,14 @@ public class HittableEntity extends Entity {
 	// Collision Detection
 	@SuppressWarnings("unused")
 	public void collisionCheck() {
-		Object[] entitiesArray = DebugMode.entities.toArray();
-		formCube();
-		for (Object ent : entitiesArray) {
-			if (ent instanceof HittableEntity &&
-					passThrough((HittableEntity) ent)) {
-				this.collision((HittableEntity) ent);
-				return;
-			}
-		}
+		/* TODO : ADD REAL GAME IMPLEMENTATION
+			HINT: YOU ONLY HAVE TO CHANGE THE TOARRAY FOR WHATEVER OBJECT
+				  YOU'RE USING FOR THE REAL GAME
+		 */
 	}
 
 	public void debugCollisionCheck() {
-		Object[] entitiesArray = DebugMode.entities.toArray();
+		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
 		formCube();
 		for (Object ent : entitiesArray) {
 			if (ent instanceof HittableEntity &&

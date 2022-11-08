@@ -138,7 +138,7 @@ public class ObjectLoader {
 		return new Model(id, indices.length);
 	}
 	
-	public int loadTexture(String filename) throws Exception {
+	public int loadTexture(String filename) {
 		int width, height;
 		ByteBuffer buffer;
 		try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -152,8 +152,10 @@ public class ObjectLoader {
 			
 			width = w.get();
 			height = h.get();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		
+
 		int id = GL11.glGenTextures();
 		textures.add(id);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
