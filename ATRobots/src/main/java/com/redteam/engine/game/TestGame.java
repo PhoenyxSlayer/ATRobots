@@ -26,7 +26,7 @@ import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.entity.Material;
 import com.redteam.engine.core.entity.Model;
-import com.redteam.engine.core.entity.TankEntity;
+import com.redteam.engine.game.entities.TankEntity;
 import com.redteam.engine.core.entity.Texture;
 import com.redteam.engine.core.entity.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;

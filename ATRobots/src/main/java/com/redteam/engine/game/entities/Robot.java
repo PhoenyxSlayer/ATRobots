@@ -1,4 +1,4 @@
-package com.redteam.engine.core.entity;
+package com.redteam.engine.game.entities;
 import java.io.File;
 import java.util.Scanner;
 

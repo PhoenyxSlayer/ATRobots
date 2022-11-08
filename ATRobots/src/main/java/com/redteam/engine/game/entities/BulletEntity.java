@@ -1,14 +1,18 @@
-package com.redteam.engine.core.entity;
+package com.redteam.engine.game.entities;
 
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.ObjectLoader;
+import com.redteam.engine.core.entity.Entity;
+import com.redteam.engine.core.entity.HittableEntity;
+import com.redteam.engine.core.entity.Model;
+import com.redteam.engine.core.entity.Texture;
 import com.redteam.engine.game.TestGame;
 
 import static com.redteam.engine.utils.Consts.*;
 
 import org.joml.Vector3f;
 
-public class Bullet extends HittableEntity {
+public class BulletEntity extends HittableEntity {
 
 	private static final ObjectLoader loader = new ObjectLoader();
 
@@ -16,14 +20,14 @@ public class Bullet extends HittableEntity {
 
 	private boolean isMoving;
 
-	public Bullet(String id, Vector3f pos, Vector3f rotation, boolean moving) {
+	public BulletEntity(String id, Vector3f pos, Vector3f rotation, boolean moving) {
 		super(id, setModel(), pos, rotation, 1, 3f);
 
 		bulletModel = setModel();
 		isMoving = moving;
 	}
 
-	public Bullet(String id, Model bulletModel, Vector3f pos, Vector3f rotation, boolean moving) {
+	public BulletEntity(String id, Model bulletModel, Vector3f pos, Vector3f rotation, boolean moving) {
 		super(id, bulletModel, pos, rotation, 1, 3f);
 
 		this.bulletModel = bulletModel;

@@ -2,6 +2,7 @@ package com.redteam.engine.core.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.redteam.engine.game.entities.TankEntity;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,6 @@
-package com.redteam.engine.core.entity;
+package com.redteam.engine.game.entities;
 
+import com.redteam.engine.core.entity.*;
 import com.redteam.engine.game.ATRobots;
 import com.redteam.engine.game.TestGame;
 import com.redteam.engine.core.Engine;
@@ -200,7 +201,7 @@ public class TankEntity extends HittableEntity {
 									}
 								}
 								TestGame.addAdditionalEntity(
-								new Bullet(
+								new BulletEntity(
 								"bullet",											// ID
 									new Vector3f(bulletPos.x,2.55f,bulletPos.z),		// POSITION
 									new Vector3f(0,turretAngle -90, -90),	 		// ROTATION
