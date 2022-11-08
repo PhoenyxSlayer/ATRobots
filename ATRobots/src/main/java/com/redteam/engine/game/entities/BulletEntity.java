@@ -6,11 +6,9 @@ import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.core.rendering.Texture;
-import com.redteam.engine.game.debug.DebugMode;
-
-import static com.redteam.engine.utils.Constants.*;
-
 import org.joml.Vector3f;
+
+import static com.redteam.engine.utils.Constants.BULLET_SPEED;
 
 public class BulletEntity extends HittableEntity {
 
@@ -72,7 +70,7 @@ public class BulletEntity extends HittableEntity {
 	@Override
 	public void debugGameTick() {
 		if(outOfBorder()) {
-			DebugMode.entityIteratorRemoval();
+			remove();
 		}
 		
 		if(isMoving) {

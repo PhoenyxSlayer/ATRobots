@@ -1,19 +1,18 @@
 package com.redteam.engine.game.entities;
 
-import com.redteam.engine.core.entity.*;
-import com.redteam.engine.core.rendering.Model;
-import com.redteam.engine.core.rendering.Texture;
-import com.redteam.engine.game.main.ATRobots;
-import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.ObjectLoader;
-
-import static com.redteam.engine.utils.Constants.*;
-
-import static org.lwjgl.glfw.GLFW.*;
-
+import com.redteam.engine.core.entity.Entity;
+import com.redteam.engine.core.entity.HittableEntity;
+import com.redteam.engine.core.rendering.Model;
+import com.redteam.engine.core.rendering.Texture;
+import com.redteam.engine.game.debug.DebugMode;
+import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWKeyCallback;
+
+import static com.redteam.engine.utils.Constants.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class TankEntity extends HittableEntity {
 	
@@ -101,6 +100,7 @@ public class TankEntity extends HittableEntity {
 		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
 	}
 
+	int i = 0;
 	@Override
 	public void debugCollision(Entity entity) {
 
