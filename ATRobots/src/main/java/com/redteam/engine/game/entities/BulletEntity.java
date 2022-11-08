@@ -19,14 +19,14 @@ public class BulletEntity extends HittableEntity {
 	private boolean isMoving;
 
 	public BulletEntity(String id, Vector3f pos, Vector3f rotation, boolean moving) {
-		super(id, setModel(), pos, rotation, 1, 3f);
+		super(id, setModel(), pos, rotation, 1, 2f);
 
 		bulletModel = setModel();
 		isMoving = moving;
 	}
 
 	public BulletEntity(String id, Model bulletModel, Vector3f pos, Vector3f rotation, boolean moving) {
-		super(id, bulletModel, pos, rotation, 1, 3f);
+		super(id, bulletModel, pos, rotation, 1, 2f);
 
 		this.bulletModel = bulletModel;
 		isMoving = moving;
