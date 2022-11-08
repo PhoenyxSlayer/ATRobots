@@ -5,8 +5,7 @@ import org.joml.Vector4f;
 
 public class Consts {
 
-	public static final String TITLE = "ATRobotsV3D",
-							   BORDER_HIT = "bloop_x.wav";
+	public static final String TITLE = "ATRobotsV3D";
 	
 	public static final float FOV = (float) Math.toRadians(60),
 			Z_NEAR = 0.01f,
