@@ -183,3 +183,7 @@ ATRobots/build/reports/tests/test/css/style.css
 ATRobots/build/reports/tests/test/css/base-style.css
 ATRobots/.gradle/file-system.probe
 ATRobots/.gradle/buildOutputCleanup/cache.properties
+ATRobots/bin/main/shaders/terrain/terrain_fragment.fs
+ATRobots/bin/main/shaders/entity/entity_fragment.fs
+ATRobots/bin/main/shaders/entity/entity_vertex.vs
+ATRobots/bin/main/shaders/terrain/terrain_vertex.vs
