@@ -4,13 +4,13 @@ import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.rendering.Material;
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.core.rendering.Texture;
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 
 import org.joml.Vector3f;
 
 public class Terrain {
 
-    private static final float SIZE = Consts.Z_BORDER;
+    private static final float SIZE = Constants.Z_BORDER;
     private static final int VERTEX_COUNT = 128;
 
     private Vector3f position;

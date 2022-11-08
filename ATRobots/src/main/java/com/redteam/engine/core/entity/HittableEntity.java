@@ -4,8 +4,8 @@ import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
 import org.joml.Vector3f;
 
-import static com.redteam.engine.utils.Consts.X_BORDER;
-import static com.redteam.engine.utils.Consts.Z_BORDER;
+import static com.redteam.engine.utils.Constants.X_BORDER;
+import static com.redteam.engine.utils.Constants.Z_BORDER;
 
 public class HittableEntity extends Entity {
 	

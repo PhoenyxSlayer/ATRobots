@@ -3,7 +3,7 @@ package com.redteam.engine.utils;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class Consts {
+public class Constants {
 
 	public static final String TITLE = "ATRobotsV3D";
 	

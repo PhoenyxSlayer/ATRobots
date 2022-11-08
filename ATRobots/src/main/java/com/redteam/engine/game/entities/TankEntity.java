@@ -8,7 +8,7 @@ import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.ObjectLoader;
 
-import static com.redteam.engine.utils.Consts.*;
+import static com.redteam.engine.utils.Constants.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 

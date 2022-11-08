@@ -14,7 +14,7 @@ import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static com.redteam.engine.utils.Consts.CAMERA_STEP;
+import static com.redteam.engine.utils.Constants.CAMERA_STEP;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.redteam.engine.core.Camera;
@@ -32,7 +32,7 @@ import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.rendering.RenderManager;
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 
 import com.redteam.engine.core.rendering.image_parser;
 import com.redteam.engine.core.sound.Sound;
@@ -79,7 +79,7 @@ public class DebugMode implements ILogic {
 
 		// Terrain Adding
 		terrains.add( new Terrain		(
-												new Vector3f(-Consts.X_BORDER,0,-Consts.Z_BORDER),	// POSITION
+												new Vector3f(-Constants.X_BORDER,0,-Constants.Z_BORDER),	// POSITION
 												loader,													// OBJECT LOADER
 												new Material(new Texture(loader.loadTexture("textures/concrete.jpg")), 0.1f)	// TEXTURE
 								  		));
@@ -110,7 +110,7 @@ public class DebugMode implements ILogic {
 		// Spectator Camera Rotation (Using Right Click)
 		if(mouseInput.isRightButtonPress() && spectator) {
 			Vector2f rotVec = mouseInput.getDisplayVec();
-			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
+			camera.moveRotation(rotVec.x * Constants.MOUSE_SENSITIVITY, rotVec.y * Constants.MOUSE_SENSITIVITY, 0);
 		}
 
 		// Camera Updates

@@ -1,6 +1,6 @@
 package com.redteam.engine.core.rendering;
 
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 import org.joml.Vector4f;
 
 public class Material {
@@ -10,9 +10,9 @@ public class Material {
     private Texture texture;
 
     public Material() {
-        this.ambientColor = Consts.DEFAULT_COLOR;
-        this.diffuseColor = Consts.DEFAULT_COLOR;
-        this.specularColor = Consts.DEFAULT_COLOR;
+        this.ambientColor = Constants.DEFAULT_COLOR;
+        this.diffuseColor = Constants.DEFAULT_COLOR;
+        this.specularColor = Constants.DEFAULT_COLOR;
         this.texture = null;
         this.reflectance = 0;
     }
@@ -22,11 +22,11 @@ public class Material {
     }
 
     public Material(Texture texture) {
-        this(Consts.DEFAULT_COLOR, Consts.DEFAULT_COLOR, Consts.DEFAULT_COLOR, texture, 0);
+        this(Constants.DEFAULT_COLOR, Constants.DEFAULT_COLOR, Constants.DEFAULT_COLOR, texture, 0);
     }
 
     public Material(Texture texture, float reflectance) {
-        this(Consts.DEFAULT_COLOR, Consts.DEFAULT_COLOR, Consts.DEFAULT_COLOR, texture, reflectance);
+        this(Constants.DEFAULT_COLOR, Constants.DEFAULT_COLOR, Constants.DEFAULT_COLOR, texture, reflectance);
     }
 
     public Material(Vector4f color, Texture texture, float reflectance) {

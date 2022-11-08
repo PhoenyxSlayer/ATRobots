@@ -1,7 +1,7 @@
 package com.redteam.engine.core;
 
 import com.redteam.engine.game.main.ATRobots;
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
@@ -11,7 +11,7 @@ public class Engine {
 	public static final long NANOSECOND = 1000000000L;
 	
 	private static int fps;
-	private static final float framerate = Consts.FPS;
+	private static final float framerate = Constants.FPS;
 	private static final float frameTime = 1.0f / framerate;
 	private boolean isRunning;
 	
@@ -69,7 +69,7 @@ public class Engine {
 				
 				if(frameCounter >= NANOSECOND) {
 					setFps(frames);
-					window.setTitle(Consts.TITLE + " Engine FPS: " + getFps());
+					window.setTitle(Constants.TITLE + " Engine FPS: " + getFps());
 					frames = 0;
 					frameCounter = 0;
 				}

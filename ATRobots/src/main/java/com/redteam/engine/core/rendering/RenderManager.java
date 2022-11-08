@@ -8,7 +8,7 @@ import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 import org.lwjgl.opengl.GL11;
 
 import com.redteam.engine.game.main.ATRobots;
@@ -37,8 +37,8 @@ public class RenderManager {
 
 	public static void renderLights(PointLight[] pointLights, SpotLight[] spotLights,
 							 DirectionalLight directionalLight, Shader shader) {
-		shader.setUniform("ambientLight", Consts.AMBIENT_LIGHT);
-		shader.setUniform("specularPower", Consts.SPECULAR_POWER);
+		shader.setUniform("ambientLight", Constants.AMBIENT_LIGHT);
+		shader.setUniform("specularPower", Constants.SPECULAR_POWER);
 		int numLights = spotLights != null ? spotLights.length : 0;
 		for(int i = 0; i < numLights; i++) {
 			shader.setUniform("spotLights", spotLights[i], i);
@@ -52,8 +52,8 @@ public class RenderManager {
 	}
 
 	public static void renderLights(DirectionalLight directionalLight, Shader shader) {
-		shader.setUniform("ambientLight", Consts.AMBIENT_LIGHT);
-		shader.setUniform("specularPower", Consts.SPECULAR_POWER);
+		shader.setUniform("ambientLight", Constants.AMBIENT_LIGHT);
+		shader.setUniform("specularPower", Constants.SPECULAR_POWER);
 		shader.setUniform("directionalLight", directionalLight);
 	}
 

@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import com.redteam.engine.core.rendering.image_parser;
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 
 import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
@@ -230,13 +230,13 @@ public class Window {
 	
 	public Matrix4f updateProjectionMatrix() {
 		float aspectRatio = (float) width / height;
-		return projectionMatrix.setPerspective(Consts.FOV, aspectRatio, Consts.Z_NEAR, Consts.Z_FAR);
+		return projectionMatrix.setPerspective(Constants.FOV, aspectRatio, Constants.Z_NEAR, Constants.Z_FAR);
 	}
 
 	@SuppressWarnings("unused")
 	public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
 		float aspectRatio = (float) width / height;
-		return matrix.setPerspective(Consts.FOV, aspectRatio, Consts.Z_NEAR, Consts.Z_FAR);
+		return matrix.setPerspective(Constants.FOV, aspectRatio, Constants.Z_NEAR, Constants.Z_FAR);
 	}
 
 	public void updateLogo(image_parser icon) {

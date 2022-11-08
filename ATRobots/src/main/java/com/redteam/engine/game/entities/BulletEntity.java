@@ -8,7 +8,7 @@ import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.game.debug.DebugMode;
 
-import static com.redteam.engine.utils.Consts.*;
+import static com.redteam.engine.utils.Constants.*;
 
 import org.joml.Vector3f;
 

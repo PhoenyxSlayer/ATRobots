@@ -7,7 +7,7 @@ import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
 import com.redteam.engine.game.main.ATRobots;
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.utils.Constants;
 import com.redteam.engine.utils.Transformation;
 import com.redteam.engine.utils.Utils;
 import org.lwjgl.opengl.GL11;
@@ -34,8 +34,8 @@ public class TerrainRender implements IRenderer {
         shader.createVertexShader(Utils.loadResource("/shaders/terrain/terrain_vertex.vs"));
         shader.createFragmentShader(Utils.loadResource("/shaders/terrain/terrain_fragment.fs"));
         EntityRender.shaderCreation(shader);
-        shader.createPointLightListUniform("pointLights", Consts.MAX_POINT_LIGHTS);
-        shader.createSpotLightListUniform("spotLights", Consts.MAX_SPOT_LIGHTS);
+        shader.createPointLightListUniform("pointLights", Constants.MAX_POINT_LIGHTS);
+        shader.createSpotLightListUniform("spotLights", Constants.MAX_SPOT_LIGHTS);
     }
 
     @Override
