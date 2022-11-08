@@ -94,7 +94,6 @@ public class TestGame implements ILogic{
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
 	private static DebugGUI deleteBullet, angleBullet, coordinates, spectatorCheck;
-	private static MainMenu menu = new MainMenu();
 	
 	private static HitBox robotHitBox;
 	private static HitBox robotNPCHitBox;

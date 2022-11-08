@@ -28,7 +28,7 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="ATRobots" type="f1a62948:ProjectNode" />
+                <item name="ATRobotsV3" type="f1a62948:ProjectNode" />
               </path>
             </expand>
             <select />
@@ -49,7 +49,6 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2FahpngegzXy2Sv7jodBmwJWt6A" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -68,7 +67,7 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
+    "settings.editor.selected.configurable": "discord-application"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -93,10 +92,8 @@
   </component>
   <component name="RunManager">
     <configuration name="ATRobots" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="corretto-17" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.redteam.engine.game.ATRobots" />
-      <module name="ATRobots.main" />
+      <module name="ATRobotsV3.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.redteam.engine.game.*" />

@@ -70,7 +70,7 @@ public class Window {
 	private void initWindow() {
 		// Gets information in case of an error
 		GLFWErrorCallback.createPrint(System.err).set();
-				
+		
 		// If GLFW has yet to be initialized
 		if(!GLFW.glfwInit())
 			throw new IllegalStateException("ERR: Unable to initialize GLFW");

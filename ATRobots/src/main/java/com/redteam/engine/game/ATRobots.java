@@ -1,21 +1,17 @@
 package com.redteam.engine.game;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.Window;
-import com.redteam.engine.utils.Consts;
 import com.redteam.engine.core.entity.Robot;
+import com.redteam.engine.core.gui.MainMenu;
+import com.redteam.engine.utils.Consts;
 
 public class ATRobots {
-	private static Robot robotName;
-	private static Window window;
-	private static Window mainMenuWindow;
-	private static Engine engine;
+	private static Robot robotName = new Robot();
+	private static Window window = new Window(Consts.TITLE, 1600, 900, true);
 	private static TestGame game;
-	static BufferedReader reader = new BufferedReader(
-            new InputStreamReader(System.in));
+	private static String name;
+	
 
 	// Game States
 	public enum State
@@ -23,42 +19,35 @@ public class ATRobots {
 	    START, RUNNING;
 	}
 	
-	// Current Game State
 	public static State state = State.START;
 	
+	
 	// Main function
-	public static void main(String[] args) throws Exception {
-		
-		run();
-				
+	public static void main(String[] args) throws Exception{
+		new MainMenu(Consts.TITLE, 800, 450);
 	}
 	
-	public static void run() throws Exception
-	{
-	    switch(state)
-	    {
-	    case START:
-	    	String name = reader.readLine();
-	    	if(name.trim().equals("run")) {
-		        state = State.RUNNING;
-		        run();
-	    	}
-	        break;
-	    case RUNNING:
-	    	robotName = new Robot();
-	    	if(robotName.compile()) {
-		    	window = new Window(Consts.TITLE, 1600, 900, true);
+	public static void run() throws Exception {
+		switch(state) {
+		case START:
+			if(name.equalsIgnoreCase("run")) {
+				state = State.RUNNING;
+				run();
+			}
+			break;
+		case RUNNING:
+			if(robotName.compile()) {
 				game = new TestGame();
 				Engine engine = new Engine();
 				engine.start();
-	    	}
-	        break;
-	    default:
-	        throw new RuntimeException("Unknown state: " + state);
-	    }
+			}
+			break;
+		}
 	}
-
-		
+	public static void setName(String n) {
+		name = n;
+	}
+	
 	public static Window getWindow() { 
 		return window;
 	}
