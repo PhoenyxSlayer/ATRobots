@@ -41,10 +41,10 @@ public class TestGame implements ILogic {
 	private final RenderManager renderer;
 	public final ObjectLoader loader;
 
-	// TODO : MAKE ENTITIIES, TERRAINS, AND LIGHTS OF THE MAP THEIR OWN CLASSES
-	public static Set<Entity> entities = new HashSet<Entity>();
-	public static Set<Terrain> terrains = new HashSet<Terrain>();
-	public static Set<Entity> additionEntities = new HashSet<Entity>();
+	// TODO : MAKE ENTITIES, TERRAINS, AND LIGHTS OF THE MAP THEIR OWN CLASSES
+	public static Set<Entity> entities = new HashSet<>();
+	public static Set<Terrain> terrains = new HashSet<>();
+	public static Set<Entity> additionEntities = new HashSet<>();
 
 	public static Iterator<Entity> iRenderEntities,
 								   iAdditionalEntities;
@@ -57,18 +57,11 @@ public class TestGame implements ILogic {
 	private final Vector3f cameraInc = new Vector3f(0,0,0);
 
 	public static Window window;
-	
-	public static Model tankModel,
-						bulletModel;
-	
+
 	private static boolean spectator = false;
-	
-	public static int entityCount;
 
 	private static final Map<String, Sound> sounds = new HashMap<>();
-	
-	private float cameraSpeed = (float)((CAMERA_STEP) * tick());
-	
+
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
 	public TestGame() {
@@ -115,7 +108,7 @@ public class TestGame implements ILogic {
 
 		// Spectator Camera Rotation (Using Right Click)
 		if(mouseInput.isRightButtonPress() && spectator) {
-			Vector2f rotVec = mouseInput.getDisplVec();
+			Vector2f rotVec = mouseInput.getDisplayVec();
 			camera.moveRotation(rotVec.x * Consts.MOUSE_SENSITIVITY, rotVec.y * Consts.MOUSE_SENSITIVITY, 0);
 		}
 
@@ -123,7 +116,7 @@ public class TestGame implements ILogic {
 		camera.movePosition( cameraInc.x,
 	  						 cameraInc.y,
 	  						 cameraInc.z );
-		cameraInc.zero();	// Resets the Vector3f to all zeros
+		cameraInc.zero();	// Resets the Vector3F to all zeros
 
 		gameTick(); 		// Updates each entity with their game functionalities(ticks)
 
@@ -173,18 +166,19 @@ public class TestGame implements ILogic {
 		return model;
 	}
 
+	@SuppressWarnings("unused")
 	public void addEntity(Entity ent) {
 		entities.add(ent);	 // add the entity to a set of entities
 	}
-	
+	@SuppressWarnings("unused")
 	public static void removeEntity(Entity ent) {
 		entities.remove(ent); // remove the entity to a set of entities
 	}
-
+	@SuppressWarnings("unused")
 	public void addTerrain(Terrain ent) {
 		terrains.add(ent);	 // add the terrain to a set of terrains
 	}
-	
+	@SuppressWarnings("unused")
 	public void removeTerrain(Terrain ent) {
 		terrains.add(ent);	 // remove the terrain to a set of terrains
 	}
@@ -216,12 +210,14 @@ public class TestGame implements ILogic {
 	}
 
 	// Grabs iGameTick Iterator
+	@SuppressWarnings("unused")
 	public static Iterator<Entity> gEntityIterator() { return iRenderEntities; }
 
 	// *Used for Entity Classes* removes themselves
 	public static void entityIteratorRemoval() { iRenderEntities.remove(); }
 
 	public static void addAdditionalEntity(Entity ent) { additionEntities.add(ent); }
+	@SuppressWarnings("unused")
 	public static void removeAdditionalEntity(Entity ent) { additionEntities.remove(ent); }
 
 	public static void findAndRemoveEntity(Entity entity) {
@@ -233,20 +229,19 @@ public class TestGame implements ILogic {
 			Entity ent = test2.next();
             if (ent.equals(entity)) {
                 test2.remove();
-				continue;
-            }
+			}
         }
 	}
 
 	
-	public static boolean getSpectator() { return spectator; }
+	public static boolean isSpectator() { return spectator; }
 
-	public static boolean updateSpectator() {
-		return spectator = spectator ? false: true;
+	public static void updateSpectator() {
+		spectator = !spectator;
 	}
 
 	public void spectatorMovement() {
-		cameraSpeed = (float)((CAMERA_STEP) * tick());
+		float cameraSpeed = (float) ((CAMERA_STEP) * tick());
 
 		if(window.isKeyPressed(GLFW_KEY_W))
 			cameraInc.z = -cameraSpeed;
@@ -262,13 +257,12 @@ public class TestGame implements ILogic {
 			cameraInc.y = -cameraSpeed;
 		if(window.isKeyPressed(GLFW_KEY_SPACE))
 			cameraInc.y = cameraSpeed;
-		return;
 	}
 
 
 
 
-	// SOUND RELEATED
+	// SOUND RELATED
 
 	@SuppressWarnings("unused")
 	private static void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -278,9 +272,11 @@ public class TestGame implements ILogic {
 	    clip.open(audioIn);
 	    clip.start();
 	}
-	
+
+	@SuppressWarnings("unused")
 	public static Collection<Sound> getAllSounds() { return sounds.values(); }
-	
+
+	@SuppressWarnings("unused")
 	public static Sound getSound(String soundFile) {
 		File file = new File(soundFile);
 		if(sounds.containsKey(file.getAbsolutePath())) {
@@ -291,7 +287,8 @@ public class TestGame implements ILogic {
 		
 		return null;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public static Sound addSound(String soundFile, boolean loops) {
 		File file = new File(soundFile);
 		if (sounds.containsKey(file.getAbsolutePath())) {

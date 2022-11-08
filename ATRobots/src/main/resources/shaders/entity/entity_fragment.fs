@@ -3,7 +3,7 @@
 const int MAX_POINT_LIGHTS = 5;
 const int MAX_SPOT_LIGHTS = 5;
 
-in vec2 fragTextCoord;
+in vec2 fragTextCoordinate;
 in vec3 fragNormal;
 in vec3 fragPos;
 
@@ -34,7 +34,7 @@ struct PointLight {
 
 struct SpotLight {
 	PointLight pl;
-	vec3 conedir;
+	vec3 coneDir;
 	float cutoff;
 };
 
@@ -50,9 +50,9 @@ vec4 ambientC;
 vec4 diffuseC;
 vec4 specularC;
 
-void setupColors(Material material, vec2 textCoord) {
+void setupColors(Material material, vec2 textCoordinate) {
 	if(material.hasTexture == 1) {
-		ambientC = texture(textureSampler, textCoord);
+		ambientC = texture(textureSampler, textCoordinate);
 		diffuseC = ambientC;
 		specularC = ambientC;
 	} else {
@@ -96,7 +96,7 @@ vec4 calcSpotLight(SpotLight light, vec3 position, vec3 normal) {
 	vec3 light_dir = light.pl.position - position;
 	vec3 to_light_dir = normalize(light_dir);
 	vec3 from_light_dir = -to_light_dir;
-	float spot_alfa = dot(from_light_dir, normalize(light.conedir));
+	float spot_alfa = dot(from_light_dir, normalize(light.coneDir));
 
 	vec4 color = vec4(0,0,0,0);
 
@@ -114,7 +114,7 @@ vec4 calcDirectionalLight(DirectionalLight light, vec3 position, vec3 normal) {
 
 void main() {
 
-	setupColors(material, fragTextCoord);
+	setupColors(material, fragTextCoordinate);
 
 	vec4 diffuseSpeclarComp = calcDirectionalLight(directionalLight, fragPos, fragNormal);
 

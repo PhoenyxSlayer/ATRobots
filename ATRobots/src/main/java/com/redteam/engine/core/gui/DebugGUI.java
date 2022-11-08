@@ -7,15 +7,15 @@ import com.redteam.engine.core.entity.Entity;
 
 import imgui.ImGui;
 
+@SuppressWarnings("unused")
 public class DebugGUI {
-	private HashMap<Integer, String> totalBulletsRemoved = new HashMap<Integer, String>(),
-						 totalBulletAngles = new HashMap<Integer, String>();
+	private final HashMap<Integer, String> totalBulletsRemoved = new HashMap<>();
+	private final HashMap<Integer, String> totalBulletAngles = new HashMap<>();
 	
 	private String currTotalBulletsRemoved,
 				   currTotalBulletAngles;
 	
 	public void init() {
-		return;
 	}
 	
 	public void passDeletedBullet(int bullet, Entity entity) {
@@ -24,7 +24,6 @@ public class DebugGUI {
 								+ entity.getPos().x + ", "
 								+ entity.getPos().y + ", "
 								+ entity.getPos().z + ">\n");
-		return;
 	}
 	
 	public void passBulletAngle(int bullet, float bulletAngle, Entity entity) {
@@ -33,7 +32,6 @@ public class DebugGUI {
 						 	  + entity.getPos().y + ", "
 						 	  + entity.getPos().z + "> "
 						 	  + " AT ANGLE " + bulletAngle + "\n");
-		return;
 	}
 	
 	public void showDeletedBulletDebug() {
@@ -47,7 +45,6 @@ public class DebugGUI {
 			currTotalBulletsRemoved = "";
 			ImGui.end();
 		}
-		return;
 	}
 	
 	public void showBulletAngleDebug() {
@@ -60,7 +57,6 @@ public class DebugGUI {
 			ImGui.text(currTotalBulletAngles);
 			currTotalBulletAngles = "";
 			ImGui.end();
-		} else {
 		}
 	}
 
@@ -69,13 +65,11 @@ public class DebugGUI {
 		ImGui.begin("Coordinates");
 		ImGui.text("X: " + x + "\nY: " + y + "\nZ: " + z);
 		ImGui.end();
-		return;
 	}
 	
 	public void spectator(boolean spectator) {
 		ImGui.begin("Spectator Mode");
 		ImGui.text("Spectator: " + spectator);
 		ImGui.end();
-		return;
 	}
 }

@@ -17,33 +17,31 @@ public class image_parser {
         return width;
     }
 
-    public int get_heigh() {
-        return heigh;
+    public int get_height() {
+        return height;
     }
 
-    private ByteBuffer image;
-    private int width, heigh;
+    private final ByteBuffer image;
+    private final int width;
+    private final int height;
 
-    image_parser(int width, int heigh, ByteBuffer image) {
+    image_parser(int width, int height, ByteBuffer image) {
         this.image = image;
-        this.heigh = heigh;
+        this.height = height;
         this.width = width;
     }
     public static image_parser load_image(String path) {
         ByteBuffer image;
-        int width, heigh;
+        int width, height;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer comp = stack.mallocInt(1);
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
 
             image = stbi_load(path, w, h, comp, 4);
-            if (image == null) {
-                // throw new resource_error("Could not load image resources.");
-            }
             width = w.get();
-            heigh = h.get();
+            height = h.get();
         }
-        return new image_parser(width, heigh, image);
+        return new image_parser(width, height, image);
     }
 }

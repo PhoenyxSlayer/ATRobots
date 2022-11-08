@@ -44,7 +44,7 @@ public class Material {
     public Vector4f getAmbientColor() {
         return ambientColor;
     }
-
+    @SuppressWarnings("unused")
     public void setAmbientColor(Vector4f ambientColor) {
         this.ambientColor = ambientColor;
     }
@@ -52,7 +52,7 @@ public class Material {
     public Vector4f getDiffuseColor() {
         return diffuseColor;
     }
-
+    @SuppressWarnings("unused")
     public void setDiffuseColor(Vector4f diffuseColor) {
         this.diffuseColor = diffuseColor;
     }
@@ -60,7 +60,7 @@ public class Material {
     public Vector4f getSpecularColor() {
         return specularColor;
     }
-
+    @SuppressWarnings("unused")
     public void setSpecularColor(Vector4f specularColor) {
         this.specularColor = specularColor;
     }

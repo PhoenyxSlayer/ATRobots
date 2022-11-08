@@ -56,7 +56,8 @@ public class RenderManager {
 		shader.setUniform("specularPower", Consts.SPECULAR_POWER);
 		shader.setUniform("directionalLight", directionalLight);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public void render(Camera camera, DirectionalLight directionalLight, PointLight[] pointLights, SpotLight[] spotLights) {
 		clear();
 

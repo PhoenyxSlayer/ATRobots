@@ -4,12 +4,14 @@ import org.joml.Vector3f;
 
 public class Camera {
 
-    private Vector3f position, rotation;
+    private final Vector3f position;
+    private final Vector3f rotation;
     public Camera() {
         position = new Vector3f(0,0,0);
         rotation = new Vector3f(0,0,0);
     }
 
+    @SuppressWarnings("unused")
     public Camera(Vector3f position, Vector3f rotation) {
         this.position = position;
         this.rotation = rotation;

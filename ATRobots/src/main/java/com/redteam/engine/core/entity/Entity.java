@@ -4,10 +4,11 @@ import org.joml.Vector3f;
 
 public class Entity {
 
-	private String id;
-    private Model model;
-    private Vector3f pos, rotation;
-    private float scale;
+	private final String id;
+    private final Model model;
+    private final Vector3f pos;
+    private final Vector3f rotation;
+    private final float scale;
     
     public Entity(String id, Model model, Vector3f pos, Vector3f rotation, float scale) {
     	this.id = id;
@@ -60,8 +61,10 @@ public class Entity {
     public float getScale() {
         return scale;
     }
+    @SuppressWarnings("unused")
+    public void gameTick() {
+    }
 
-    public void gameTick() { return; }
-
-    public void debugGameTick() { return; }
+    public void debugGameTick() {
+    }
 }

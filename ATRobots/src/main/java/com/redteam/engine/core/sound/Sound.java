@@ -11,7 +11,7 @@ import static org.lwjgl.system.libc.LibCStdlib.*;
 public class Sound {
 	private int bufferId;
 	private int sourceId;
-	private String filepath;
+	private final String filepath;
 	
 	private boolean isPlaying = false;
 	
@@ -62,12 +62,14 @@ public class Sound {
 		// Free stb raw audio buffer
 		free(rawAudioBuffer);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public void delete() {
 		alDeleteSources(sourceId);
 		alDeleteBuffers(bufferId);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public void play() {
 		int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
 		if (state == AL_STOPPED) {
@@ -80,18 +82,21 @@ public class Sound {
 			isPlaying = true;
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
 	public void stop() {
 		if(isPlaying) {
 			alSourceStop(sourceId);
 			isPlaying = false;
 		}
 	}
-	
+
+	@SuppressWarnings("unused")
 	public String getFilePath() {
 		return this.filepath;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public boolean isPlaying() {
 		int state = alGetSourcei(sourceId, AL_SOURCE_STATE);
 		if (state == AL_STOPPED) {

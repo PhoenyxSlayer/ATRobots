@@ -7,21 +7,21 @@ import org.joml.Vector3f;
 
 public class HittableEntity extends Entity {
 	
-	private float hitboxScale;
+	private final float hitBoxScale;
 	    
 	private Vector3f[] hitBox;
 
-	public HittableEntity(String id, Model model, Vector3f pos, Vector3f rotation, float scale, float hitboxScale) {
+	public HittableEntity(String id, Model model, Vector3f pos, Vector3f rotation, float scale, float hitBoxScale) {
 		super(id, model, pos, rotation, scale);
-		this.hitboxScale = hitboxScale;
+		this.hitBoxScale = hitBoxScale;
 		formCube();
 	}
-	
-	// ALL BELOW HITBOX CODE
+
+	// ALL BELOW HIT BOX CODE
     
     private void formCube() {
 		
-		float halfSideLength = hitboxScale / 2f;
+		float halfSideLength = hitBoxScale / 2f;
 		
 		hitBox = new Vector3f[]{
 				// front face
@@ -60,13 +60,14 @@ public class HittableEntity extends Entity {
 							  getPos().z - halfSideLength), // bottom left
 		};
 	}
-    
+
+	@SuppressWarnings("unused")
     public boolean passThrough(Vector3f pos) {
 		boolean collide = true;
 		for(int i = 0; i < 8; i++) {
-			collide &= (pos.x - hitBox[i].x <= hitboxScale) && (pos.x - hitBox[i].x >= -hitboxScale) && 
-					   (pos.y - hitBox[i].y <= hitboxScale) && (pos.y - hitBox[i].y >= -hitboxScale) &&
-					   (pos.z - hitBox[i].z <= hitboxScale) && (pos.z - hitBox[i].z >= -hitboxScale);
+			collide &= (pos.x - hitBox[i].x <= hitBoxScale) && (pos.x - hitBox[i].x >= -hitBoxScale) &&
+					   (pos.y - hitBox[i].y <= hitBoxScale) && (pos.y - hitBox[i].y >= -hitBoxScale) &&
+					   (pos.z - hitBox[i].z <= hitBoxScale) && (pos.z - hitBox[i].z >= -hitBoxScale);
 		}
 		return collide;
 	}
@@ -75,9 +76,9 @@ public class HittableEntity extends Entity {
 		boolean collide = true;
 		if(entity != this) {				// Makes sure it's not passing itself
 			for(int i = 0; i < 8; i++) {
-				collide &= (entity.getBox()[i].x - hitBox[i].x <= hitboxScale) && (entity.getBox()[i].x - hitBox[i].x >= -hitboxScale) && 
-						   (entity.getBox()[i].y - hitBox[i].y <= hitboxScale) && (entity.getBox()[i].y - hitBox[i].y >= -hitboxScale) &&
-						   (entity.getBox()[i].z - hitBox[i].z <= hitboxScale) && (entity.getBox()[i].z - hitBox[i].z >= -hitboxScale);
+				collide &= (entity.getBox()[i].x - hitBox[i].x <= hitBoxScale) && (entity.getBox()[i].x - hitBox[i].x >= -hitBoxScale) &&
+						   (entity.getBox()[i].y - hitBox[i].y <= hitBoxScale) && (entity.getBox()[i].y - hitBox[i].y >= -hitBoxScale) &&
+						   (entity.getBox()[i].z - hitBox[i].z <= hitBoxScale) && (entity.getBox()[i].z - hitBox[i].z >= -hitBoxScale);
 			} 
 		}
 		else {
@@ -91,45 +92,46 @@ public class HittableEntity extends Entity {
 	public Vector3f[] getBox() {
 		return hitBox;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public float getHitBoxScale() {
-		return hitboxScale;
+		return hitBoxScale;
+	}
+	
+	@SuppressWarnings("unused")
+	public void collision(Entity entity){
+	}
+	public void debugCollision(Entity entity) {
 	}
 
-	public void collision(Entity entity){ return; }
-	public void debugCollision(Entity entity) { return; }
-
-	public void gameTick() { return; }
-	public void debugGameTick() { return; }
+	public void gameTick() {
+	}
+	public void debugGameTick() {
+	}
 
 
 	// Collision Detection
 
-	Object entitiiesArray[];
+	Object[] entitiesArray;
 	
-	public boolean collisionCheck() {
-		entitiiesArray = TestGame.entities.toArray();
+	public void collisionCheck() {
+		entitiesArray = TestGame.entities.toArray();
 		formCube();
-		for(int i = 0; i < entitiiesArray.length; i++) {
-			if((Entity)entitiiesArray[i] instanceof HittableEntity) {
-				for(int j = i; j < entitiiesArray.length; j++) {
-					if(passThrough((HittableEntity)entitiiesArray[j])) {
-						((HittableEntity)entitiiesArray[i]).debugCollision((Entity)entitiiesArray[j]);
-						((HittableEntity)entitiiesArray[j]).debugCollision((Entity)entitiiesArray[i]);
-						return true;
+		for(int i = 0; i < entitiesArray.length; i++) {
+			if(entitiesArray[i] instanceof HittableEntity) {
+				for(int j = i; j < entitiesArray.length; j++) {
+					if(passThrough((HittableEntity)entitiesArray[j])) {
+						((HittableEntity)entitiesArray[i]).debugCollision((Entity)entitiesArray[j]);
+						((HittableEntity)entitiesArray[j]).debugCollision((Entity)entitiesArray[i]);
+						return;
 					}
 				}
 			}
 		}
-		return false;
 	}
 
-	public boolean inBorder() {
-		if((getPos().x <= -X_BORDER || getPos().x >= X_BORDER)
-		|| (getPos().z <= -Z_BORDER || getPos().z >= 0))
-		{
-			return false;
-		}
-		return true;
+	public boolean outOfBorder() {
+		return ((getPos().x <= -X_BORDER) || (getPos().x >= X_BORDER))
+				|| ((getPos().z <= -Z_BORDER) || (getPos().z >= 0));
 	}
 }

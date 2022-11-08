@@ -1,8 +1,8 @@
 package com.redteam.engine.core.entity;
 
 public class Model {
-	private int id,
-				vertexCount;
+	private final int id;
+	private final int vertexCount;
 	private Material material;
 	
 	public Model(int id, int vertexCount) {

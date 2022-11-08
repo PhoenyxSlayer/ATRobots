@@ -24,6 +24,7 @@ public class PointLight {
         return color;
     }
 
+    @SuppressWarnings("unused")
     public void setColor(Vector3f color) {
         this.color = color;
     }
@@ -40,6 +41,7 @@ public class PointLight {
         return intensity;
     }
 
+    @SuppressWarnings("unused")
     public void setIntensity(float intensity) {
         this.intensity = intensity;
     }
@@ -48,6 +50,7 @@ public class PointLight {
         return constant;
     }
 
+    @SuppressWarnings("unused")
     public void setConstant(float constant) {
         this.constant = constant;
     }
@@ -56,6 +59,7 @@ public class PointLight {
         return linear;
     }
 
+    @SuppressWarnings("unused")
     public void setLinear(float linear) {
         this.linear = linear;
     }
@@ -64,6 +68,7 @@ public class PointLight {
         return exponent;
     }
 
+    @SuppressWarnings("unused")
     public void setExponent(float exponent) {
         this.exponent = exponent;
     }

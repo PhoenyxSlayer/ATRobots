@@ -20,9 +20,9 @@ import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.utils.Utils;
 
 public class ObjectLoader {
-	private List<Integer> vaos = new ArrayList<>(),
-						  vbos = new ArrayList<>(),
-						  textures = new ArrayList<>();
+	private final List<Integer> VAOs = new ArrayList<>();
+	private final List<Integer> VBOs = new ArrayList<>();
+	private final List<Integer> textures = new ArrayList<>();
 
 	public Model loadOBJModel(String fileName) {
 		List<String> lines = Utils.readAllLines(fileName);
@@ -34,8 +34,8 @@ public class ObjectLoader {
 
 		for(String line : lines) {
 			String[] tokens = line.split("\\s+");
-			switch(tokens[0]) {
-				case "v":
+			switch (tokens[0]) {
+				case "v" -> {
 					// vertices
 					Vector3f verticesVec = new Vector3f(
 							Float.parseFloat(tokens[1]),
@@ -43,16 +43,16 @@ public class ObjectLoader {
 							Float.parseFloat(tokens[3])
 					);
 					vertices.add(verticesVec);
-					break;
-				case "vt":
+				}
+				case "vt" -> {
 					// vertex textures
 					Vector2f textureVec = new Vector2f(
 							Float.parseFloat(tokens[1]),
 							Float.parseFloat(tokens[2])
 					);
 					textures.add(textureVec);
-					break;
-				case "vn":
+				}
+				case "vn" -> {
 					// vertex normals
 					Vector3f normalsVec = new Vector3f(
 							Float.parseFloat(tokens[1]),
@@ -60,15 +60,15 @@ public class ObjectLoader {
 							Float.parseFloat(tokens[3])
 					);
 					normals.add(normalsVec);
-					break;
-				case "f":
+				}
+				case "f" -> {
 					// faces
 					processFace(tokens[1], faces);
 					processFace(tokens[2], faces);
 					processFace(tokens[3], faces);
-					break;
-				default:
-					break;
+				}
+				default -> {
+				}
 			}
 		}
 
@@ -82,27 +82,27 @@ public class ObjectLoader {
 			i++;
 		}
 
-		float[] texCoordArr = new float[vertices.size() * 2];
+		float[] texCoordinateArr = new float[vertices.size() * 2];
 		float[] normalArr = new float[vertices.size() * 3];
 
 		for(Vector3i face : faces) {
-			processVertex(face.x, face.y, face.z, textures, normals, indices, texCoordArr, normalArr);
+			processVertex(face.x, face.y, face.z, textures, normals, indices, texCoordinateArr, normalArr);
 		}
 
 		int[] indicesArr = indices.stream().mapToInt((Integer v) -> v).toArray();
 
-		return loadModel(verticesArr, texCoordArr, normalArr, indicesArr);
+		return loadModel(verticesArr, texCoordinateArr, normalArr, indicesArr);
 	}
 
-	private static void processVertex(int pos, int texCoord, int normal, List<Vector2f> texCoordList,
+	private static void processVertex(int pos, int texCoordinate, int normal, List<Vector2f> texCoordinateList,
 									  List<Vector3f> normalList, List<Integer> indicesList,
-									  float[] texCoordArr, float[] normalArr) {
+									  float[] texCoordinateArr, float[] normalArr) {
 		indicesList.add(pos);
 
-		if(texCoord >= 0) {
-			Vector2f texCoordVec = texCoordList.get(texCoord);
-			texCoordArr[pos * 2] = texCoordVec.x;
-			texCoordArr[pos * 2 + 1] = 1 - texCoordVec.y;
+		if(texCoordinate >= 0) {
+			Vector2f texCoordinateVec = texCoordinateList.get(texCoordinate);
+			texCoordinateArr[pos * 2] = texCoordinateVec.x;
+			texCoordinateArr[pos * 2 + 1] = 1 - texCoordinateVec.y;
 		}
 
 		if(normal >= 0) {
@@ -116,11 +116,11 @@ public class ObjectLoader {
 	private static void processFace(String token, List<Vector3i> faces) {
 		String[] lineToken = token.split("/");
 		int length = lineToken.length;
-		int pos = -1, coords = -1, normal = -1;
+		int pos, coords = -1, normal = -1;
 		pos = Integer.parseInt(lineToken[0]) - 1;
 		if(length > 1) {
-			String textCoord = lineToken[1];
-			coords = textCoord.length() > 0 ? Integer.parseInt(textCoord) - 1 : -1;
+			String textCoordinate = lineToken[1];
+			coords = textCoordinate.length() > 0 ? Integer.parseInt(textCoordinate) - 1 : -1;
 			if(length > 2)
 				normal = Integer.parseInt(lineToken[2]) - 1;
 		}
@@ -166,14 +166,14 @@ public class ObjectLoader {
 	
 	private int createVAO() {
 		int id = GL30.glGenVertexArrays();
-		vaos.add(id);
+		VAOs.add(id);
 		GL30.glBindVertexArray(id);
 		return id;
 	}
 	
 	private void storeIndicesBuffer(int[] indices) {
 		int vbo = GL15.glGenBuffers();
-		vbos.add(vbo);
+		VBOs.add(vbo);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vbo);
 		IntBuffer buffer = Utils.storeDataInIntBuffer(indices);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
@@ -181,7 +181,7 @@ public class ObjectLoader {
 	
 	private void storeDataInAttribList(int attribNo, int vertexCount, float[] data) {
 		int vbo = GL15.glGenBuffers();
-		vbos.add(vbo);
+		VBOs.add(vbo);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		FloatBuffer buffer = Utils.storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
@@ -194,9 +194,9 @@ public class ObjectLoader {
 	}
 	
 	public void cleanup() {
-		for(int vao : vaos)
+		for(int vao : VAOs)
 			GL30.glDeleteVertexArrays(vao);
-		for(int vbo : vbos)
+		for(int vbo : VBOs)
 			GL30.glDeleteBuffers(vbo);
 		for(int texture : textures)
 			GL11.glDeleteTextures(texture);

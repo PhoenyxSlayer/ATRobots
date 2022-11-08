@@ -8,18 +8,18 @@ import com.redteam.engine.core.lighting.SpotLight;
 
 public interface IRenderer<T> {
 
-    public void init() throws Exception;
+    void init() throws Exception;
 
-    public void render(Camera camera, PointLight[] pointLights, SpotLight[] spotLights,
+    void render(Camera camera, PointLight[] pointLights, SpotLight[] spotLights,
                        DirectionalLight directionalLight);
 
-    public void render(Camera camera, DirectionalLight directionalLight);
+    void render(Camera camera, DirectionalLight directionalLight);
 
-    abstract void bind(Model model);
+    void bind(Model model);
 
-    public void unbind();
+    void unbind();
 
-    public void prepare(T t, Camera camera);
+    void prepare(T t, Camera camera);
 
-    public void cleanup();
+    void cleanup();
 }

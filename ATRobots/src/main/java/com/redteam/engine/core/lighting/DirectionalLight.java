@@ -17,6 +17,7 @@ public class DirectionalLight {
         return color;
     }
 
+    @SuppressWarnings("unused")
     public void setColor(Vector3f color) {
         this.color = color;
     }
@@ -25,6 +26,7 @@ public class DirectionalLight {
         return direction;
     }
 
+    @SuppressWarnings("unused")
     public void setDirection(Vector3f direction) {
         this.direction = direction;
     }
@@ -33,6 +35,7 @@ public class DirectionalLight {
         return intensity;
     }
 
+    @SuppressWarnings("unused")
     public void setIntensity(float intensity) {
         this.intensity = intensity;
     }

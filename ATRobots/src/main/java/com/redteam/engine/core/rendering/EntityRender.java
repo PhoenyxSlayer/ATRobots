@@ -23,7 +23,7 @@ import java.util.Map;
 public class EntityRender implements IRenderer {
 
     Shader shader;
-    private Map<Model, List<Entity>> entities;
+    private final Map<Model, List<Entity>> entities;
 
     public EntityRender() throws Exception {
         entities = new HashMap<>();
@@ -32,8 +32,14 @@ public class EntityRender implements IRenderer {
 
     @Override
     public void init() throws Exception {
-        shader.createVertexShader(Utils.loadResource("/shaders/entity_vertex.vs"));
-        shader.createFragmentShader(Utils.loadResource("/shaders/entity_fragment.fs"));
+        shader.createVertexShader(Utils.loadResource("/shaders/entity/entity_vertex.vs"));
+        shader.createFragmentShader(Utils.loadResource("/shaders/entity/entity_fragment.fs"));
+        shaderCreation(shader);
+        shader.createPointLightListUniform("pointLights", 5);
+        shader.createSpotLightListUniform("spotLights", 5);
+    }
+
+    static void shaderCreation(Shader shader) throws Exception {
         shader.link();
         shader.createUniform("textureSampler");
         shader.createUniform("transformationMatrix");
@@ -43,8 +49,6 @@ public class EntityRender implements IRenderer {
         shader.createMaterialUniform("material");
         shader.createUniform("specularPower");
         shader.createDirectionalLightUniform("directionalLight");
-        shader.createPointLightListUniform("pointLights", 5);
-        shader.createSpotLightListUniform("spotLights", 5);
     }
 
     @Override
@@ -52,6 +56,10 @@ public class EntityRender implements IRenderer {
         shader.bind();
         shader.setUniform("projectionMatrix", ATRobots.getWindow().updateProjectionMatrix());
         RenderManager.renderLights(pointLights, spotLights, directionalLight, shader);
+        drawEntityList(camera);
+    }
+
+    private void drawEntityList(Camera camera) {
         for(Model model : entities.keySet()) {
             bind(model);
             List<Entity> entityList = entities.get(model);
@@ -70,29 +78,23 @@ public class EntityRender implements IRenderer {
         shader.bind();
         shader.setUniform("projectionMatrix", ATRobots.getWindow().updateProjectionMatrix());
         RenderManager.renderLights(directionalLight, shader);
-        for(Model model : entities.keySet()) {
-            bind(model);
-            List<Entity> entityList = entities.get(model);
-            for(Entity entity : entityList) {
-                prepare(entity, camera);
-                GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-            }
-            unbind();
-        }
-        entities.clear();
-        shader.unbind();
+        drawEntityList(camera);
     }
 
 
     @Override
     public void bind(Model model) {
+        glVertexArrayCreation(model, shader);
+    }
+
+    static void glVertexArrayCreation(Model model, Shader shader) {
         GL30.glBindVertexArray(model.getId());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
         shader.setUniform("material", model.getMaterial());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getId());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().id());
     }
 
     @Override

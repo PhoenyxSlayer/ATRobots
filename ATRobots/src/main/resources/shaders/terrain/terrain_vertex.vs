@@ -1,10 +1,10 @@
 #version 400 core
 
 in vec3 position;
-in vec2 textureCoord;
+in vec2 textureCoordinate;
 in vec3 normal;
 
-out vec2 fragTextCoord;
+out vec2 fragTextCoordinate;
 out vec3 fragNormal;
 out vec3 fragPos;
 
@@ -18,5 +18,5 @@ void main() {
 
 	fragNormal = normalize(worldPos).xyz;
 	fragPos = worldPos.xyz;
-	fragTextCoord = textureCoord / 2.5;
+	fragTextCoordinate = textureCoordinate / 2.5;
 }

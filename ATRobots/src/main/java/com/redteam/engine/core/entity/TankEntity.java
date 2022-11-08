@@ -14,24 +14,22 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 
 public class TankEntity extends HittableEntity {
 	
-	private Vector3f baseRotation,
-					 turretRotation = new Vector3f(0,0,0);
+	private final Vector3f baseRotation;
+	private final Vector3f turretRotation = new Vector3f(0,0,0);
 	
-	private static ObjectLoader loader = new ObjectLoader();
+	private static final ObjectLoader loader = new ObjectLoader();
 
-	private Model top,
-				  base;
-
-	private float tankSpeed = (float)(MOVEMENT_SPEED * Engine.tick());
+	private final Model top;
+	private final Model base;
 
 	// TODO : MAKE TANKS HAVE RANDOMIZED TEXTURES
 
 	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation) {
-		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, 1, 5f);
+		super(id, setModel("/models/tankBot.obj"), basePosition, baseRotation, 1, 5f);
 		this.baseRotation = baseRotation;
 
-		top = setModel("/models/tankTop.obj", "textures/Camo.jpg");
-	    base = setModel("/models/tankBot.obj", "textures/Camo.jpg");
+		top = setModel("/models/tankTop.obj");
+	    base = setModel("/models/tankBot.obj");
 	}
 
 	public TankEntity(String id, Model base, Model top, Vector3f basePosition, Vector3f baseRotation) {
@@ -42,10 +40,10 @@ public class TankEntity extends HittableEntity {
 		this.base = base;
 	}
 
-	private static Model setModel(String modelOBJ, String texture) {
+	private static Model setModel(String modelOBJ) {
 		Model model = loader.loadOBJModel(modelOBJ);
 		try {
-			model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
+			model.setTexture(new Texture(loader.loadTexture("textures/Camo.jpg")), 1f);
 			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,7 +96,6 @@ public class TankEntity extends HittableEntity {
 	@Override
 	public void collision(Entity entity) {
 		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
-		return;
 	}
 	int i = 0;
 	@Override
@@ -111,9 +108,8 @@ public class TankEntity extends HittableEntity {
 			// TODO : REDUCES HEALTH
 		}
 		else if(entity instanceof TankEntity) {
-			// TODO : MAKE IT SO IT DOESN'T GO THROUGH EACHOTHER
+			// TODO : MAKE IT SO IT DOESN'T GO THROUGH EACH OTHER
 		}
-		return;
 	}
 
 	@Override
@@ -124,10 +120,9 @@ public class TankEntity extends HittableEntity {
 	
 
 	// debugGameTick Variables
-	
-	private Vector3f pushBack = new Vector3f(0,0,0),
-					 movement = new Vector3f(0,0,0),
-					 bulletPos = new Vector3f(0,0,0);
+
+	private final Vector3f movement = new Vector3f(0,0,0);
+	private final Vector3f bulletPos = new Vector3f(0,0,0);
 	
 	private float tankAngle,
 	  			  turretAngle;
@@ -137,16 +132,17 @@ public class TankEntity extends HittableEntity {
 	@Override
 	public void debugGameTick() {
 		
-		if(!TestGame.getSpectator()) {
+		if(!TestGame.isSpectator()) {
 			// SPEED/SPRINT
+			float tankSpeed;
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 				tankSpeed = ((float) (MOVEMENT_SPEED * Engine.tick()) * 3);
 			else
 				tankSpeed = (float) (MOVEMENT_SPEED * Engine.tick());
 
 			// MAKES SURE ENTITY IS IN BORDER
-			if(!inBorder()) {
-				pushBack = getPos();
+			if(outOfBorder()) {
+				Vector3f pushBack = getPos();
 				if(getPos().x > X_BORDER && getPos().z > 0 )
 					pushBack.add(-tankSpeed, 0, -tankSpeed);
 				else if(getPos().x > X_BORDER && getPos().z < -Z_BORDER )
@@ -177,39 +173,31 @@ public class TankEntity extends HittableEntity {
 
 						if(key == GLFW_KEY_V)
 							TestGame.updateSpectator();
-						if(!TestGame.getSpectator()) {
+						if(!TestGame.isSpectator()) {
 							if(key == GLFW_KEY_SPACE) {
 								bulletPos.x = getPos().x;
 								bulletPos.z = getPos().z;
-								switch((int)turretAngle) {
-									case 0:
-										bulletPos.z += 5.3f;
-										break;
-									case 45:
-										bulletPos.x += 4.2f;
-										bulletPos.z += 4.2f;
-										break;
-									case 90:
-										bulletPos.x += 5.3f;
-										break;
-									case 135:
-										bulletPos.x += 4.2f;
-										bulletPos.z -= 4.2f;
-										break;
-									case 180:
-										bulletPos.z -= 5.3f;
-										break;
-									case 225:
-										bulletPos.x -= 4.2f;
-										bulletPos.z -= 4.2f;
-										break;
-									case 270:
-										bulletPos.x -= 5.3f;
-										break;
-									case 315:
-										bulletPos.x -= 4.2f;
-										bulletPos.z += 4.2f;
-										break;
+								switch ((int) turretAngle) {
+									case 0 ->   bulletPos.z += 5.3f;
+									case 45 -> {
+											    bulletPos.x += 4.2f;
+											    bulletPos.z += 4.2f;
+									}
+									case 90 ->  bulletPos.x += 5.3f;
+									case 135 -> {
+										        bulletPos.x += 4.2f;
+											    bulletPos.z -= 4.2f;
+									}
+									case 180 -> bulletPos.z -= 5.3f;
+									case 225 -> {
+												bulletPos.x -= 4.2f;
+												bulletPos.z -= 4.2f;
+									}
+									case 270 -> bulletPos.x -= 5.3f;
+									case 315 -> {
+												bulletPos.x -= 4.2f;
+												bulletPos.z += 4.2f;
+									}
 								}
 								TestGame.addAdditionalEntity(
 								new Bullet(
@@ -225,7 +213,6 @@ public class TankEntity extends HittableEntity {
 						if(key == GLFW_KEY_ESCAPE) {
 							System.out.println("EXITING");
 							glfwSetWindowShouldClose(window, true);
-							return;
 						}
 						
 					}
