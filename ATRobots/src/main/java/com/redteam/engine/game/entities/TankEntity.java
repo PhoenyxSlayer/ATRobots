@@ -1,8 +1,10 @@
 package com.redteam.engine.game.entities;
 
 import com.redteam.engine.core.entity.*;
-import com.redteam.engine.game.ATRobots;
-import com.redteam.engine.game.TestGame;
+import com.redteam.engine.core.rendering.Model;
+import com.redteam.engine.core.rendering.Texture;
+import com.redteam.engine.game.main.ATRobots;
+import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.ObjectLoader;
 
@@ -105,7 +107,7 @@ public class TankEntity extends HittableEntity {
 		
 		if(entity.getID().trim().equals("bullet")) {
 			System.out.println("i've been hit " + i++);
-			TestGame.findAndRemoveEntity(entity);
+			DebugMode.findAndRemoveEntity(entity);
 			// TODO : REDUCES HEALTH
 		}
 		else if(entity instanceof TankEntity) {
@@ -133,7 +135,7 @@ public class TankEntity extends HittableEntity {
 	@Override
 	public void debugGameTick() {
 		
-		if(!TestGame.isSpectator()) {
+		if(!DebugMode.isSpectator()) {
 			// SPEED/SPRINT
 			float tankSpeed;
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
@@ -173,8 +175,8 @@ public class TankEntity extends HittableEntity {
 					if(action == GLFW_PRESS) {
 
 						if(key == GLFW_KEY_V)
-							TestGame.updateSpectator();
-						if(!TestGame.isSpectator()) {
+							DebugMode.updateSpectator();
+						if(!DebugMode.isSpectator()) {
 							if(key == GLFW_KEY_SPACE) {
 								bulletPos.x = getPos().x;
 								bulletPos.z = getPos().z;
@@ -200,7 +202,7 @@ public class TankEntity extends HittableEntity {
 												bulletPos.z += 4.2f;
 									}
 								}
-								TestGame.addAdditionalEntity(
+								DebugMode.addAdditionalEntity(
 								new BulletEntity(
 								"bullet",											// ID
 									new Vector3f(bulletPos.x,2.55f,bulletPos.z),		// POSITION
@@ -288,8 +290,8 @@ public class TankEntity extends HittableEntity {
 
 			setTurretRotation(0, turretAngle, 0);
 
-			TestGame.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
-			TestGame.camera.setRotation(90.0f, 0, 0);
+			DebugMode.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
+			DebugMode.camera.setRotation(90.0f, 0, 0);
 		}
 	}
 }

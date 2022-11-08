@@ -1,4 +1,4 @@
-package com.redteam.engine.game.gui;
+package com.redteam.engine.game.debug.gui;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package com.redteam.engine.core.entity.terrain;
+package com.redteam.engine.core.terrain;
 
 import com.redteam.engine.core.ObjectLoader;
-import com.redteam.engine.core.entity.Material;
-import com.redteam.engine.core.entity.Model;
-import com.redteam.engine.core.entity.Texture;
+import com.redteam.engine.core.rendering.Material;
+import com.redteam.engine.core.rendering.Model;
+import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.utils.Consts;
 
 import org.joml.Vector3f;

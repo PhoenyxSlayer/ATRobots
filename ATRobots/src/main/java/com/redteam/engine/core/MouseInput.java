@@ -1,6 +1,6 @@
 package com.redteam.engine.core;
 
-import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;

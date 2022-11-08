@@ -1,6 +1,6 @@
 package com.redteam.engine.core;
 
-import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.main.ATRobots;
 import com.redteam.engine.utils.Consts;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;

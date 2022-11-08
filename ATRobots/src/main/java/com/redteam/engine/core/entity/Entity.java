@@ -1,5 +1,6 @@
 package com.redteam.engine.core.entity;
 
+import com.redteam.engine.core.rendering.Model;
 import org.joml.Vector3f;
 
 public class Entity {

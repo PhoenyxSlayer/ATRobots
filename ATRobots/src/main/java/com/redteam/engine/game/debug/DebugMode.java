@@ -1,4 +1,4 @@
-package com.redteam.engine.game;
+package com.redteam.engine.game.debug;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -24,11 +25,11 @@ import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
-import com.redteam.engine.core.entity.Material;
-import com.redteam.engine.core.entity.Model;
+import com.redteam.engine.core.rendering.Material;
+import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.entities.TankEntity;
-import com.redteam.engine.core.entity.Texture;
-import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.rendering.Texture;
+import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.rendering.RenderManager;
 import com.redteam.engine.utils.Consts;
@@ -36,7 +37,7 @@ import com.redteam.engine.utils.Consts;
 import com.redteam.engine.core.rendering.image_parser;
 import com.redteam.engine.core.sound.Sound;
 
-public class TestGame implements ILogic {
+public class DebugMode implements ILogic {
 	
 	private final RenderManager renderer;
 	public final ObjectLoader loader;
@@ -64,7 +65,7 @@ public class TestGame implements ILogic {
 
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
-	public TestGame() {
+	public DebugMode() {
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
 		loader = new ObjectLoader();

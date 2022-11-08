@@ -1,7 +1,6 @@
 package com.redteam.engine.core.rendering;
 
 import com.redteam.engine.core.Camera;
-import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;

@@ -4,14 +4,14 @@ import com.redteam.engine.core.Camera;
 import com.redteam.engine.core.Shader;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
-import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
 import com.redteam.engine.utils.Consts;
 import org.lwjgl.opengl.GL11;
 
-import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.main.ATRobots;
 
 import java.util.ArrayList;
 import java.util.List;

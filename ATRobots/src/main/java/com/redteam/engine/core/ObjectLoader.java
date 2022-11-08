@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import com.redteam.engine.core.entity.Model;
+import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.utils.Utils;
 
 public class ObjectLoader {

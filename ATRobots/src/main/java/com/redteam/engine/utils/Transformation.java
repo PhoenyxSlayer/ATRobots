@@ -2,7 +2,7 @@ package com.redteam.engine.utils;
 
 import com.redteam.engine.core.Camera;
 import com.redteam.engine.core.entity.Entity;
-import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.terrain.Terrain;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

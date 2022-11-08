@@ -3,7 +3,7 @@ package com.redteam.engine.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.redteam.engine.core.entity.Material;
+import com.redteam.engine.core.rendering.Material;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;

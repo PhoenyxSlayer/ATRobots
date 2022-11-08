@@ -1,9 +1,9 @@
-package com.redteam.engine.game;
+package com.redteam.engine.core;
 
 import java.util.HashSet;
 
 import com.redteam.engine.core.entity.Entity;
-import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 
 @SuppressWarnings("unused")

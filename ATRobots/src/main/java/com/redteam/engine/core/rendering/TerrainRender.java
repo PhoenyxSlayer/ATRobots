@@ -2,12 +2,11 @@ package com.redteam.engine.core.rendering;
 
 import com.redteam.engine.core.Camera;
 import com.redteam.engine.core.Shader;
-import com.redteam.engine.core.entity.Model;
-import com.redteam.engine.core.entity.terrain.Terrain;
+import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
-import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.main.ATRobots;
 import com.redteam.engine.utils.Consts;
 import com.redteam.engine.utils.Transformation;
 import com.redteam.engine.utils.Utils;

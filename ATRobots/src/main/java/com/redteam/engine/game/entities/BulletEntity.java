@@ -4,9 +4,9 @@ import com.redteam.engine.core.Engine;
 import com.redteam.engine.core.ObjectLoader;
 import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
-import com.redteam.engine.core.entity.Model;
-import com.redteam.engine.core.entity.Texture;
-import com.redteam.engine.game.TestGame;
+import com.redteam.engine.core.rendering.Model;
+import com.redteam.engine.core.rendering.Texture;
+import com.redteam.engine.game.debug.DebugMode;
 
 import static com.redteam.engine.utils.Consts.*;
 
@@ -35,7 +35,7 @@ public class BulletEntity extends HittableEntity {
 	}
 
 	private static Model setModel() {
-		Model model = loader.loadOBJModel("/models/untitled.obj");
+		Model model = loader.loadOBJModel("/models/bullet.obj");
 		try {
 			model.setTexture(new Texture(loader.loadTexture("textures/bullet.png")), 1f);
 			return model;
@@ -72,7 +72,7 @@ public class BulletEntity extends HittableEntity {
 	@Override
 	public void debugGameTick() {
 		if(outOfBorder()) {
-			TestGame.entityIteratorRemoval();
+			DebugMode.entityIteratorRemoval();
 		}
 		
 		if(isMoving) {

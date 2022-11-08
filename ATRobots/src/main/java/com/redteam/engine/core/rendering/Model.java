@@ -1,4 +1,4 @@
-package com.redteam.engine.core.entity;
+package com.redteam.engine.core.rendering;
 
 public class Model {
 	private final int id;

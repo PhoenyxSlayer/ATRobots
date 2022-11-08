@@ -1,6 +1,7 @@
 package com.redteam.engine.core.entity;
 
-import com.redteam.engine.game.TestGame;
+import com.redteam.engine.core.rendering.Model;
+import com.redteam.engine.game.debug.DebugMode;
 import static com.redteam.engine.utils.Consts.*;
 
 import org.joml.Vector3f;
@@ -115,7 +116,7 @@ public class HittableEntity extends Entity {
 	Object[] entitiesArray;
 	
 	public void collisionCheck() {
-		entitiesArray = TestGame.entities.toArray();
+		entitiesArray = DebugMode.entities.toArray();
 		formCube();
 		for(int i = 0; i < entitiesArray.length; i++) {
 			if(entitiesArray[i] instanceof HittableEntity) {
