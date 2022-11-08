@@ -200,6 +200,8 @@ public class TankEntity extends HittableEntity {
 												bulletPos.z += 4.2f;
 									}
 								}
+								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
+								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").play();
 								DebugMode.addAdditionalEntity(
 								new BulletEntity(
 								"bullet",											// ID
@@ -222,47 +224,61 @@ public class TankEntity extends HittableEntity {
 
 			glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
 
+			boolean moving = false;
 			// MOVING + ROTATION OF TANK
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_W)) {
+				moving = true;
 				tankAngle = 180;
 				movement.z = -tankSpeed;				// MOVES UP
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
+				moving = true;
 				tankAngle = 270;
 				movement.x = -tankSpeed;				// MOVES LEFT
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+				moving = true;
 				tankAngle = 0;
 				movement.z = tankSpeed;					// MOVES DOWN
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
+				moving = true;
 				tankAngle = 90;
 				movement.x = tankSpeed;					// MOVES RIGHT
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
+				moving = true;
 				tankAngle = 225;
 				movement.x = -tankSpeed;				// MOVES UP-LEFT
 				movement.z = -tankSpeed;
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
+				moving = true;
 				tankAngle = 135;
 				movement.x = tankSpeed;					// MOVES UP-RIGHT
 				movement.z = -tankSpeed;
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_D) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+				moving = true;
 				tankAngle = 45;
 				movement.x = tankSpeed;					// MOVES DOWN-RIGHT
 				movement.z = tankSpeed;
 			}
 			if(ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+				moving = true;
 				tankAngle = 315;
 				movement.x = -tankSpeed;				// MOVES DOWN-LEFT
 				movement.z = tankSpeed;
 			}
-
+			if(moving) {
+				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").play();
+			} else {
+				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").stop();
+				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").play();
+			}
 			incPos(movement.x, 0, movement.z);
 			movement.zero();
-
 			setRotation(0, tankAngle, 0);
 
 			// ROTATION OF TURRET

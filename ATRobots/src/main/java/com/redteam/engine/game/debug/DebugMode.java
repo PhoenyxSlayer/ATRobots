@@ -43,10 +43,11 @@ public class DebugMode implements ILogic {
 	public static ObjectLoader loader;
 
 	public static DebugObjectMap objectMap = new DebugObjectMap();
+	public static DebugSoundMap soundMap = new DebugSoundMap();
+
 	private static HashSet<Entity> additionalEntities = new HashSet<>();
 
-	public static Iterator<Entity> iRenderEntities,
-								   iAdditionalEntities;
+	public static Iterator<Entity> iRenderEntities;
 	public static Iterator<Terrain> iRenderTerrains;
 
 	public static Camera camera;
@@ -56,9 +57,6 @@ public class DebugMode implements ILogic {
 	public static Window window;
 
 	private static boolean spectator = false;
-
-	// TODO : MAKE SOUND HAVE ITS OWN MAP FILE
-	private static final Map<String, Sound> sounds = new HashMap<>();
 
 	private final image_parser icon = image_parser.load_image("src/main/resources/images/test.png");
 	
@@ -74,6 +72,7 @@ public class DebugMode implements ILogic {
 		renderer.init();					// INITIALIZATION OF RENDERER
 		window.updateLogo(icon);			// WINDOW ICON
 		objectMap.init();
+		soundMap.init();
 	}
 
 	@Override
@@ -190,44 +189,5 @@ public class DebugMode implements ILogic {
 
 	public static ObjectLoader getObjectLoader() {
 		return loader;
-	}
-
-
-	// SOUND RELATED
-
-	@SuppressWarnings("unused")
-	private static void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-	    File f = new File(soundFile);
-	    AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());  
-	    Clip clip = AudioSystem.getClip();
-	    clip.open(audioIn);
-	    clip.start();
-	}
-
-	@SuppressWarnings("unused")
-	public static Collection<Sound> getAllSounds() { return sounds.values(); }
-
-	@SuppressWarnings("unused")
-	public static Sound getSound(String soundFile) {
-		File file = new File(soundFile);
-		if(sounds.containsKey(file.getAbsolutePath())) {
-			return sounds.get(file.getAbsolutePath());
-		} else {
-			assert false : "Sound file not added '" + soundFile + "'";
-		}
-		
-		return null;
-	}
-
-	@SuppressWarnings("unused")
-	public static Sound addSound(String soundFile, boolean loops) {
-		File file = new File(soundFile);
-		if (sounds.containsKey(file.getAbsolutePath())) {
-			return sounds.get(file.getAbsolutePath());
-		} else {
-			Sound sound = new Sound(file.getAbsolutePath(), loops);
-			sounds.put(file.getAbsolutePath(), sound);
-			return sound;
-		}
 	}
 }
