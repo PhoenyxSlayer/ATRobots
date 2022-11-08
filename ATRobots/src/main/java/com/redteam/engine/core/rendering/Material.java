@@ -1,6 +1,5 @@
 package com.redteam.engine.core.rendering;
 
-import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.utils.Consts;
 import org.joml.Vector4f;
 
