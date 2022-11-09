@@ -100,7 +100,6 @@ public class TankEntity extends HittableEntity {
 		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
 	}
 
-	int i = 0;
 	@Override
 	public void debugCollision(Entity entity) {
 
