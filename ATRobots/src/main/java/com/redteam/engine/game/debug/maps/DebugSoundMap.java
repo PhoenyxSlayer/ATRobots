@@ -1,4 +1,4 @@
-package com.redteam.engine.game.debug;
+package com.redteam.engine.game.debug.maps;
 
 import com.redteam.engine.core.iSoundMapping;
 

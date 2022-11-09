@@ -1,7 +1,9 @@
-package com.redteam.engine.game.debug.gui;
+package com.redteam.engine.game.debug.maps;
 
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
+import com.redteam.engine.game.debug.gui.DebugCurrentEntitiesGUI;
+import com.redteam.engine.game.debug.gui.DebugSpectatorGUI;
 import com.redteam.engine.game.main.ATRobots;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
@@ -14,8 +16,8 @@ public class DebugGUIMap {
     Window window = ATRobots.getWindow();
     private boolean debugMode = false;
 
-    private DebugSpectatorGUI spectatorGUI = new DebugSpectatorGUI();
-    private DebugCurrentEntitiesGUI currentEntitiesGUI = new DebugCurrentEntitiesGUI();
+    private final DebugSpectatorGUI spectatorGUI = new DebugSpectatorGUI();
+    private final DebugCurrentEntitiesGUI currentEntitiesGUI = new DebugCurrentEntitiesGUI();
 
 
     public void spectatorGUI(boolean spectator) {

@@ -1,10 +1,12 @@
-package com.redteam.engine.game.debug;
+package com.redteam.engine.game.debug.maps;
 
+import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.iObjMapping;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.rendering.Material;
 import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.core.terrain.Terrain;
+import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.game.entities.TankEntity;
 import com.redteam.engine.utils.Constants;
 import org.joml.Vector3f;
@@ -18,7 +20,8 @@ public class DebugObjectMap implements iObjMapping {
         addEntity(new TankEntity	(
                                     "tank",                                      // ID
                                         new Vector3f(70f,1.3f,-50f),        // POSITION
-                                        new Vector3f(0,0,0)                 // ROTATION
+                                        new Vector3f(0,0,0),                 // ROTATION
+                                        "green"
                                     ));
     }
 
