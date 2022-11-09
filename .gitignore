@@ -187,3 +187,15 @@ ATRobots/bin/main/shaders/terrain/terrain_fragment.fs
 ATRobots/bin/main/shaders/entity/entity_fragment.fs
 ATRobots/bin/main/shaders/entity/entity_vertex.vs
 ATRobots/bin/main/shaders/terrain/terrain_vertex.vs
+*.uniqueId1
+*.uniqueId2
+*.uniqueId5
+*.uniqueId8
+*.uniqueId9
+*.uniqueId3
+*.uniqueId10
+*.uniqueId0
+*.uniqueId7
+*.uniqueId6
+*.uniqueId11
+*.uniqueId4
