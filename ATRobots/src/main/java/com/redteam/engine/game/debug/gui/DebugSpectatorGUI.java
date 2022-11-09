@@ -1,7 +1,6 @@
 package com.redteam.engine.game.debug.gui;
 
 import imgui.ImGui;
-import org.joml.Vector3f;
 
 @SuppressWarnings("unused")
 public class DebugSpectatorGUI implements iDebugGUI {
@@ -13,7 +12,7 @@ public class DebugSpectatorGUI implements iDebugGUI {
 	}
 
 	public void update() {
-		ImGui.text("Spectator: " + String.valueOf(spectator));
+		ImGui.text("Spectator: " + spectator);
 	}
 
 	public void close() {
