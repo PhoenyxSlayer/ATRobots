@@ -127,6 +127,7 @@ public class HittableEntity extends Entity {
 			if (ent instanceof HittableEntity &&
 					passThrough((HittableEntity) ent)) {
 				this.debugCollision((HittableEntity) ent);
+				((HittableEntity) ent).debugCollision(this);
 				return;
 			}
 		}
