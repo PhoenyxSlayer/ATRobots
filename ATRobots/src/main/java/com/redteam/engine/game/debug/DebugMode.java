@@ -131,18 +131,6 @@ public class DebugMode implements ILogic {
 
 	@Override
 	public void render() {
-		debugGUIMap.createImGUIWindows();
-
-		debugGUIMap.spectatorGUI(isSpectator());
-		debugGUIMap.currentEntitiesGUI(entities);
-
-		debugGUIMap.render();
-
-		glfwSwapBuffers(window.getWindowHandle());
-		// Tells OpenGL to start rendering all the objects put in a queue
-		glfwPollEvents();
-
-
 		// Entity Rendering
 		for(Entity ent : objectMap.entityMap()) {
 			if(ent instanceof TankEntity) {
@@ -161,6 +149,19 @@ public class DebugMode implements ILogic {
 
 		// Renders camera output and lighting
 		renderer.render(camera, objectMap.lightMap());
+
+
+		// Drawing of the GUI
+		debugGUIMap.createImGUIWindows();
+
+		debugGUIMap.spectatorGUI(isSpectator());
+		debugGUIMap.currentEntitiesGUI(entities);
+
+		debugGUIMap.render();
+
+		glfwSwapBuffers(window.getWindowHandle());
+		// Tells OpenGL to start rendering all the objects put in a queue
+		glfwPollEvents();
 	}
 
 	@Override
