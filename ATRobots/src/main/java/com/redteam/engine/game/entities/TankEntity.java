@@ -170,7 +170,8 @@ public class TankEntity extends HittableEntity {
 				@Override
 				public void invoke(long window, int key, int scancode, int action, int mods) {
 					if(action == GLFW_PRESS) {
-
+						if(key == GLFW_KEY_F)
+							DebugMode.debugGUIMap.updateDebugMode();		// Enables the Debug GUIs
 						if(key == GLFW_KEY_V)
 							DebugMode.updateSpectator();
 						if(!DebugMode.isSpectator()) {

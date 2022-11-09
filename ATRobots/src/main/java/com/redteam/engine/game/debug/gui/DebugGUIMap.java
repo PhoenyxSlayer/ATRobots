@@ -5,7 +5,6 @@ import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.game.main.ATRobots;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
@@ -33,7 +32,7 @@ public class DebugGUIMap {
         currentEntitiesGUI.close();
     }
 
-    public boolean getDebugMode(HashSet<Entity> entities) {
+    public boolean getDebugMode() {
         return debugMode;
     }
 
@@ -48,12 +47,14 @@ public class DebugGUIMap {
 
     public void render() {
         ImGui.render();
-        window.imGuiGl3.renderDrawData(ImGui.getDrawData());
-        if(ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-            final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
-            ImGui.updatePlatformWindows();
-            ImGui.renderPlatformWindowsDefault();
-            GLFW.glfwMakeContextCurrent(backupWindowPtr);
+        if(getDebugMode()) {
+            window.imGuiGl3.renderDrawData(ImGui.getDrawData());
+            if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+                final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+                ImGui.updatePlatformWindows();
+                ImGui.renderPlatformWindowsDefault();
+                GLFW.glfwMakeContextCurrent(backupWindowPtr);
+            }
         }
 
     }

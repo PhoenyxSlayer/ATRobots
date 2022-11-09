@@ -63,7 +63,6 @@ public class DebugMode implements ILogic {
 		renderer.init();					// INITIALIZATION OF RENDERER
 		objectMap.init();					// ADDS ENTITIES, TERRAIN, AND LIGHTS
 		soundMap.init();					// ADDS SOUNDS
-		debugGUIMap.updateDebugMode();		// Enables the Debug GUIs
 	}
 
 	@Override
