@@ -6,8 +6,10 @@ import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.rendering.RenderManager;
 import com.redteam.engine.core.rendering.image_parser;
 import com.redteam.engine.core.terrain.Terrain;
+import com.redteam.engine.game.debug.gui.DebugGUIMap;
 import com.redteam.engine.game.entities.TankEntity;
 import com.redteam.engine.game.main.ATRobots;
+import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -15,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import static com.redteam.engine.core.Engine.tick;
+import static com.redteam.engine.core.iObjMapping.entities;
 import static com.redteam.engine.utils.Constants.CAMERA_STEP;
 import static com.redteam.engine.utils.Constants.MOUSE_SENSITIVITY;
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,6 +25,8 @@ import static org.lwjgl.glfw.GLFW.*;
 public class DebugMode implements ILogic {
 	public static DebugObjectMap objectMap;
 	public static DebugSoundMap soundMap;
+
+	public static DebugGUIMap debugGUIMap;
 
 	private static final HashSet<Entity> additionalEntities = new HashSet<>();
 
@@ -40,6 +45,7 @@ public class DebugMode implements ILogic {
 	private static boolean spectator;
 	
 	public DebugMode() {
+		debugGUIMap = new DebugGUIMap();
 		objectMap = new DebugObjectMap();
 		soundMap = new DebugSoundMap();
 		icon = image_parser.load_image("src/main/resources/images/test.png");
@@ -57,6 +63,7 @@ public class DebugMode implements ILogic {
 		renderer.init();					// INITIALIZATION OF RENDERER
 		objectMap.init();					// ADDS ENTITIES, TERRAIN, AND LIGHTS
 		soundMap.init();					// ADDS SOUNDS
+		debugGUIMap.updateDebugMode();		// Enables the Debug GUIs
 	}
 
 	@Override
@@ -125,13 +132,24 @@ public class DebugMode implements ILogic {
 
 	@Override
 	public void render() {
+		Vector3f tankPos = new Vector3f(0,0,0);
+
+		window.imGuiGlfw.newFrame();
+		ImGui.newFrame();
+
+		debugGUIMap.spectatorGUI(isSpectator());
+		debugGUIMap.currentEntitiesGUI(entities);
+		debugGUIMap.render();
+
 		glfwSwapBuffers(window.getWindowHandle());
 		// Tells OpenGL to start rendering all the objects put in a queue
 		glfwPollEvents();
 
+
 		// Entity Rendering
 		for(Entity ent : objectMap.entityMap()) {
 			if(ent instanceof TankEntity) {
+				tankPos = ent.getPos();
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
 				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
 				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f));
