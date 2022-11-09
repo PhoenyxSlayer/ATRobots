@@ -41,6 +41,11 @@ public class DebugGUIMap {
         debugMode = !debugMode;
     }
 
+    public void createImGUIWindows() {
+        window.imGuiGlfw.newFrame();
+        ImGui.newFrame();
+    }
+
     public void render() {
         ImGui.render();
         window.imGuiGl3.renderDrawData(ImGui.getDrawData());

@@ -132,13 +132,11 @@ public class DebugMode implements ILogic {
 
 	@Override
 	public void render() {
-		Vector3f tankPos = new Vector3f(0,0,0);
-
-		window.imGuiGlfw.newFrame();
-		ImGui.newFrame();
+		debugGUIMap.createImGUIWindows();
 
 		debugGUIMap.spectatorGUI(isSpectator());
 		debugGUIMap.currentEntitiesGUI(entities);
+
 		debugGUIMap.render();
 
 		glfwSwapBuffers(window.getWindowHandle());
@@ -149,7 +147,6 @@ public class DebugMode implements ILogic {
 		// Entity Rendering
 		for(Entity ent : objectMap.entityMap()) {
 			if(ent instanceof TankEntity) {
-				tankPos = ent.getPos();
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
 				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
 				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f));
