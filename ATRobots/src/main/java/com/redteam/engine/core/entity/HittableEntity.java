@@ -2,6 +2,7 @@ package com.redteam.engine.core.entity;
 
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
+import com.redteam.engine.game.entities.BulletEntity;
 import org.joml.Vector3f;
 
 import static com.redteam.engine.utils.Constants.X_BORDER;
@@ -9,7 +10,7 @@ import static com.redteam.engine.utils.Constants.Z_BORDER;
 
 public class HittableEntity extends Entity {
 	
-	private final float hitBoxScale;
+	private float hitBoxScale;
 	    
 	private Vector3f[] hitBox;
 
@@ -98,6 +99,9 @@ public class HittableEntity extends Entity {
 	@SuppressWarnings("unused")
 	public float getHitBoxScale() {
 		return hitBoxScale;
+	}
+	public void setHitBoxScale(float hitBoxScale) {
+		this.hitBoxScale = hitBoxScale;
 	}
 	
 	@SuppressWarnings("unused")

@@ -9,7 +9,7 @@ public class Entity {
     private final Model model;
     private final Vector3f pos;
     private final Vector3f rotation;
-    private final float scale;
+    private float scale;
 
     private boolean removed;
     
@@ -63,6 +63,9 @@ public class Entity {
 
     public float getScale() {
         return scale;
+    }
+    public void setScale(float scale) {
+        this.scale = scale;
     }
     @SuppressWarnings("unused")
     public void gameTick() {
