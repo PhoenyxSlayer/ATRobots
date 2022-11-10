@@ -19,13 +19,13 @@ public class DebugObjectMap implements iObjMapping {
     public void initEntities() {
         addEntity(new TankEntity	(
                                     "tank",                                      // ID
-                                        DebugMode.RandomizeTankLocation(),       // POSITION
-                                        new Vector3f(0,0,0),                 // ROTATION
-                                        "green"
+                                     DebugMode.RandomizeTankLocation(),          // POSITION
+                                     new Vector3f(0,0,0),                        // ROTATION
+                                    "blue"                                       // COLOR
                                     ));
         addEntity(new HittableEntity	(
                 "tank",                                      // ID
-                DebugMode.setModel("/models/tank.obj", "textures/base/green.jpg"),
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),
                 DebugMode.RandomizeTankLocation(),       // POSITION
                 new Vector3f(0,0,0),                 // ROTATION
                 1f,

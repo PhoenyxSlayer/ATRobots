@@ -112,6 +112,7 @@ public class HittableEntity extends Entity {
 		if(entity instanceof BulletEntity) {
 			entity.remove();
 			setModel(DebugMode.setModel("/models/tank.obj", "textures/base/red.jpg"));
+			System.out.println("Tank Hit!");
 		}
 	}
 
