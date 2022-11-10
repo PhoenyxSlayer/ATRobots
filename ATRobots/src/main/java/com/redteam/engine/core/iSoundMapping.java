@@ -25,25 +25,6 @@ public interface iSoundMapping {
         }
     }
 
-    default Sound getSound(String soundFile) {
-        File file = new File(soundFile);
-        if(sounds.containsKey(file.getAbsolutePath())) {
-            return sounds.get(file.getAbsolutePath());
-        } else {
-            assert false : "Sound file not added '" + soundFile + "'";
-        }
-        return null;
-    }
-
     default Collection<Sound> getAllSounds() { return sounds.values(); }
 
-
-    // Alex Implementation of Sound
-    default void playSound(String soundFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-        File f = new File(soundFile);
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioIn);
-        clip.start();
-    }
 }

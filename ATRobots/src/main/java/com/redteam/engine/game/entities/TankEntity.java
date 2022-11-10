@@ -218,6 +218,9 @@ public class TankEntity extends HittableEntity {
 				@Override
 				public void invoke(long window, int key, int scancode, int action, int mods) {
 					if(action == GLFW_PRESS) {
+						if(key == GLFW_KEY_M) {
+							DebugMode.soundMap.setSound();
+						}
 						if(key == GLFW_KEY_F)
 							DebugMode.debugGUIMap.updateDebugMode();		// Enables the Debug GUIs
 						if(key == GLFW_KEY_V)
@@ -248,8 +251,15 @@ public class TankEntity extends HittableEntity {
 												bulletPos.z += 5.3f;
 									}
 								}
-								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
-								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").play();
+								if(DebugMode.soundMap.isSoundOn()) {
+									DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
+									DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").play();
+								}
+								else {
+									if(DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").isPlaying()) {
+										DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
+									}
+								}
 								DebugMode.addAdditionalEntity(
 								new BulletEntity(
 								"bullet",											// ID
@@ -318,12 +328,24 @@ public class TankEntity extends HittableEntity {
 				movement.x = -tankSpeed;				// MOVES DOWN-LEFT
 				movement.z = tankSpeed;
 			}
-			if(moving) {
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").stop();
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").play();
+
+			// TURNS OFF W/ M
+			if(DebugMode.soundMap.isSoundOn()) {
+
+				if (moving) {
+					DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+					DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").play();
+				} else {
+					DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").stop();
+					DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").play();
+				}
 			} else {
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").stop();
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").play();
+				if(DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").isPlaying()) {
+					DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+				}
+				if(DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").isPlaying()) {
+					DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").stop();
+				}
 			}
 			incPos(movement.x, 0, movement.z);
 			movement.zero();

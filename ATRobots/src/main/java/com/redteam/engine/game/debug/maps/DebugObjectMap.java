@@ -20,8 +20,7 @@ public class DebugObjectMap implements iObjMapping {
         addEntity(new TankEntity	(
                                     "tank",                                      // ID
                                         DebugMode.RandomizeTankLocation(),       // POSITION
-                                        new Vector3f(0,0,0),                 // ROTATION
-                                        "green"
+                                        new Vector3f(0,0,0)                 // ROTATION
                                     ));
     }
 
