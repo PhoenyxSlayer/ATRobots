@@ -219,15 +219,23 @@ public class TankEntity extends HittableEntity {
 								switch ((int) turretAngle) {
 									case 0 ->   bulletPos.z += 5.3f;
 									case 45 -> {
+											    bulletPos.x += 5.3f;
+											    bulletPos.z += 5.3f;
 									}
 									case 90 ->  bulletPos.x += 5.3f;
 									case 135 -> {
+										        bulletPos.x += 5.3f;
+											    bulletPos.z -= 5.3f;
 									}
 									case 180 -> bulletPos.z -= 5.3f;
 									case 225 -> {
+												bulletPos.x -= 5.3f;
+												bulletPos.z -= 5.3f;
 									}
 									case 270 -> bulletPos.x -= 5.3f;
 									case 315 -> {
+												bulletPos.x -= 5.3f;
+												bulletPos.z += 5.3f;
 									}
 								}
 								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
