@@ -199,3 +199,5 @@ ATRobots/bin/main/shaders/terrain/terrain_vertex.vs
 *.uniqueId6
 *.uniqueId11
 *.uniqueId4
+*.uniqueId12
+*.uniqueId13
