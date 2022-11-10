@@ -13,11 +13,13 @@ import com.redteam.engine.game.debug.maps.DebugObjectMap;
 import com.redteam.engine.game.debug.maps.DebugSoundMap;
 import com.redteam.engine.game.entities.TankEntity;
 import com.redteam.engine.game.main.ATRobots;
+import com.redteam.engine.utils.Constants;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 
 import static com.redteam.engine.core.Engine.tick;
 import static com.redteam.engine.core.iObjMapping.entities;
@@ -179,4 +181,21 @@ public class DebugMode implements ILogic {
 	public static void updateSpectator() {spectator = !spectator; }
 
 	public static ObjectLoader getObjectLoader() { return loader; }
+
+
+	public static Vector3f RandomizeTankLocation () {
+		// randomGenerator() * (max - min) + min;
+		return new Vector3f(
+				(randomGenerator() * (Constants.X_BORDER - -Constants.X_BORDER) + -Constants.X_BORDER),
+				1.3f,
+				// Min for Z is 0
+				(randomGenerator() * (-Constants.Z_BORDER))
+		);
+	}
+
+	private static Random generator = new Random();
+	static float randomGenerator() {
+		return generator.nextFloat();
+	}
+
 }
