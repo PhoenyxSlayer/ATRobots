@@ -1,6 +1,7 @@
 package com.redteam.engine.core.entity;
 
 import com.redteam.engine.core.rendering.Model;
+import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.game.entities.BulletEntity;
 import org.joml.Vector3f;
@@ -108,6 +109,10 @@ public class HittableEntity extends Entity {
 	public void collision(Entity entity){
 	}
 	public void debugCollision(Entity entity) {
+		if(entity instanceof BulletEntity) {
+			entity.remove();
+			setModel(DebugMode.setModel("/models/tank.obj", "textures/base/red.jpg"));
+		}
 	}
 
 	public void gameTick() {

@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 public class Entity {
 
 	private final String id;
-    private final Model model;
+    private Model model;
     private final Vector3f pos;
     private final Vector3f rotation;
     private float scale;
@@ -51,6 +51,9 @@ public class Entity {
 
     public Model getModel() {
         return model;
+    }
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     public Vector3f getPos() {

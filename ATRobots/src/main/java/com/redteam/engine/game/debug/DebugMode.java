@@ -198,4 +198,15 @@ public class DebugMode implements ILogic {
 		return generator.nextFloat();
 	}
 
+	public static Model setModel(String OBJModel, String texture) {
+		Model model = loader.loadOBJModel(OBJModel);
+		try {
+			model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
+			return model;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }
