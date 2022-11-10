@@ -108,10 +108,16 @@ public class HittableEntity extends Entity {
 	@SuppressWarnings("unused")
 	public void collision(Entity entity){
 	}
+	int i = 0;
 	public void debugCollision(Entity entity) {
 		if(entity instanceof BulletEntity) {
 			entity.remove();
-			setModel(DebugMode.setModel("/models/tank.obj", "textures/base/red.jpg"));
+			i++;
+			if(i % 2 == 0) {
+				setModel(DebugMode.setModel("/models/tank.obj", "textures/base/red.jpg"));
+			} else {
+				setModel(DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"));
+			}
 			System.out.println("Tank Hit!");
 		}
 	}
