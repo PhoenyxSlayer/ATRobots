@@ -272,7 +272,7 @@ public class TankEntity extends HittableEntity {
 					}
 					if (action == GLFW_RELEASE) {
 						if(key == GLFW_KEY_ESCAPE) {
-							System.out.println("EXITING");
+							System.out.println("EXITING WINDOW " + ATRobots.getWindow().getTitle());
 							glfwSetWindowShouldClose(window, true);
 						}
 						
