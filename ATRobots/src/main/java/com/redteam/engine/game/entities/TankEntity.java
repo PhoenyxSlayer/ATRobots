@@ -21,17 +21,21 @@ public class TankEntity extends HittableEntity {
 	
 	private static final ObjectLoader loader = new ObjectLoader();
 
-	private final Model top;
-	private final Model base;
+	private Model top;
+	private Model base;
+
+	private String color = "";
 
 	// TODO : MAKE TANKS HAVE RANDOMIZED TEXTURES
 
-	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation) {
-		super(id, setModel("/models/tankBot.obj"), basePosition, baseRotation, 1, 5f);
+	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation, String color) {
+		super(id, setModel("/models/tankBot.obj", color), basePosition, baseRotation, 1, 5f);
 		this.baseRotation = baseRotation;
+		this.color = color;
 
-		top = setModel("/models/tankTop.obj");
-	    base = setModel("/models/tankBot.obj");
+
+		top = setModel("/models/tankTop.obj", color);
+	    base = setModel("/models/tankBot.obj", color);
 	}
 
 	public TankEntity(String id, Model base, Model top, Vector3f basePosition, Vector3f baseRotation) {
@@ -42,17 +46,43 @@ public class TankEntity extends HittableEntity {
 		this.base = base;
 	}
 
-	private static Model setModel(String modelOBJ) {
+	private static Model setModel(String modelOBJ, String color) {
+		String textureFile = "textures/";
+
+		// TODO : In Blender create a black border outline for all textures for both turret and the base
+		// Sets the Turret Model (Depending on the user picked color)
+		if(modelOBJ.equals("/models/tankTop.obj")) {
+			textureFile += "turret/";
+			textureFile = getTextureColor(color, textureFile);
+		}
+		// Sets the Base Model (Depending on the user picked color)
+		else if (modelOBJ.equals("/models/tankBot.obj")) {
+			textureFile += "base/";
+			textureFile = getTextureColor(color, textureFile);
+		}
 		Model model = loader.loadOBJModel(modelOBJ);
 		try {
-			model.setTexture(new Texture(loader.loadTexture("textures/Camo.jpg")), 1f);
+			model.setTexture(new Texture(loader.loadTexture(textureFile)), 1f);
 			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
+	private static String getTextureColor(String color, String textureFile) {
+		switch (color) {
+			case "Green", "green", "G", "g" -> textureFile += "green.jpg";
+			case "Red", "red", "R", "r" -> textureFile += "red.jpg";
+			case "Blue", "blue", "B", "b" -> textureFile += "blue.jpg";
+			case "Cyan", "cyan", "C", "c" -> textureFile += "cyan.jpg";
+			case "Pink", "pink", "P", "p" -> textureFile += "pink.jpg";
+			case "Yellow", "yellow", "Y", "y" -> textureFile += "yellow.jpg";
+			default -> textureFile = "textures/Camo.jpg";
+		}
+		return textureFile;
+	}
+
 	@Override
 	public void incRotation(float x, float y, float z) {
         incBaseRotation(x,y,z);
@@ -95,6 +125,15 @@ public class TankEntity extends HittableEntity {
 
 	public Vector3f getTurretRotation() { return turretRotation; }
 
+	@SuppressWarnings("unused")
+	public String getColor() { return color; }
+
+	public void setColor(String color) {
+		this.color = color;
+		top = setModel("/models/tankTop.obj", color);
+		base = setModel("/models/tankBot.obj", color);
+	}
+
 	@Override
 	public void collision(Entity entity) {
 		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
@@ -102,7 +141,6 @@ public class TankEntity extends HittableEntity {
 
 	@Override
 	public void debugCollision(Entity entity) {
-
 		if(entity instanceof BulletEntity) {
 			entity.remove();
 			// TODO : REDUCES HEALTH
@@ -181,23 +219,15 @@ public class TankEntity extends HittableEntity {
 								switch ((int) turretAngle) {
 									case 0 ->   bulletPos.z += 5.3f;
 									case 45 -> {
-											    bulletPos.x += 4.2f;
-											    bulletPos.z += 4.2f;
 									}
 									case 90 ->  bulletPos.x += 5.3f;
 									case 135 -> {
-										        bulletPos.x += 4.2f;
-											    bulletPos.z -= 4.2f;
 									}
 									case 180 -> bulletPos.z -= 5.3f;
 									case 225 -> {
-												bulletPos.x -= 4.2f;
-												bulletPos.z -= 4.2f;
 									}
 									case 270 -> bulletPos.x -= 5.3f;
 									case 315 -> {
-												bulletPos.x -= 4.2f;
-												bulletPos.z += 4.2f;
 									}
 								}
 								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
