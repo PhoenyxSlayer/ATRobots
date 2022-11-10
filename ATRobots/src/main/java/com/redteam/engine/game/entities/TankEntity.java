@@ -18,7 +18,7 @@ public class TankEntity extends HittableEntity {
 	
 	private final Vector3f baseRotation;
 	private final Vector3f turretRotation = new Vector3f(0,0,0);
-	
+	private int health = 100;
 	private static final ObjectLoader loader = new ObjectLoader();
 
 	private Model top;
@@ -143,6 +143,9 @@ public class TankEntity extends HittableEntity {
 	public void debugCollision(Entity entity) {
 		if(entity instanceof BulletEntity) {
 			entity.remove();
+			System.out.println("You've Been Hit!");
+			if(health >= 10) { health -= 10; }
+			System.out.println("Health: " + health);
 			// TODO : REDUCES HEALTH
 		}
 		else if(entity instanceof TankEntity) {

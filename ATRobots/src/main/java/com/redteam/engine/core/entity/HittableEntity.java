@@ -12,7 +12,8 @@ import static com.redteam.engine.utils.Constants.Z_BORDER;
 public class HittableEntity extends Entity {
 	
 	private float hitBoxScale;
-	    
+
+	private int health = 100;
 	private Vector3f[] hitBox;
 
 	public HittableEntity(String id, Model model, Vector3f pos, Vector3f rotation, float scale, float hitBoxScale) {
@@ -119,6 +120,8 @@ public class HittableEntity extends Entity {
 				setModel(DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"));
 			}
 			System.out.println("Tank Hit!");
+			if(health >= 10) { health -= 10; }
+			System.out.println("Health: " + health);
 		}
 	}
 
