@@ -3,6 +3,9 @@ package com.redteam.engine.core.entity;
 import com.redteam.engine.core.rendering.Model;
 import org.joml.Vector3f;
 
+import static com.redteam.engine.utils.Constants.X_BORDER;
+import static com.redteam.engine.utils.Constants.Z_BORDER;
+
 public class Entity {
 
 	private final String id;
