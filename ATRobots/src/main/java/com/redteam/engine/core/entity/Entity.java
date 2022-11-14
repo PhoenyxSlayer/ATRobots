@@ -81,4 +81,9 @@ public class Entity {
     public boolean isRemoved() {
         return removed;
     }
+
+    public boolean outOfBorder() {
+		return ((getPos().x <= -X_BORDER) || (getPos().x >= X_BORDER))
+				|| ((getPos().z <= -Z_BORDER) || (getPos().z >= 0));
+	}
 }

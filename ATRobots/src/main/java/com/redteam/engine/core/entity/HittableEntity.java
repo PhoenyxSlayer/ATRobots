@@ -136,9 +136,4 @@ public class HittableEntity extends Entity {
 			}
 		}
 	}
-
-	public boolean outOfBorder() {
-		return ((getPos().x <= -X_BORDER) || (getPos().x >= X_BORDER))
-				|| ((getPos().z <= -Z_BORDER) || (getPos().z >= 0));
-	}
 }
