@@ -41,8 +41,6 @@ public class TankEntity extends HittableEntity {
 	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation) {
 		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, 1, 5f);
 		this.baseRotation = baseRotation;
-		this.color = color;
-
 
 		top = setModel("/models/tankTop.obj", "textures/Camo.jpg");
 		base = setModel("/models/tankBot.obj","textures/Camo.jpg");
