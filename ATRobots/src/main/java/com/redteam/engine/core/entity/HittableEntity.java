@@ -2,11 +2,7 @@ package com.redteam.engine.core.entity;
 
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
-import com.redteam.engine.game.entities.BulletEntity;
 import org.joml.Vector3f;
-
-import static com.redteam.engine.utils.Constants.X_BORDER;
-import static com.redteam.engine.utils.Constants.Z_BORDER;
 
 public class HittableEntity extends Entity {
 	
@@ -64,13 +60,16 @@ public class HittableEntity extends Entity {
 		};
 	}
 
-	@SuppressWarnings("unused")
     public boolean passThrough(Vector3f pos) {
 		boolean collide = true;
-		for(int i = 0; i < 8; i++) {
-			collide &= (pos.x - hitBox[i].x <= hitBoxScale) && (pos.x - hitBox[i].x >= -hitBoxScale) &&
-					   (pos.y - hitBox[i].y <= hitBoxScale) && (pos.y - hitBox[i].y >= -hitBoxScale) &&
-					   (pos.z - hitBox[i].z <= hitBoxScale) && (pos.z - hitBox[i].z >= -hitBoxScale);
+		if(pos != getPos())  {
+			for(int i = 0; i < 8; i++) {
+				collide &= (pos.x - hitBox[i].x <= hitBoxScale) && (pos.x - hitBox[i].x >= -hitBoxScale) &&
+						(pos.y - hitBox[i].y <= hitBoxScale) && (pos.y - hitBox[i].y >= -hitBoxScale) &&
+						(pos.z - hitBox[i].z <= hitBoxScale) && (pos.z - hitBox[i].z >= -hitBoxScale);
+			}
+		} else {
+			collide = false;
 		}
 		return collide;
 	}
@@ -129,7 +128,8 @@ public class HittableEntity extends Entity {
 		formCube();
 		for (Object ent : entitiesArray) {
 			if (ent instanceof HittableEntity &&
-					passThrough((HittableEntity) ent)) {
+			   (passThrough((HittableEntity) ent)) || 
+			   (passThrough(((HittableEntity) ent).getPos()))) {
 				this.debugCollision((HittableEntity) ent);
 				((HittableEntity) ent).debugCollision(this);
 				return;
