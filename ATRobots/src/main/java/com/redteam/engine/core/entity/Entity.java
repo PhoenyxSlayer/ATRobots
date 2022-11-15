@@ -6,6 +6,10 @@ import org.joml.Vector3f;
 import static com.redteam.engine.utils.Constants.X_BORDER;
 import static com.redteam.engine.utils.Constants.Z_BORDER;
 
+/* https://docs.google.com/document/d/1c6gZt4eIC7wcBEtP2FeN9dnjtGApW9oLxj5VHExmx9c/edit?usp=sharing
+ *  -> Link to Design Doc
+ */
+
 public abstract class Entity {
 
 	private final String id;

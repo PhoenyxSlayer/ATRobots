@@ -4,6 +4,10 @@ import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
 import org.joml.Vector3f;
 
+/* https://docs.google.com/document/d/1PEnyHnWt1y7VdEA1bnkRN30tYblDDacImu-bdZJjqKs/edit?usp=sharing
+ *  -> Link to Design Doc
+ */
+
 public abstract class HittableEntity extends Entity {
 	
 	private float hitBoxScale;
