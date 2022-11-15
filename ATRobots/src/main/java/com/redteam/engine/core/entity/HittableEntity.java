@@ -4,7 +4,7 @@ import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
 import org.joml.Vector3f;
 
-public class HittableEntity extends Entity {
+public abstract class HittableEntity extends Entity {
 	
 	private float hitBoxScale;
 	    
@@ -99,38 +99,44 @@ public class HittableEntity extends Entity {
 	public float getHitBoxScale() {
 		return hitBoxScale;
 	}
+	@SuppressWarnings("unused")
 	public void setHitBoxScale(float hitBoxScale) {
 		this.hitBoxScale = hitBoxScale;
 	}
 	
 	@SuppressWarnings("unused")
-	public void collision(Entity entity){
-	}
-	public void debugCollision(Entity entity) {
-	}
+	protected abstract void collision(Entity entity);
 
-	public void gameTick() {
-	}
-	public void debugGameTick() {
-	}
+	protected abstract void debugCollision(Entity entity);
 
 	// Collision Detection
 	@SuppressWarnings("unused")
 	public void collisionCheck() {
 		/* TODO : ADD REAL GAME IMPLEMENTATION
-			HINT: YOU ONLY HAVE TO CHANGE THE TOARRAY FOR WHATEVER OBJECT
-				  YOU'RE USING FOR THE REAL GAME
+		 *	HINT: YOU ONLY HAVE TO CHANGE THE ARRAY FOR WHATEVER OBJECT
+		 *		  YOU'RE USING FOR THE REAL GAME
 		 */
+		Object[] entitiesArray = null; //= DebugMode.objectMap.entityMap().toArray();
+		formCube();
+		for (Object ent : entitiesArray) {
+			assert ent instanceof HittableEntity;
+			if( (passThrough((HittableEntity) ent)) ||
+					(passThrough(((Entity) ent).getPos()))) {
+				this.debugCollision((Entity) ent);
+				((HittableEntity) ent).debugCollision(this);
+				return;
+			}
+		}
 	}
 
 	public void debugCollisionCheck() {
 		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
 		formCube();
 		for (Object ent : entitiesArray) {
-			if (ent instanceof HittableEntity &&
-			   (passThrough((HittableEntity) ent)) || 
-			   (passThrough(((HittableEntity) ent).getPos()))) {
-				this.debugCollision((HittableEntity) ent);
+			assert ent instanceof HittableEntity;
+			if( (passThrough((HittableEntity) ent)) ||
+					(passThrough(((Entity) ent).getPos()))) {
+				this.debugCollision((Entity) ent);
 				((HittableEntity) ent).debugCollision(this);
 				return;
 			}

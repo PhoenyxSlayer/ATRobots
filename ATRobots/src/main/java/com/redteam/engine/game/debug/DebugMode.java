@@ -140,8 +140,15 @@ public class DebugMode implements ILogic {
 		for(Entity ent : objectMap.entityMap()) {
 			if(ent instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
-				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
-				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f));
+				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f) {
+					// TODO : Implement it so the tank class will pass two models into the renderer instead of this
+					public void gameTick() {}
+					public void debugGameTick() {}
+				});
+				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f) {
+					public void gameTick() {}
+					public void debugGameTick() {}
+				});
 			}
 			else {
 				renderer.processEntity(ent);

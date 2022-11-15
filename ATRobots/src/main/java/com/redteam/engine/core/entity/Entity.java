@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 import static com.redteam.engine.utils.Constants.X_BORDER;
 import static com.redteam.engine.utils.Constants.Z_BORDER;
 
-public class Entity {
+public abstract class Entity {
 
 	private final String id;
     private final Model model;
@@ -71,11 +71,9 @@ public class Entity {
         this.scale = scale;
     }
     @SuppressWarnings("unused")
-    public void gameTick() {
-    }
+    public abstract void gameTick();
 
-    public void debugGameTick() {
-    }
+    public abstract void debugGameTick();
 
     public void remove() {
         removed = true;
@@ -86,7 +84,7 @@ public class Entity {
     }
 
     public boolean outOfBorder() {
-		return ((getPos().x <= -X_BORDER) || (getPos().x >= X_BORDER))
-				|| ((getPos().z <= -Z_BORDER) || (getPos().z >= 0));
+		return ((getPos().x < -X_BORDER) || (getPos().x > X_BORDER))
+				|| ((getPos().z < -Z_BORDER) || (getPos().z > 0));
 	}
 }
