@@ -26,24 +26,23 @@ public class TankEntity extends HittableEntity {
 
 	private String color = "";
 
-	// TODO : MAKE TANKS HAVE RANDOMIZED TEXTURES
-
+	@SuppressWarnings("unused")
 	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation, String color) {
-		super(id, setModel("/models/tankBot.obj", color), basePosition, baseRotation, 1, 5f);
+		super(id, setTankModel("/models/tankBot.obj", color), basePosition, baseRotation, 1, 5f);
 		this.baseRotation = baseRotation;
 		this.color = color;
 
 
-		top = setModel("/models/tankTop.obj", color);
-	    base = setModel("/models/tankBot.obj", color);
+		top = setTankModel("/models/tankTop.obj", color);
+	    base = setTankModel("/models/tankBot.obj", color);
 	}
 
 	public TankEntity(String id, Vector3f basePosition, Vector3f baseRotation) {
-		super(id, setModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, 1, 5f);
+		super(id, setTankModel("/models/tankBot.obj", "textures/Camo.jpg"), basePosition, baseRotation, 1, 5f);
 		this.baseRotation = baseRotation;
 
-		top = setModel("/models/tankTop.obj", "textures/Camo.jpg");
-		base = setModel("/models/tankBot.obj","textures/Camo.jpg");
+		top = setTankModel("/models/tankTop.obj", "textures/Camo.jpg");
+		base = setTankModel("/models/tankBot.obj","textures/Camo.jpg");
 	}
 
 	public TankEntity(String id, Model base, Model top, Vector3f basePosition, Vector3f baseRotation) {
@@ -54,19 +53,19 @@ public class TankEntity extends HittableEntity {
 		this.base = base;
 	}
 
-	private static Model setModel(String modelOBJ, String color) {
+	private static Model setTankModel(String modelOBJ, String texture) {
 		String textureFile = "textures/";
 
 		// TODO : In Blender create a black border outline for all textures for both turret and the base
 		// Sets the Turret Model (Depending on the user picked color)
 		if(modelOBJ.equals("/models/tankTop.obj")) {
 			textureFile += "turret/";
-			textureFile = getTextureColor(color, textureFile);
+			textureFile = getTextureColor(texture, textureFile);
 		}
 		// Sets the Base Model (Depending on the user picked color)
 		else if (modelOBJ.equals("/models/tankBot.obj")) {
 			textureFile += "base/";
-			textureFile = getTextureColor(color, textureFile);
+			textureFile = getTextureColor(texture, textureFile);
 		}
 		Model model = loader.loadOBJModel(modelOBJ);
 		try {
@@ -96,7 +95,7 @@ public class TankEntity extends HittableEntity {
         incBaseRotation(x,y,z);
 		incTurretRotation(x,y,z);
 	}
-	
+
 	@Override
 	public void setRotation(float x, float y, float z) {
         setBaseRotation(x,y,z);
@@ -135,30 +134,28 @@ public class TankEntity extends HittableEntity {
 
 	@SuppressWarnings("unused")
 	public String getColor() { return color; }
-
+	@SuppressWarnings("unused")
 	public void setColor(String color) {
 		this.color = color;
-		top = setModel("/models/tankTop.obj", color);
-		base = setModel("/models/tankBot.obj", color);
+		top = setTankModel("/models/tankTop.obj", color);
+		base = setTankModel("/models/tankBot.obj", color);
 	}
 
-	@Override
 	public void collision(Entity entity) {
-		// TODO : REAL-GAMES IMPLEMENTATION OF COLLISION
-	}
-
-	@Override
-	public void debugCollision(Entity entity) {
 		if(entity instanceof BulletEntity) {
 			entity.remove();
 			// TODO : REDUCES HEALTH
 		}
-		else if(entity instanceof TankEntity) {
-			// TODO : MAKE IT SO IT DOESN'T GO THROUGH EACH OTHER
+		// TODO : CREATE MINE COLLISION
+		if(entity instanceof TankEntity) {
+			// TODO : PREVENT TANKS GOING THROUGH EACH OTHER
 		}
 	}
 
-	@Override
+	public void debugCollision(Entity entity) {
+		collision(entity);
+	}
+
 	public void gameTick() {
 		// TODO : REAL-GAMES GAME TICK IMPLEMENTATION
 		// THIS IS WHERE FUNCTION CONVERSION FROM .AT2 CODE WILL GO
@@ -175,7 +172,6 @@ public class TankEntity extends HittableEntity {
 
 	GLFWKeyCallback keyCallback;
 
-	@Override
 	public void debugGameTick() {
 		
 		if(!DebugMode.isSpectator()) {
