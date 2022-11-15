@@ -28,10 +28,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class DebugMode implements ILogic {
 	public static DebugObjectMap objectMap;
 	public static DebugSoundMap soundMap;
-
 	public static DebugGUIMap debugGUIMap;
-
-	private static final HashSet<Entity> additionalEntities = new HashSet<>();
 
 	public static Iterator<Entity> iGameTick;
 
@@ -93,24 +90,20 @@ public class DebugMode implements ILogic {
 	public void gameTick() {
 		iGameTick = objectMap.entityMap().iterator();
 
+		// Needs to be an iterator due to removal code during iteration
 		while(iGameTick.hasNext()) {
-			Entity ent = iGameTick.next();
-			if(ent.isRemoved()) {
-				iGameTick.remove();
-				continue;
-			}
-			if(ent instanceof HittableEntity) {
-				ent.debugGameTick();
+			Entity ent = iGameTick.next();	// Grabs entity value from iterator
+
+			ent.debugGameTick(); 			// Runs through each entity's functionalities
+
+			if(ent instanceof HittableEntity)
 				((HittableEntity) ent).debugCollisionCheck();	// Checks Collisions on only HittableEntities and their children
-			} else { // for EVERY entity
-				ent.debugGameTick();
-			}		 // Updates each entity with their game functionalities(ticks)
+
+			if(ent.isRemoved()) {                // If it's removal was called
+				iGameTick.remove();				 // Remove the entity from the iterator
+				objectMap.removeEntity(ent);	 // Remove the entity from the map
+			}
 		}
-
-		for(Entity ent : additionalEntities)
-			objectMap.addEntity(ent);
-
-		additionalEntities.clear();
 	}
 
 	public void spectatorMovement() {
@@ -179,8 +172,6 @@ public class DebugMode implements ILogic {
 		renderer.cleanup();
 		loader.cleanup();
 	}
-
-	public static void addAdditionalEntity(Entity ent) { additionalEntities.add(ent); }
 	
 	public static boolean isSpectator() { return spectator; }
 	public static void updateSpectator() {spectator = !spectator; }
@@ -198,7 +189,7 @@ public class DebugMode implements ILogic {
 		);
 	}
 
-	private static Random generator = new Random();
+	private static final Random generator = new Random();
 	static float randomGenerator() {
 		return generator.nextFloat();
 	}

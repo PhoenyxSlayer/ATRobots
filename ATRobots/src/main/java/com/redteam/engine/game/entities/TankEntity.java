@@ -228,25 +228,25 @@ public class TankEntity extends HittableEntity {
 								bulletPos.x = getPos().x;
 								bulletPos.z = getPos().z;
 								switch ((int) turretAngle) {
-									case 0 ->   bulletPos.z += 5.3f;
+									case 0 ->   bulletPos.z += 4f;
 									case 45 -> {
-											    bulletPos.x += 5.3f;
-											    bulletPos.z += 5.3f;
+											    bulletPos.x += 4f;
+											    bulletPos.z += 4f;
 									}
-									case 90 ->  bulletPos.x += 5.3f;
+									case 90 ->  bulletPos.x += 4f;
 									case 135 -> {
-										        bulletPos.x += 5.3f;
-											    bulletPos.z -= 5.3f;
+										        bulletPos.x += 4f;
+											    bulletPos.z -= 4f;
 									}
-									case 180 -> bulletPos.z -= 5.3f;
+									case 180 -> bulletPos.z -= 4f;
 									case 225 -> {
-												bulletPos.x -= 5.3f;
-												bulletPos.z -= 5.3f;
+												bulletPos.x -= 4f;
+												bulletPos.z -= 4f;
 									}
-									case 270 -> bulletPos.x -= 5.3f;
+									case 270 -> bulletPos.x -= 4f;
 									case 315 -> {
-												bulletPos.x -= 5.3f;
-												bulletPos.z += 5.3f;
+												bulletPos.x -= 4f;
+												bulletPos.z += 4f;
 									}
 								}
 								if(DebugMode.soundMap.isSoundOn()) {
@@ -258,12 +258,12 @@ public class TankEntity extends HittableEntity {
 										DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
 									}
 								}
-								DebugMode.addAdditionalEntity(
+								DebugMode.objectMap.addEntity(
 								new BulletEntity(
 								"bullet",											// ID
 									new Vector3f(bulletPos.x,2.55f,bulletPos.z),		// POSITION
-									new Vector3f(0,turretAngle -90, -90),	 		// ROTATION
-									true										// IS IT MOVING?
+									new Vector3f(0,turretAngle -90, -90),	 	// ROTATION
+									true												// IS IT MOVING?
 								));
 							}
 						}
