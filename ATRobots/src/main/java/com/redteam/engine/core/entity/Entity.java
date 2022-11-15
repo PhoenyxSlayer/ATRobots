@@ -67,6 +67,7 @@ public abstract class Entity {
     public float getScale() {
         return scale;
     }
+    @SuppressWarnings("unused")
     public void setScale(float scale) {
         this.scale = scale;
     }
