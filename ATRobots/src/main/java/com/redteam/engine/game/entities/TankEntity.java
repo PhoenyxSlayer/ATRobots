@@ -200,7 +200,7 @@ public class TankEntity extends HittableEntity {
 				else if(getPos().x > X_BORDER)
 					pushBack.add(-tankSpeed, 0, 0);
 				else if(getPos().x < -X_BORDER)
-					pushBack.add(tankSpeed, 0, -tankSpeed);
+					pushBack.add(tankSpeed, 0, 0);
 				else if(getPos().z > 0)
 					pushBack.add(0, 0, -tankSpeed);
 				else if(getPos().z < -Z_BORDER)
