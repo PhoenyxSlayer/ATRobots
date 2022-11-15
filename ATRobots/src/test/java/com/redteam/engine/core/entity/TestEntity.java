@@ -60,7 +60,7 @@ class TestEntity {
         assertEquals(76.0f, testEntity.getPos().y, 0.01f);
         assertEquals(21.0f, testEntity.getPos().z, 0.01f);
 
-        // SPECIAL TO INCPOS
+        // SPECIAL TO INC POS
         testEntity.incPos(21.0f, 7.0f, 16.0f);
 
         assertEquals(66.0f, testEntity.getPos().x, 0.01f);
@@ -83,7 +83,7 @@ class TestEntity {
         assertEquals(76.0f, testEntity.getPos().y, 0.01f);
         assertEquals(21.0f, testEntity.getPos().z, 0.01f);
 
-        // SPECIAL TO SETPOS
+        // SPECIAL TO SET POS
         testEntity.setPos(34.0f, 56.0f, 11.0f);
 
         assertEquals(34.0f, testEntity.getPos().x, 0.01f);
@@ -106,7 +106,7 @@ class TestEntity {
         assertEquals(5.0f, testEntity.getRotation().y, 0.01f);
         assertEquals(83.0f, testEntity.getRotation().z, 0.01f);
 
-        // SPECIAL TO INCROTATION
+        // SPECIAL TO INC ROTATION
         testEntity.incRotation(67.0f, 22.0f, 95.0f);
 
         assertEquals(146.0f, testEntity.getRotation().x, 0.01f);
@@ -129,7 +129,7 @@ class TestEntity {
         assertEquals(5.0f, testEntity.getRotation().y, 0.01f);
         assertEquals(83.0f, testEntity.getRotation().z, 0.01f);
 
-        // SPECIAL TO SETROTATION
+        // SPECIAL TO SET ROTATION
         testEntity.setRotation(54.0f, 78.0f, 31.0f);
 
         assertEquals(54.0f, testEntity.getRotation().x, 0.01f);
@@ -147,7 +147,7 @@ class TestEntity {
         assertTrue(testEntity.isRemoved());
     }
 
-    // OUTOFBORDER TEST
+    // OUT OF BORDER TEST
     @Test
     void testOutOfBorder() {
         testEntity.setPos(originalPos.x, originalPos.y, originalPos.z);
