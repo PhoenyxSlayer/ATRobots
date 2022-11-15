@@ -95,7 +95,6 @@ public abstract class HittableEntity extends Entity {
 		return hitBox;
 	}
 
-	@SuppressWarnings("unused")
 	public float getHitBoxScale() {
 		return hitBoxScale;
 	}
