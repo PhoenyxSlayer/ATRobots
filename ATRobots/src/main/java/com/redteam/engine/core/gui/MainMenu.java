@@ -7,16 +7,20 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import com.redteam.engine.core.entity.Robot;
 import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.RobotSelection;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = -4918278784416304615L;
 	
 	private int width, height;
+	private ArrayList<String> rName = new ArrayList<String>();
 	
 	private ImageIcon icon = new ImageIcon("src/main/resources/images/test.png");
 	private ImageIcon play = new ImageIcon("src/main/resources/images/play.png");
@@ -30,6 +34,9 @@ public class MainMenu extends JFrame {
 	private BufferStrategy bs;
 	
 	private boolean running = true;
+	private boolean rSelect = false;
+	private Robot r = new Robot();
+	private RobotSelection rs = new RobotSelection();
 	
 	public MainMenu(String title, int width, int height) {
 		this.width = width;
@@ -65,7 +72,9 @@ public class MainMenu extends JFrame {
 				System.out.println("Mouse X: "+e.getX()+"\nMouse Y: "+e.getY()+"");
 				if((e.getX() >= (width/2)-55 && e.getX() <= ((width/2)-55)+128) && (e.getY() >= (height/2) && e.getY() <= (height/2)+50)) {
 					System.out.println("Button Clicked");
-					ATRobots.setName("run");
+					rSelect = true;
+				}
+				if((e.getX() >= width-128 && e.getX() <= width) && (e.getY() >= height-50 && e.getY() <= height)) {
 					setVisible(false);
 					try {
 						ATRobots.run();
@@ -74,10 +83,69 @@ public class MainMenu extends JFrame {
 					}
 					setVisible(true);
 				}
+				if((e.getX() >= 0 && e.getX() <= 128) && (e.getY() >= height-50 && e.getY() <= height)) {
+					rSelect = false;
+				}
 				if((e.getX() >= (width/2)-55 && e.getX() <= ((width/2)-55)+128) && (e.getY() >= (height/2)+100 && e.getY() <= (height/2)+150)) {
 					System.out.println("Button Clicked");
 					running = false;
 					dispose();
+				}
+				
+				if((e.getX() >= 70 && e.getX() <= 85) && (e.getY() >= 111 && e.getY() <= 136)) {
+					rName.remove(0);
+					rs.clearName(rName);
+				}
+				if((e.getX() >= 100 && e.getX() <= 135) && (e.getY() >= 111 && e.getY() <= 136)) {
+					r.compile();
+					System.out.println(rName);
+					rName.add(r.referenceName());
+					rs.setName(rName);
+				}
+				if((e.getX() >= 70 && e.getX() <= 85) && (e.getY() >= 179 && e.getY() <= 204)) {
+					rName.remove(1);
+					rs.clearName(rName);
+				}
+				if((e.getX() >= 100 && e.getX() <= 135) && (e.getY() >= 179 && e.getY() <= 204)) {
+					r.compile();
+					rName.add(r.referenceName());
+					rs.setName(rName);
+				}
+				if((e.getX() >= 70 && e.getX() <= 85) && (e.getY() >= 247 && e.getY() <= 272)) {
+					rName.remove(2);
+					rs.clearName(rName);
+				}
+				if((e.getX() >= 100 && e.getX() <= 135) && (e.getY() >= 247 && e.getY() <= 272)) {
+					r.compile();
+					rName.add(r.referenceName());
+					rs.setName(rName);
+				}
+				if((e.getX() >= 470 && e.getX() <= 485) && (e.getY() >= 111 && e.getY() <= 136)) {
+					rName.remove(3);
+					rs.clearName(rName);
+				}
+				if((e.getX() >= 500 && e.getX() <= 535) && (e.getY() >= 111 && e.getY() <= 136)) {
+					r.compile();
+					rName.add(r.referenceName());
+					rs.setName(rName);
+				}
+				if((e.getX() >= 470 && e.getX() <= 485) && (e.getY() >= 179 && e.getY() <= 204)) {
+					rName.remove(4);
+					rs.clearName(rName);
+				}
+				if((e.getX() >= 500 && e.getX() <= 535) && (e.getY() >= 179 && e.getY() <= 204)) {
+					r.compile();
+					rName.add(r.referenceName());
+					rs.setName(rName);
+				}
+				if((e.getX() >= 470 && e.getX() <= 485) && (e.getY() >= 247 && e.getY() <= 272)) {
+					rName.remove(5);
+					rs.clearName(rName);
+				}
+				if((e.getX() >= 500 && e.getX() <= 535) && (e.getY() >= 247 && e.getY() <= 272)) {
+					r.compile();
+					rName.add(r.referenceName());
+					rs.setName(rName);
 				}
 			}
 			
@@ -125,6 +193,8 @@ public class MainMenu extends JFrame {
 		g.drawImage(exit.getImage(), (width/2)-55, (height/2)+100, canvas);
 		g.drawImage(settings.getImage(), 0, height-50, canvas);
 		//g.drawImage(icon.getImage(), 100, 200, canvas);
+		
+		if(rSelect) rs.render(g, canvas);
 		
 		bs.show();
 		g.dispose();

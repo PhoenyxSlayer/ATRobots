@@ -36,6 +36,7 @@ public class Robot{
 		if(chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) {
 			file = chooser.getSelectedFile();
 			String fileName = file.getName().substring(0, file.getName().indexOf('.'));
+			s = file.getName();
 			System.out.println(""+fileName+" loaded!");
 		}
 		return file;
@@ -49,8 +50,8 @@ public class Robot{
 		boolean isValid = false;
 		
 		//Read in AT2 file line by line, remove any comment or blank lines and turn the file into an array;
-		//if(getFile() == null) return isValid;
 		try (BufferedReader br = new BufferedReader(new FileReader(getFile()))) {
+			if(file == null) return isValid;
 			String line = "";
 			
 			
