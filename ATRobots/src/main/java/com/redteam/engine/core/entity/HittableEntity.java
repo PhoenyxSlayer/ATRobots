@@ -68,9 +68,14 @@ public abstract class HittableEntity extends Entity {
 		boolean collide = true;
 		if(pos != getPos())  {
 			for(int i = 0; i < 8; i++) {
-				collide &= (pos.x - hitBox[i].x <= hitBoxScale) && (pos.x - hitBox[i].x >= -hitBoxScale) &&
-						(pos.y - hitBox[i].y <= hitBoxScale) && (pos.y - hitBox[i].y >= -hitBoxScale) &&
-						(pos.z - hitBox[i].z <= hitBoxScale) && (pos.z - hitBox[i].z >= -hitBoxScale);
+				collide &=	(pos.x - hitBox[i].x <= hitBoxScale)
+						&&	(pos.x - hitBox[i].x >= -hitBoxScale) &&
+
+							(pos.y - hitBox[i].y <= hitBoxScale)
+						&&	(pos.y - hitBox[i].y >= -hitBoxScale) &&
+
+							(pos.z - hitBox[i].z <= hitBoxScale)
+						&&	(pos.z - hitBox[i].z >= -hitBoxScale);
 			}
 		} else {
 			collide = false;
@@ -82,9 +87,14 @@ public abstract class HittableEntity extends Entity {
 		boolean collide = true;
 		if(entity != this) {				// Makes sure it's not passing itself
 			for(int i = 0; i < 8; i++) {
-				collide &= (entity.getBox()[i].x - hitBox[i].x <= hitBoxScale) && (entity.getBox()[i].x - hitBox[i].x >= -hitBoxScale) &&
-						   (entity.getBox()[i].y - hitBox[i].y <= hitBoxScale) && (entity.getBox()[i].y - hitBox[i].y >= -hitBoxScale) &&
-						   (entity.getBox()[i].z - hitBox[i].z <= hitBoxScale) && (entity.getBox()[i].z - hitBox[i].z >= -hitBoxScale);
+				collide &= 	(entity.getBox()[i].x - hitBox[i].x <= hitBoxScale)
+						&&	(entity.getBox()[i].x - hitBox[i].x >= -hitBoxScale) &&
+
+							(entity.getBox()[i].y - hitBox[i].y <= hitBoxScale)
+						&&	(entity.getBox()[i].y - hitBox[i].y >= -hitBoxScale) &&
+
+						   (entity.getBox()[i].z - hitBox[i].z <= hitBoxScale)
+						&& (entity.getBox()[i].z - hitBox[i].z >= -hitBoxScale);
 			} 
 		}
 		else {
