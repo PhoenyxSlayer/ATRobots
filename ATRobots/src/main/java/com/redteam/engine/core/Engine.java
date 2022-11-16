@@ -1,14 +1,9 @@
 package com.redteam.engine.core;
 
-import java.io.IOException;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
+import com.redteam.engine.game.main.ATRobots;
+import com.redteam.engine.utils.Constants;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-
-import com.redteam.engine.game.ATRobots;
-import com.redteam.engine.utils.Consts;
 
 
 public class Engine {
@@ -16,8 +11,8 @@ public class Engine {
 	public static final long NANOSECOND = 1000000000L;
 	
 	private static int fps;
-	private static final float framerate = Consts.FPS;
-	private static float frametime = 1.0f / framerate;
+	private static final float framerate = Constants.FPS;
+	private static final float frameTime = 1.0f / framerate;
 	private boolean isRunning;
 	
 	private Window window;
@@ -45,7 +40,7 @@ public class Engine {
 		run();
 	}
 	
-	public void run() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	public void run() {
 		this.isRunning = true;
 		int frames = 0;
 		long frameCounter = 0;
@@ -64,24 +59,24 @@ public class Engine {
 			unprocessedTime += passedTime / (double)NANOSECOND;
 			frameCounter += passedTime;
 			
-			while(unprocessedTime > frametime) {
+			while(unprocessedTime > frameTime) {
 				
 				render = true;
-				unprocessedTime -= frametime;
+				unprocessedTime -= frameTime;
 				
 				if(window.windowShouldClose())
 					stop();
 				
 				if(frameCounter >= NANOSECOND) {
 					setFps(frames);
-					window.setTitle(Consts.TITLE + " Engine FPS: " + getFps());
+					window.setTitle(Constants.TITLE + " Engine FPS: " + getFps());
 					frames = 0;
 					frameCounter = 0;
 				}
 			}
 			
 			if(render) {
-				update(frametime);
+				update();
 				render();
 				frames++;
 			}
@@ -105,7 +100,7 @@ public class Engine {
 		window.update();
 	}
 	
-	private void update(float interval) { gameLogic.update(interval, mouseInput); }
+	private void update() { gameLogic.update(Engine.frameTime, mouseInput); }
 	
 	private void cleanup() {
 		window.cleanup();
@@ -124,7 +119,7 @@ public class Engine {
 	
 	private static double getDelta() {
 		double currentTime = GLFW.glfwGetTime() / 0.02f;
-		double delta = (double) currentTime - (double) lastFrame;
+		double delta = currentTime - lastFrame;
 		lastFrame = GLFW.glfwGetTime() / 0.02f;
 		return delta;
 	}

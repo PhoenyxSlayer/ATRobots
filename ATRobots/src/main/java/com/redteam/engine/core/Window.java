@@ -12,6 +12,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -21,7 +22,8 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
-import com.redteam.engine.utils.Consts;
+import com.redteam.engine.core.rendering.image_parser;
+import com.redteam.engine.utils.Constants;
 
 import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
@@ -31,16 +33,16 @@ public class Window {
 	public final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
 	public final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 	
-	private String glslVersion = null,
-				   title;
+	private String glslVersion = null;
+	private final String title;
 	private long windowPtr,
 				 audioContext,
 				 audioDevice;
 	
 	private int width, height;
 	
-	private boolean vSync,
-					resize;
+	private final boolean vSync;
+	private boolean resize;
 	
 	private final Matrix4f projectionMatrix;
 	
@@ -64,7 +66,6 @@ public class Window {
 		alcDestroyContext(audioContext);
 		alcCloseDevice(audioDevice);
 		GLFW.glfwDestroyWindow(windowPtr);
-		return;
 	}
 	
 	private void initWindow() {
@@ -91,7 +92,7 @@ public class Window {
 		// Specifies whether the OpenGL context should be forward-compatible
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 		
-		// Incase width or height is equal to zero
+		// Encase width or height is equal to zero
 		boolean maximised = false;
 		if( (width == 0) || (height == 0) ) {
 			width = 100; height = 100;
@@ -115,6 +116,7 @@ public class Window {
 			GLFW.glfwMaximizeWindow(windowPtr);
 		else {
 			GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+			assert vidMode != null;
 			GLFW.glfwSetWindowPos(windowPtr, (vidMode.width() - width) / 2,
 												  (vidMode.height() - height) / 2);
 		}
@@ -139,10 +141,8 @@ public class Window {
 				
 		ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
 		ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
-				
-		if(!alCapabilities.OpenAL10) {
-			assert false : "Audio library not supported.";
-		}
+
+		assert alCapabilities.OpenAL10 : "Audio library not supported.";
 		
 		/* LWJGL detects the context that is current in the current thread,
 		 * creates the GLCapabilities instance and makes the OpenGL
@@ -156,7 +156,7 @@ public class Window {
 		
 		/*
 		 * Once the fragment shader has processed the fragment a
-		 * so called stencil test is executed that, just like the
+		 * so-called stencil test is executed that, just like the
 		 * depth test, has the option to discard fragments.
 		 */
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -175,20 +175,24 @@ public class Window {
 	
 	public void setResize(boolean resize) {
 		this.resize = resize;
-		return;
 	}
 	
 	public boolean isvSync() {
 		return vSync;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public void setClearColour(float r, float g, float b, float a) {
 		GL11.glClearColor(r, g, b, a);
-		return;
 	}
 	
 	public boolean isKeyPressed(int keycode) {
 		return GLFW.glfwGetKey(windowPtr, keycode) == GLFW.GLFW_PRESS;
+	}
+
+	@SuppressWarnings("unused")
+	public boolean isKeyReleased(int keycode) {
+		return GLFW.glfwGetKey(windowPtr, keycode) == GLFW.GLFW_RELEASE;
 	}
 	
 	public boolean windowShouldClose() {
@@ -198,7 +202,8 @@ public class Window {
 	public boolean isResize() {
 		return resize;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public String getTitle() {
 		return title;
 	}
@@ -218,18 +223,27 @@ public class Window {
 	public long getWindowHandle() {
 		return windowPtr;
 	}
-	
+	@SuppressWarnings("unused")
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
 	
 	public Matrix4f updateProjectionMatrix() {
 		float aspectRatio = (float) width / height;
-		return projectionMatrix.setPerspective(Consts.FOV, aspectRatio, Consts.Z_NEAR, Consts.Z_FAR);
+		return projectionMatrix.setPerspective(Constants.FOV, aspectRatio, Constants.Z_NEAR, Constants.Z_FAR);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
 		float aspectRatio = (float) width / height;
-		return matrix.setPerspective(Consts.FOV, aspectRatio, Consts.Z_NEAR, Consts.Z_FAR);
+		return matrix.setPerspective(Constants.FOV, aspectRatio, Constants.Z_NEAR, Constants.Z_FAR);
+	}
+
+	public void updateLogo(image_parser icon) {
+		GLFWImage iconGLFW = GLFWImage.malloc();
+		GLFWImage.Buffer iconBF = GLFWImage.malloc(1);
+        iconGLFW.set(icon.get_width(), icon.get_height(), icon.get_image());
+        iconBF.put(0, iconGLFW);
+        GLFW.glfwSetWindowIcon(this.getWindowHandle(), iconBF);
 	}
 }

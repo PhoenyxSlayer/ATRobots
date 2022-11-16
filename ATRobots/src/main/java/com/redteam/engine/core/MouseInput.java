@@ -1,6 +1,6 @@
 package com.redteam.engine.core;
 
-import com.redteam.engine.game.ATRobots;
+import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
@@ -8,25 +8,23 @@ import org.lwjgl.glfw.GLFW;
 public class MouseInput {
 
     private final Vector2d previousPos, currentPos;
-    private final Vector2f displVec;
+    private final Vector2f displayVec;
 
     private boolean inWindow = false, leftButtonPress = false, rightButtonPress = false;
 
     public MouseInput() {
         previousPos = new Vector2d(-1, -1);
         currentPos = new Vector2d(0,0);
-        displVec = new Vector2f();
+        displayVec = new Vector2f();
     }
 
     public void init() {
-        GLFW.glfwSetCursorPosCallback(ATRobots.getWindow().getWindowHandle(), (window, xpos, ypos) -> {
-            currentPos.x = xpos;
-            currentPos.y = ypos;
+        GLFW.glfwSetCursorPosCallback(ATRobots.getWindow().getWindowHandle(), (window, xPos, yPos) -> {
+            currentPos.x = xPos;
+            currentPos.y = yPos;
         });
 
-        GLFW.glfwSetCursorEnterCallback(ATRobots.getWindow().getWindowHandle(), (window, entered) -> {
-            inWindow = entered;
-        });
+        GLFW.glfwSetCursorEnterCallback(ATRobots.getWindow().getWindowHandle(), (window, entered) -> inWindow = entered);
 
         GLFW.glfwSetMouseButtonCallback(ATRobots.getWindow().getWindowHandle(), (window, button, action, mods) -> {
             leftButtonPress = button == GLFW.GLFW_MOUSE_BUTTON_1 && action == GLFW.GLFW_PRESS;
@@ -35,26 +33,27 @@ public class MouseInput {
     }
 
     public void input() {
-        displVec.x = 0;
-        displVec.y = 0;
+        displayVec.x = 0;
+        displayVec.y = 0;
         if(previousPos.x > 0 && previousPos.y > 0 && inWindow) {
             double x = currentPos.x - previousPos.x;
             double y = currentPos.y - previousPos.y;
             boolean rotateX = x != 0;
             boolean rotateY = y != 0;
             if(rotateX)
-                displVec.y = (float)x;
+                displayVec.y = (float)x;
             if(rotateY)
-                displVec.x = (float)y;
+                displayVec.x = (float)y;
         }
         previousPos.x = currentPos.x;
         previousPos.y = currentPos.y;
     }
 
-    public Vector2f getDisplVec() {
-        return displVec;
+    public Vector2f getDisplayVec() {
+        return displayVec;
     }
 
+    @SuppressWarnings("unused")
     public boolean isLeftButtonPress() {
         return leftButtonPress;
     }

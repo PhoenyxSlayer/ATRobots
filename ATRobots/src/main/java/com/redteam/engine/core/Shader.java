@@ -3,7 +3,7 @@ package com.redteam.engine.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.redteam.engine.core.entity.Material;
+import com.redteam.engine.core.rendering.Material;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
@@ -72,13 +72,13 @@ public class Shader {
 
 	public void createSpotLightUniform(String uniformName) throws Exception {
 		createPointLightUniform(uniformName + ".pl");
-		createUniform(uniformName + ".conedir");
+		createUniform(uniformName + ".coneDir");
 		createUniform(uniformName + ".cutoff");
 	}
 	
-	public void setUniform(String uniformname, Matrix4f value) {
+	public void setUniform(String uniformName, Matrix4f value) {
 		try(MemoryStack stack = MemoryStack.stackPush()) {
-			GL20.glUniformMatrix4fv(uniforms.get(uniformname), false,
+			GL20.glUniformMatrix4fv(uniforms.get(uniformName), false,
 									value.get(stack.mallocFloat(16)));
 		}
 	}
@@ -91,6 +91,7 @@ public class Shader {
 		GL20.glUniform3f(uniforms.get(uniformName), value.x, value.y, value.z);
 	}
 
+	@SuppressWarnings("unused")
 	public void setUniform(String uniformName, boolean value) {
 		float res = 0;
 		if(value)
@@ -98,12 +99,12 @@ public class Shader {
 		GL20.glUniform1f(uniforms.get(uniformName), res);
 	}
 
-	public void setUniform(String uniformname, int value) {
-		GL20.glUniform1i(uniforms.get(uniformname), value);
+	public void setUniform(String uniformName, int value) {
+		GL20.glUniform1i(uniforms.get(uniformName), value);
 	}
 
-	public void setUniform(String uniformname, float value) {
-		GL20.glUniform1f(uniforms.get(uniformname), value);
+	public void setUniform(String uniformName, float value) {
+		GL20.glUniform1f(uniforms.get(uniformName), value);
 	}
 
 	public void setUniform(String uniformName, Material material) {
@@ -131,10 +132,11 @@ public class Shader {
 
 	public void setUniform(String uniformName, SpotLight spotLight) {
 		setUniform(uniformName + ".pl", spotLight.getPointLight());
-		setUniform(uniformName + ".conedir", spotLight.getConeDirection());
+		setUniform(uniformName + ".coneDir", spotLight.getConeDirection());
 		setUniform(uniformName + ".cutoff", spotLight.getCutoff());
 	}
 
+	@SuppressWarnings("unused")
 	public void setUniform(String uniformName, PointLight[] pointLights) {
 		int numLights = pointLights != null ? pointLights.length : 0;
 		for(int i = 0; i < numLights; i++) {
@@ -146,6 +148,7 @@ public class Shader {
 		setUniform(uniformName + "[" + pos + "]", pointLight);
 	}
 
+	@SuppressWarnings("unused")
 	public void setUniform(String uniformName, SpotLight[] spotLights) {
 		int numLights = spotLights != null ? spotLights.length : 0;
 		for(int i = 0; i < numLights; i++) {

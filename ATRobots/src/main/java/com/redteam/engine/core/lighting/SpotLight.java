@@ -33,6 +33,7 @@ public class SpotLight {
         return coneDirection;
     }
 
+    @SuppressWarnings("unused")
     public void setConeDirection(Vector3f coneDirection) {
         this.coneDirection = coneDirection;
     }

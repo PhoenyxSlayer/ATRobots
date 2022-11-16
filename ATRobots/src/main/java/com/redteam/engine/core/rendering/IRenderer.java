@@ -1,23 +1,24 @@
 package com.redteam.engine.core.rendering;
 
 import com.redteam.engine.core.Camera;
-import com.redteam.engine.core.entity.Model;
 import com.redteam.engine.core.lighting.DirectionalLight;
 import com.redteam.engine.core.lighting.PointLight;
 import com.redteam.engine.core.lighting.SpotLight;
 
 public interface IRenderer<T> {
 
-    public void init() throws Exception;
+    void init() throws Exception;
 
-    public void render(Camera camera, PointLight[] pointLights, SpotLight[] spotLights,
+    void render(Camera camera, PointLight[] pointLights, SpotLight[] spotLights,
                        DirectionalLight directionalLight);
 
-    abstract void bind(Model model);
+    void render(Camera camera, DirectionalLight directionalLight);
 
-    public void unbind();
+    void bind(Model model);
 
-    public void prepare(T t, Camera camera);
+    void unbind();
 
-    public void cleanup();
+    void prepare(T t, Camera camera);
+
+    void cleanup();
 }
