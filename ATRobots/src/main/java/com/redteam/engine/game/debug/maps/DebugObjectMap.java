@@ -24,7 +24,7 @@ public class DebugObjectMap implements iObjMapping {
                                     "blue"                                       // COLOR
                                     ));
         addEntity(new HittableEntity	(
-                "tank",                                      // ID
+                "dummyTank",                                      // ID
                 DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),
                 DebugMode.RandomizeTankLocation(),       // POSITION
                 new Vector3f(0,0,0),                 // ROTATION
