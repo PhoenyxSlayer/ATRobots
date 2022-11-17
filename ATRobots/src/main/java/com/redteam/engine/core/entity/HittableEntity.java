@@ -143,11 +143,13 @@ public class HittableEntity extends Entity {
 		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
 		formCube();
 		for (Object ent : entitiesArray) {
-			if (ent instanceof HittableEntity &&
-					passThrough((HittableEntity) ent)) {
-				this.debugCollision((HittableEntity) ent);
-				((HittableEntity) ent).debugCollision(this);
-				return;
+			if (ent instanceof HittableEntity) {
+				if(passThrough((HittableEntity) ent) &&
+						passThrough(((HittableEntity) ent).getPos())){
+					this.debugCollision((HittableEntity) ent);
+					((HittableEntity) ent).debugCollision(this);
+					return;
+				}
 			}
 		}
 	}
