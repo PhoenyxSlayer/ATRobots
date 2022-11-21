@@ -15,7 +15,6 @@ import com.redteam.engine.utils.Constants;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -189,6 +188,7 @@ public class DebugMode implements ILogic {
 		);
 	}
 
+	@SuppressWarnings("unused")
 	public static float RandomizeTankRotation () {
 		// randomGenerator() * (max - min) + min;
 		return randomGenerator() * 360;
