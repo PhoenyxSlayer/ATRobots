@@ -17,7 +17,6 @@ import com.redteam.engine.utils.Constants;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -30,10 +29,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class DebugMode implements ILogic {
 	public static DebugObjectMap objectMap;
 	public static DebugSoundMap soundMap;
-
 	public static DebugGUIMap debugGUIMap;
-
-	private static final HashSet<Entity> additionalEntities = new HashSet<>();
 
 	public static Iterator<Entity> iGameTick;
 
@@ -48,7 +44,7 @@ public class DebugMode implements ILogic {
 	private final Vector3f cameraInc;
 
 	private static boolean spectator;
-	
+
 	public DebugMode() {
 		debugGUIMap = new DebugGUIMap();
 		objectMap = new DebugObjectMap();
@@ -61,7 +57,7 @@ public class DebugMode implements ILogic {
 		cameraInc = new Vector3f(0,0,0);
 		spectator = false;
 	}
-	
+
 	@Override
 	public void init() throws Exception {
 		window.updateLogo(icon);			// WINDOW ICON
@@ -95,24 +91,20 @@ public class DebugMode implements ILogic {
 	public void gameTick() {
 		iGameTick = objectMap.entityMap().iterator();
 
+		// Needs to be an iterator due to removal code during iteration
 		while(iGameTick.hasNext()) {
-			Entity ent = iGameTick.next();
-			if(ent.isRemoved()) {
-				iGameTick.remove();
-				continue;
-			}
-			if(ent instanceof HittableEntity) {
-				ent.debugGameTick();
+			Entity ent = iGameTick.next();	// Grabs entity value from iterator
+
+			ent.debugGameTick(); 			// Runs through each entity's functionalities
+
+			if(ent instanceof HittableEntity)
 				((HittableEntity) ent).debugCollisionCheck();	// Checks Collisions on only HittableEntities and their children
-			} else { // for EVERY entity
-				ent.debugGameTick();
-			}		 // Updates each entity with their game functionalities(ticks)
+
+			if(ent.isRemoved()) {                // If it's removal was called
+				iGameTick.remove();				 // Remove the entity from the iterator
+				objectMap.removeEntity(ent);	 // Remove the entity from the map
+			}
 		}
-
-		for(Entity ent : additionalEntities)
-			objectMap.addEntity(ent);
-
-		additionalEntities.clear();
 	}
 
 	public void spectatorMovement() {
@@ -140,8 +132,15 @@ public class DebugMode implements ILogic {
 		for(Entity ent : objectMap.entityMap()) {
 			if(ent instanceof TankEntity) {
 				// TankEntity consists of two models; resulting in the need of two entities being rendered
-				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f));
-				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f));
+				renderer.processEntity(new Entity("tankBot", ((TankEntity) ent).getBase(), ent.getPos(), ((TankEntity) ent).getBaseRotation(), 1f) {
+					// TODO : Implement it so the tank class will pass two models into the renderer instead of this
+					public void gameTick() {}
+					public void debugGameTick() {}
+				});
+				renderer.processEntity(new Entity("tankTop", ((TankEntity) ent).getTop(), ent.getPos(), ((TankEntity) ent).getTurretRotation(), 1f) {
+					public void gameTick() {}
+					public void debugGameTick() {}
+				});
 			}
 			else {
 				renderer.processEntity(ent);
@@ -175,8 +174,6 @@ public class DebugMode implements ILogic {
 		loader.cleanup();
 	}
 
-	public static void addAdditionalEntity(Entity ent) { additionalEntities.add(ent); }
-	
 	public static boolean isSpectator() { return spectator; }
 	public static void updateSpectator() {spectator = !spectator; }
 
@@ -193,7 +190,7 @@ public class DebugMode implements ILogic {
 		);
 	}
 
-	private static Random generator = new Random();
+	private static final Random generator = new Random();
 	static float randomGenerator() {
 		return generator.nextFloat();
 	}

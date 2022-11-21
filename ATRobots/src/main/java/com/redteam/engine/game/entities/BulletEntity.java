@@ -19,9 +19,9 @@ public class BulletEntity extends HittableEntity {
 	private boolean isMoving;
 
 	public BulletEntity(String id, Vector3f pos, Vector3f rotation, boolean moving) {
-		super(id, setModel(), pos, rotation, 1, 2f);
+		super(id, setBulletModel(), pos, rotation, 1, 2f);
 
-		bulletModel = setModel();
+		bulletModel = setBulletModel();
 		isMoving = moving;
 	}
 
@@ -32,7 +32,7 @@ public class BulletEntity extends HittableEntity {
 		isMoving = moving;
 	}
 
-	private static Model setModel() {
+	private static Model setBulletModel() {
 		Model model = loader.loadOBJModel("/models/bullet.obj");
 		try {
 			model.setTexture(new Texture(loader.loadTexture("textures/bullet.png")), 1f);
@@ -54,25 +54,15 @@ public class BulletEntity extends HittableEntity {
 		isMoving = move;
 	}
 
-	@Override
-	public void collision(Entity entity) {
-	}
+	public void collision(Entity entity) {}
+	public void debugCollision(Entity entity) {}
 
-	@Override
-	public void debugCollision(Entity entity) {
-	}
-
-	@Override
 	public void gameTick() {
 		// TODO : REAL-GAMES GAME TICK IMPLEMENTATION
-	}
-	
-	@Override
-	public void debugGameTick() {
 		if(outOfBorder()) {
 			remove();
 		}
-		
+
 		if(isMoving) {
 			float bulletSpeed = (float) (BULLET_SPEED * Engine.tick());
 			switch ((int) (getRotation().y + 90)) {
@@ -86,5 +76,9 @@ public class BulletEntity extends HittableEntity {
 				case 315 -> incPos(-bulletSpeed, 0, bulletSpeed);
 			}
 		}
+	}
+
+	public void debugGameTick() {
+		gameTick();
 	}
 }

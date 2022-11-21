@@ -29,7 +29,7 @@ public class DebugObjectMap implements iObjMapping {
                 DebugMode.RandomizeTankLocation(),       // POSITION
                 new Vector3f(0,0,0),                 // ROTATION
                 1f,
-                3f
+                5f
         ));
     }
 

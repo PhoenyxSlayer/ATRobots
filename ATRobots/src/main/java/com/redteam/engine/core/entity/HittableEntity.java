@@ -1,7 +1,6 @@
 package com.redteam.engine.core.entity;
 
 import com.redteam.engine.core.rendering.Model;
-import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.game.entities.BulletEntity;
 import org.joml.Vector3f;
@@ -97,11 +96,11 @@ public class HittableEntity extends Entity {
 	public Vector3f[] getBox() {
 		return hitBox;
 	}
-
 	@SuppressWarnings("unused")
 	public float getHitBoxScale() {
 		return hitBoxScale;
 	}
+	@SuppressWarnings("unused")
 	public void setHitBoxScale(float hitBoxScale) {
 		this.hitBoxScale = hitBoxScale;
 	}
@@ -115,13 +114,14 @@ public class HittableEntity extends Entity {
 			entity.remove();
 			i++;
 			if(i % 2 == 0) {
-				setModel(DebugMode.setModel("/models/tank.obj", "textures/base/red.jpg"));
-			} else {
 				setModel(DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"));
+			} else {
+				setModel(DebugMode.setModel("/models/tank.obj", "textures/base/red.jpg"));
 			}
-			System.out.println("Tank Hit!");
-			if(health >= 10) { health -= 10; }
+			System.out.println(getID() + " Hit!");
+			if(health > 0) { health -= 10; }
 			System.out.println("Health: " + health);
+			if(health == 0) { remove(); }
 		}
 	}
 
@@ -134,7 +134,7 @@ public class HittableEntity extends Entity {
 	@SuppressWarnings("unused")
 	public void collisionCheck() {
 		/* TODO : ADD REAL GAME IMPLEMENTATION
-			HINT: YOU ONLY HAVE TO CHANGE THE TOARRAY FOR WHATEVER OBJECT
+			HINT: YOU ONLY HAVE TO CHANGE THE TO ARRAY FOR WHATEVER OBJECT
 				  YOU'RE USING FOR THE REAL GAME
 		 */
 	}
