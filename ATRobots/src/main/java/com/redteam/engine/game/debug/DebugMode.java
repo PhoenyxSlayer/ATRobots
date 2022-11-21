@@ -189,6 +189,11 @@ public class DebugMode implements ILogic {
 		);
 	}
 
+	public static float RandomizeTankRotation () {
+		// randomGenerator() * (max - min) + min;
+		return randomGenerator() * 360;
+	}
+
 	private static final Random generator = new Random();
 	static float randomGenerator() {
 		return generator.nextFloat();
