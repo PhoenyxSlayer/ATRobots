@@ -12,6 +12,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL11;
 
 import static com.redteam.engine.utils.Constants.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -370,24 +371,41 @@ public class TankEntity extends HittableEntity {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
-
-					if (key == GLFW_KEY_0) {
+					if (key == GLFW_KEY_F11) {
 						fullscreen = !fullscreen;
 						long monitor;
 						GLFWVidMode glfwGetVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 						if(fullscreen) {
-							monitor = ATRobots.getWindow().getPrimaryMonitor();
 							assert glfwGetVideoMode != null;
-							GLFW.glfwSetWindowMonitor(ATRobots.getWindow().getWindowHandle(), monitor, 0, 0, glfwGetVideoMode.width(), glfwGetVideoMode.height(), GLFW_DONT_CARE);
+							monitor = ATRobots.getWindow().getPrimaryMonitor();
+
+							GLFW.glfwSetWindowMonitor(	window,
+														monitor,
+													0,
+													0,
+														 glfwGetVideoMode.width(),
+													     glfwGetVideoMode.height(),
+														 GLFW_DONT_CARE
+													 );
+							GL11.glViewport(0, 0, glfwGetVideoMode.width(),glfwGetVideoMode.height());
 						} else {
 							monitor = 0;
-							GLFW.glfwSetWindowMonitor(ATRobots.getWindow().getWindowHandle(), monitor, (glfwGetVideoMode.width() - 1600) / 2, (glfwGetVideoMode.height() - 900) / 2, 1600, 900, GLFW_DONT_CARE);
+							GLFW.glfwSetWindowMonitor(	window,
+														monitor,
+													(glfwGetVideoMode.width() - ATRobots.getWidth()) / 2,
+													(glfwGetVideoMode.height() - ATRobots.getHeight()) / 2,
+														ATRobots.getWidth(),
+														ATRobots.getHeight(),
+														GLFW_DONT_CARE
+													 );
+							GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
+							GL11.glViewport(0, 0, ATRobots.getWidth(),ATRobots.getHeight());
 						}
 					}
 					if (key == GLFW_KEY_M) {
 						DebugMode.soundMap.setSound();
 					}
-					if (key == GLFW_KEY_F)
+					if (key == GLFW_KEY_F4)
 						DebugMode.debugGUIMap.updateDebugMode();        // Enables the Debug GUIs
 					if (key == GLFW_KEY_V)
 						DebugMode.updateSpectator();

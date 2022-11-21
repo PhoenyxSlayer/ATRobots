@@ -104,9 +104,9 @@ public class Window {
 		GLFW.glfwSetFramebufferSizeCallback(windowPtr, (window, width, height) -> {
 			this.width = width;
 			this.height = height;
-			this.setResize(true);
+			this.setResize(false);
 		});
-		
+
 		// Centers the window
 		if(maximised)
 			GLFW.glfwMaximizeWindow(windowPtr);

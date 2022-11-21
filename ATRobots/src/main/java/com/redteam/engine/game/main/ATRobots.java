@@ -11,11 +11,13 @@ public class ATRobots {
 	public static Window window;
 	private static DebugMode game;
 
+	private static int width = 1280,
+					   height = 720;
 
 	// Main function
 	public static void main(String[] args) throws Exception {
 		//if(robotName.getFile()) {
-			window = new Window(Constants.TITLE, 1600, 900, true);
+			window = new Window(Constants.TITLE, getWidth(), getHeight(), true);
 			game = new DebugMode();
 			Engine engine = new Engine();
 			engine.start();
@@ -29,6 +31,15 @@ public class ATRobots {
 	public static DebugMode getGame() {
 		return game;
 	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	public static int getHeight() {
+		return height;
+	}
+
 
 	@SuppressWarnings("unused")
 	public Robot getRobot() {
