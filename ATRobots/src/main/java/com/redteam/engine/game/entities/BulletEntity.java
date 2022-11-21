@@ -65,16 +65,15 @@ public class BulletEntity extends HittableEntity {
 
 		if(isMoving) {
 			float bulletSpeed = (float) (BULLET_SPEED * Engine.tick());
-			switch ((int) (getRotation().y + 90)) {
-				case 0 -> incPos(0, 0, bulletSpeed);
-				case 45 -> incPos(bulletSpeed, 0, bulletSpeed);
-				case 90 -> incPos(bulletSpeed, 0, 0);
-				case 135 -> incPos(bulletSpeed, 0, -bulletSpeed);
-				case 180 -> incPos(0, 0, -bulletSpeed);
-				case 225 -> incPos(-bulletSpeed, 0, -bulletSpeed);
-				case 270 -> incPos(-bulletSpeed, 0, 0);
-				case 315 -> incPos(-bulletSpeed, 0, bulletSpeed);
-			}
+
+			float degrees = getRotation().y - 90;
+
+			// Increments the bullet based on its y rotation along the X & Z Plane
+			incPos(
+					(float)(bulletSpeed * Math.sin(Math.toRadians(degrees))),
+					0,
+					(float)(bulletSpeed * Math.cos(Math.toRadians(degrees)))
+			);
 		}
 	}
 

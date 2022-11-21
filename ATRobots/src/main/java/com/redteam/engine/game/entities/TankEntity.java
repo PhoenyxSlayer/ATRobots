@@ -383,7 +383,7 @@ public class TankEntity extends HittableEntity {
 									new BulletEntity(
 											getID() + "_bullet",									// ID
 											new Vector3f(bulletPos.x, 2.55f, bulletPos.z),		// POSITION
-											new Vector3f(0, turretAngle - 90, -90),		// ROTATION
+											new Vector3f(0, turretAngle + 90, 90),		// ROTATION
 											true													// IS IT MOVING?
 									));
 						}
