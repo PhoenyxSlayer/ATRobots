@@ -75,8 +75,8 @@ public class Window {
 		GLFW.glfwDefaultWindowHints();
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL11.GL_FALSE);
 		// Makes window resizable
-		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_TRUE);
-		
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_FALSE);
+
 		// https://en.wikipedia.org/wiki/OpenGL_Shading_Language
 		glslVersion = "#version 150";
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -106,9 +106,6 @@ public class Window {
 			this.height = height;
 			this.setResize(false);
 		});
-
-		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_FALSE);
-		GLFW.glfwSetWindowSizeLimits(windowPtr, 0, 0, width, height);
 
 		// Centers the window
 		if(maximised)
