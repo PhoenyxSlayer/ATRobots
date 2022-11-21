@@ -17,17 +17,57 @@ public class DebugObjectMap implements iObjMapping {
     // Entity Adding
     @Override
     public void initEntities() {
+        // Playable Tank
         addEntity(new TankEntity	(
                                     "tank",                                      // ID
-                                     DebugMode.RandomizeTankLocation(),          // POSITION
-                                     new Vector3f(0,0,0),                        // ROTATION
-                                    "blue"                                       // COLOR
+                                     DebugMode.RandomizeTankLocation(),             // POSITION
+                                     new Vector3f(0,0,0),                  // ROTATION
+                                    "blue"                                          // COLOR
                                     ));
+
+        // Test Entity for Shooting
         addEntity(new HittableEntity	(
-                "dummyTank",                                      // ID
-                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),
-                DebugMode.RandomizeTankLocation(),       // POSITION
-                new Vector3f(0,0,0),                 // ROTATION
+                "dummyTank",                                                                    // ID
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),  // MODEL + TEXTURE
+                DebugMode.RandomizeTankLocation(),                                                 // POSITION
+                new Vector3f(0,DebugMode.RandomizeTankRotation(),0),                         // ROTATION
+                1f,
+                5f
+                                        ));
+
+        // Test Entity for Shooting
+        addEntity(new HittableEntity	(
+                "dummyTank",                                                                    // ID
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),  // MODEL + TEXTURE
+                DebugMode.RandomizeTankLocation(),                                                 // POSITION
+                new Vector3f(0,DebugMode.RandomizeTankRotation(),0),                         // ROTATION
+                1f,
+                5f
+                                        ));
+        // Test Entity for Shooting
+        addEntity(new HittableEntity	(
+                "dummyTank",                                                                    // ID
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),  // MODEL + TEXTURE
+                DebugMode.RandomizeTankLocation(),                                                 // POSITION
+                new Vector3f(0,DebugMode.RandomizeTankRotation(),0),                         // ROTATION
+                1f,
+                5f
+        ));
+        // Test Entity for Shooting
+        addEntity(new HittableEntity	(
+                "dummyTank",                                                                    // ID
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),  // MODEL + TEXTURE
+                DebugMode.RandomizeTankLocation(),                                                 // POSITION
+                new Vector3f(0,DebugMode.RandomizeTankRotation(),0),                         // ROTATION
+                1f,
+                5f
+        ));
+        // Test Entity for Shooting
+        addEntity(new HittableEntity	(
+                "dummyTank",                                                                    // ID
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),  // MODEL + TEXTURE
+                DebugMode.RandomizeTankLocation(),                                                 // POSITION
+                new Vector3f(0,DebugMode.RandomizeTankRotation(),0),                         // ROTATION
                 1f,
                 5f
         ));
@@ -36,13 +76,15 @@ public class DebugObjectMap implements iObjMapping {
     // Terrain Adding
     @Override
     public void initTerrains() {
+
+        // Inner Terrain
         addTerrain( new Terrain		(
                                         new Vector3f(-Constants.X_BORDER,0,-Constants.Z_BORDER),	                                                        // POSITION
                                         DebugMode.getObjectLoader(),													                                    // OBJECT LOADER
                                         new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/concrete.jpg")), 0.1f)	// TEXTURE
                                     ));
                 
-      //Outer Terrain
+        //Outer Terrain//
       		//top and bottom of map
       		
         	addTerrain(new Terrain(new Vector3f(-75,0,-300), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
@@ -57,7 +99,7 @@ public class DebugObjectMap implements iObjMapping {
       		addTerrain(new Terrain(new Vector3f(-225,0,-300), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
       		addTerrain(new Terrain(new Vector3f(-225,0,-150), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
       		addTerrain(new Terrain(new Vector3f(-225,0,0), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));	
-      //Outer Terrain^^*/
+        //Outer Terrain//
         
         
         
