@@ -370,17 +370,18 @@ public class TankEntity extends HittableEntity {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
+
 					if (key == GLFW_KEY_0) {
 						fullscreen = !fullscreen;
 						long monitor;
+						GLFWVidMode glfwGetVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 						if(fullscreen) {
 							monitor = ATRobots.getWindow().getPrimaryMonitor();
-							GLFWVidMode glfwGetVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 							assert glfwGetVideoMode != null;
 							GLFW.glfwSetWindowMonitor(ATRobots.getWindow().getWindowHandle(), monitor, 0, 0, glfwGetVideoMode.width(), glfwGetVideoMode.height(), GLFW_DONT_CARE);
 						} else {
 							monitor = 0;
-							GLFW.glfwSetWindowMonitor(ATRobots.getWindow().getWindowHandle(), monitor, 0, 0, 1600, 900, GLFW_DONT_CARE);
+							GLFW.glfwSetWindowMonitor(ATRobots.getWindow().getWindowHandle(), monitor, (glfwGetVideoMode.width() - 1600) / 2, (glfwGetVideoMode.height() - 900) / 2, 1600, 900, GLFW_DONT_CARE);
 						}
 					}
 					if (key == GLFW_KEY_M) {
