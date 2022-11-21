@@ -107,6 +107,9 @@ public class Window {
 			this.setResize(false);
 		});
 
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_FALSE);
+		GLFW.glfwSetWindowSizeLimits(windowPtr, 0, 0, width, height);
+
 		// Centers the window
 		if(maximised)
 			GLFW.glfwMaximizeWindow(windowPtr);
