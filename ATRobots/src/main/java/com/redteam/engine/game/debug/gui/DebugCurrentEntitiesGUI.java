@@ -11,7 +11,7 @@ public class DebugCurrentEntitiesGUI implements iDebugGUI {
 	private HashSet<Entity> entities = new HashSet<>();
 
 	public void init() {
-		ImGui.begin("Current Entities");
+		ImGui.begin("Current Entities ");
 	}
 
 	public void update() {
@@ -25,7 +25,7 @@ public class DebugCurrentEntitiesGUI implements iDebugGUI {
 							   .append("\nZ: ").append(((int) (ent.getPos().z * 100)) / 100.)
 							   .append("\n");
 			}
-			ImGui.text("Current Entities:\n " + currentEntities);
+			ImGui.text("Current Entities " + entities.size() + ":\n" + currentEntities);
 		}
 	}
 
