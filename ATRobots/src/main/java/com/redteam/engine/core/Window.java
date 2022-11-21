@@ -9,11 +9,7 @@ import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
 import static org.lwjgl.openal.ALC10.alcOpenDevice;
 
 import org.joml.Matrix4f;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -71,7 +67,7 @@ public class Window {
 	private void initWindow() {
 		// Gets information in case of an error
 		GLFWErrorCallback.createPrint(System.err).set();
-				
+
 		// If GLFW has yet to be initialized
 		if(!GLFW.glfwInit())
 			throw new IllegalStateException("ERR: Unable to initialize GLFW");
@@ -231,6 +227,10 @@ public class Window {
 	public Matrix4f updateProjectionMatrix() {
 		float aspectRatio = (float) width / height;
 		return projectionMatrix.setPerspective(Constants.FOV, aspectRatio, Constants.Z_NEAR, Constants.Z_FAR);
+	}
+
+	public long getPrimaryMonitor() {
+		return GLFW.glfwGetPrimaryMonitor();
 	}
 
 	@SuppressWarnings("unused")

@@ -9,10 +9,17 @@ import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static com.redteam.engine.utils.Constants.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class TankEntity extends HittableEntity {
 
@@ -367,6 +374,10 @@ public class TankEntity extends HittableEntity {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (action == GLFW_PRESS) {
+					if (key == GLFW_KEY_0) {
+						GLFWVidMode glfwGetVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+						GLFW.glfwSetWindowMonitor(ATRobots.getWindow().getWindowHandle(), ATRobots.getWindow().getPrimaryMonitor(), 0, 0, glfwGetVideoMode.width(), glfwGetVideoMode.height(), GLFW_DONT_CARE);
+					}
 					if (key == GLFW_KEY_M) {
 						DebugMode.soundMap.setSound();
 					}
