@@ -17,7 +17,9 @@ public class Constants {
 			MOVEMENT_SPEED = 0.25f,
 			BULLET_SPEED = 1.5f;
 
-	public static final int MAX_SPOT_LIGHTS = 5,
+	public static final int WIDTH = 1280,
+							HEIGHT = 720,
+							MAX_SPOT_LIGHTS = 5,
 							MAX_POINT_LIGHTS = 5,
 							X_BORDER = 75,
 							Z_BORDER = X_BORDER * 2;

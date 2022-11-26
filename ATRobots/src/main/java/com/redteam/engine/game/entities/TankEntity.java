@@ -14,7 +14,14 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
 
-import static com.redteam.engine.utils.Constants.*;
+import static com.redteam.engine.utils.Constants.MOVEMENT_SPEED;
+
+import static com.redteam.engine.utils.Constants.X_BORDER;
+import static com.redteam.engine.utils.Constants.Z_BORDER;
+
+import static com.redteam.engine.utils.Constants.WIDTH;
+import static com.redteam.engine.utils.Constants.HEIGHT;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TankEntity extends HittableEntity {
@@ -392,14 +399,14 @@ public class TankEntity extends HittableEntity {
 							monitor = 0;
 							GLFW.glfwSetWindowMonitor(	window,
 														monitor,
-													(glfwGetVideoMode.width() - ATRobots.getWidth()) / 2,
-													(glfwGetVideoMode.height() - ATRobots.getHeight()) / 2,
-														ATRobots.getWidth(),
-														ATRobots.getHeight(),
+													(glfwGetVideoMode.width() - WIDTH) / 2,
+													(glfwGetVideoMode.height() - HEIGHT) / 2,
+														WIDTH,
+														HEIGHT,
 														GLFW_DONT_CARE
 													 );
 							GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
-							GL11.glViewport(0, 0, ATRobots.getWidth(),ATRobots.getHeight());
+							GL11.glViewport(0, 0, WIDTH, HEIGHT);
 						}
 					}
 					if (key == GLFW_KEY_M) {
