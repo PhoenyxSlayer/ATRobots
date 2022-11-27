@@ -35,24 +35,22 @@ public class DebugObjectMap implements iObjMapping {
                 
       //Outer Terrain
       		//top and bottom of map
+
+            Material borders = new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f);
       		
-        	addTerrain(new Terrain(new Vector3f(-75,0,-300), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
-      		addTerrain(new Terrain(new Vector3f(-75,0,0), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
+        	addTerrain(new Terrain(new Vector3f(-75,0,-300), DebugMode.getObjectLoader(), borders));
+      		addTerrain(new Terrain(new Vector3f(-75,0,0), DebugMode.getObjectLoader(), borders));
 
       		//Right side of map
-      		addTerrain(new Terrain(new Vector3f(75,0,-150), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
-      		addTerrain(new Terrain(new Vector3f(75,0,-300), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
-      		addTerrain(new Terrain(new Vector3f(75,0,0), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
+      		addTerrain(new Terrain(new Vector3f(75,0,-150), DebugMode.getObjectLoader(), borders));
+      		addTerrain(new Terrain(new Vector3f(75,0,-300), DebugMode.getObjectLoader(), borders));
+      		addTerrain(new Terrain(new Vector3f(75,0,0), DebugMode.getObjectLoader(), borders));
       		
       		//Left Side map
-      		addTerrain(new Terrain(new Vector3f(-225,0,-300), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
-      		addTerrain(new Terrain(new Vector3f(-225,0,-150), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));
-      		addTerrain(new Terrain(new Vector3f(-225,0,0), DebugMode.getObjectLoader(), new Material(new Texture(DebugMode.getObjectLoader().loadTexture("textures/MineCraftGrass.jpg")), 0.1f)));	
+      		addTerrain(new Terrain(new Vector3f(-225,0,-300), DebugMode.getObjectLoader(), borders));
+      		addTerrain(new Terrain(new Vector3f(-225,0,-150), DebugMode.getObjectLoader(), borders));
+      		addTerrain(new Terrain(new Vector3f(-225,0,0), DebugMode.getObjectLoader(), borders));
       //Outer Terrain^^*/
-        
-        
-        
-        
     }
 
     // Light for the Map
