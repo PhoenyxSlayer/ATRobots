@@ -14,14 +14,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
 
-import static com.redteam.engine.utils.Constants.MOVEMENT_SPEED;
-
-import static com.redteam.engine.utils.Constants.X_BORDER;
-import static com.redteam.engine.utils.Constants.Z_BORDER;
-
-import static com.redteam.engine.utils.Constants.WIDTH;
-import static com.redteam.engine.utils.Constants.HEIGHT;
-
+import static com.redteam.engine.utils.Constants.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TankEntity extends HittableEntity {
