@@ -295,22 +295,23 @@ public class TankEntity extends HittableEntity {
 	private void turretControls() {
 		turretAngle = getBaseRotation().y;
 
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_I))
-			turretAngle = 180;
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_J))
-			turretAngle = 270;
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_L))
-			turretAngle = 90;
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_K))
-			turretAngle = 0;
 		if (ATRobots.window.isKeyPressed(GLFW_KEY_I) & ATRobots.window.isKeyPressed(GLFW_KEY_J))
 			turretAngle = 225;
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_I) & ATRobots.window.isKeyPressed(GLFW_KEY_L))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_I) & ATRobots.window.isKeyPressed(GLFW_KEY_L))
 			turretAngle = 135;
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_L) & ATRobots.window.isKeyPressed(GLFW_KEY_K))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_L) & ATRobots.window.isKeyPressed(GLFW_KEY_K))
 			turretAngle = 45;
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_J) & ATRobots.window.isKeyPressed(GLFW_KEY_K))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_J) & ATRobots.window.isKeyPressed(GLFW_KEY_K))
 			turretAngle = 315;
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_I))
+			turretAngle = 180;
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_J))
+			turretAngle = 270;
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_L))
+			turretAngle = 90;
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_K))
+			turretAngle = 0;
+
 	}
 
 
