@@ -32,7 +32,7 @@ public class Utils {
 		String result;
 		try(InputStream in = Utils.class.getResourceAsStream(filename)) {
 			assert in != null;
-			try(Scanner scanner = new Scanner(in, StandardCharsets.UTF_8)) {
+			try(Scanner scanner = new Scanner(in, String.valueOf(StandardCharsets.UTF_8))) {
 				result = scanner.useDelimiter("\\A").next();
 			}
 		}

@@ -161,13 +161,45 @@ public class TankEntity extends HittableEntity {
 
 	private static String getTextureColor(String color, String textureFile) {
 		switch (color) {
-			case "Green", "green", "G", "g" -> textureFile += "green.jpg";
-			case "Red", "red", "R", "r" -> textureFile += "red.jpg";
-			case "Blue", "blue", "B", "b" -> textureFile += "blue.jpg";
-			case "Cyan", "cyan", "C", "c" -> textureFile += "cyan.jpg";
-			case "Pink", "pink", "P", "p" -> textureFile += "pink.jpg";
-			case "Yellow", "yellow", "Y", "y" -> textureFile += "yellow.jpg";
-			default -> textureFile = "textures/Camo.jpg";
+			case "Green":
+				case "green":
+			case "G":
+				case "g":
+					textureFile += "green.jpg";
+					break;
+			case "Red":
+			case "red":
+			case "R":
+			case "r":
+				textureFile += "red.jpg";
+				break;
+			case "Blue":
+			case "blue":
+			case "B":
+			case "b":
+				textureFile += "blue.jpg";
+				break;
+			case "Cyan":
+			case "cyan":
+			case "C":
+			case "c":
+				textureFile += "cyan.jpg";
+				break;
+			case "Pink":
+			case "pink":
+			case "P":
+			case "p":
+				textureFile += "pink.jpg";
+				break;
+			case "Yellow":
+			case "yellow":
+			case "Y":
+			case "y":
+				textureFile += "yellow.jpg";
+				break;
+			default:
+				textureFile = "textures/Camo.jpg";
+				break;
 		}
 		return textureFile;
 	}
@@ -416,26 +448,34 @@ public class TankEntity extends HittableEntity {
 							bulletPos.x = getPos().x;
 							bulletPos.z = getPos().z;
 							switch ((int) turretAngle) {
-								case 0 -> bulletPos.z += 4f;
-								case 45 -> {
+								case 0:
+									bulletPos.z += 4f;
+									break;
+								case 45:
 									bulletPos.x += 4f;
 									bulletPos.z += 4f;
-								}
-								case 90 -> bulletPos.x += 4f;
-								case 135 -> {
+									break;
+								case 90:
+									bulletPos.x += 4f;
+									break;
+								case 135:
 									bulletPos.x += 4f;
 									bulletPos.z -= 4f;
-								}
-								case 180 -> bulletPos.z -= 4f;
-								case 225 -> {
+									break;
+								case 180:
+									bulletPos.z -= 4f;
+									break;
+								case 225:
 									bulletPos.x -= 4f;
 									bulletPos.z -= 4f;
-								}
-								case 270 -> bulletPos.x -= 4f;
-								case 315 -> {
+									break;
+								case 270:
+									bulletPos.x -= 4f;
+									break;
+								case 315:
 									bulletPos.x -= 4f;
 									bulletPos.z += 4f;
-								}
+									break;
 							}
 							if (DebugMode.soundMap.isSoundOn()) {
 								DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
