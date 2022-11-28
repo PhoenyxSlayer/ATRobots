@@ -249,17 +249,17 @@ public class TankEntity extends HittableEntity {
 			tankAngle = 180;
 			movement.z = -tankSpeed;                // MOVES UP
 		}
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
 			tankMoving = true;
 			tankAngle = 270;
 			movement.x = -tankSpeed;                // MOVES LEFT
 		}
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 0;
 			movement.z = tankSpeed;                    // MOVES DOWN
 		}
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
 			tankMoving = true;
 			tankAngle = 90;
 			movement.x = tankSpeed;                    // MOVES RIGHT
@@ -270,19 +270,19 @@ public class TankEntity extends HittableEntity {
 			movement.x = -tankSpeed;                // MOVES UP-LEFT
 			movement.z = -tankSpeed;
 		}
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
 			tankMoving = true;
 			tankAngle = 135;
 			movement.x = tankSpeed;                    // MOVES UP-RIGHT
 			movement.z = -tankSpeed;
 		}
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_D) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_D) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 45;
 			movement.x = tankSpeed;                    // MOVES DOWN-RIGHT
 			movement.z = tankSpeed;
 		}
-		if (ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 315;
 			movement.x = -tankSpeed;                // MOVES DOWN-LEFT
