@@ -238,56 +238,52 @@ public class TankEntity extends HittableEntity {
 		// By default, it's not moving
 		tankMoving = false;
 
-		if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_LEFT_SHIFT)))
+		if (ATRobots.window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			tankSpeed = ((float) (MOVEMENT_SPEED * Engine.tick()) * 3);
 		else
 			tankSpeed = (float) (MOVEMENT_SPEED * Engine.tick());
 
 		// MOVING + ROTATION OF TANK
-		if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_W)
-						 & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_A))) {
+		if (ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
 			tankMoving = true;
 			tankAngle = 225;
 			movement.x = -tankSpeed;                // MOVES UP-LEFT
 			movement.z = -tankSpeed;
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_W)
-							  & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_D))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
 			tankMoving = true;
 			tankAngle = 135;
 			movement.x = tankSpeed;                    // MOVES UP-RIGHT
 			movement.z = -tankSpeed;
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_D)
-							  & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_S))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_D) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 45;
 			movement.x = tankSpeed;                    // MOVES DOWN-RIGHT
 			movement.z = tankSpeed;
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_A)
-							  & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_S))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 315;
 			movement.x = -tankSpeed;                // MOVES DOWN-LEFT
 			movement.z = tankSpeed;
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_W))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_W)) {
 			tankMoving = true;
 			tankAngle = 180;
 			movement.z = -tankSpeed;                // MOVES UP
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_A))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
 			tankMoving = true;
 			tankAngle = 270;
 			movement.x = -tankSpeed;                // MOVES LEFT
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_S))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 0;
 			movement.z = tankSpeed;                    // MOVES DOWN
 		}
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_D))) {
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
 			tankMoving = true;
 			tankAngle = 90;
 			movement.x = tankSpeed;                    // MOVES RIGHT
@@ -299,21 +295,21 @@ public class TankEntity extends HittableEntity {
 	private void turretControls() {
 		turretAngle = getBaseRotation().y;
 
-		if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_I) & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_J)))
+		if (ATRobots.window.isKeyPressed(GLFW_KEY_I) & ATRobots.window.isKeyPressed(GLFW_KEY_J))
 			turretAngle = 225;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_I) & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_L)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_I) & ATRobots.window.isKeyPressed(GLFW_KEY_L))
 			turretAngle = 135;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_L) & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_K)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_L) & ATRobots.window.isKeyPressed(GLFW_KEY_K))
 			turretAngle = 45;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(),GLFW_KEY_J) & GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_K)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_J) & ATRobots.window.isKeyPressed(GLFW_KEY_K))
 			turretAngle = 315;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_I)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_I))
 			turretAngle = 180;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_J)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_J))
 			turretAngle = 270;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_L)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_L))
 			turretAngle = 90;
-		else if (GLFW_PRESS == (GLFW.glfwGetKey(ATRobots.getWindow().getWindowHandle(), GLFW_KEY_K)))
+		else if (ATRobots.window.isKeyPressed(GLFW_KEY_K))
 			turretAngle = 0;
 
 	}
