@@ -316,18 +316,18 @@ public class TankEntity extends HittableEntity {
 	private void tankSounds() {
 		if (DebugMode.soundMap.isSoundOn()) {    //
 			if (tankMoving) {
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").stop();
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").play();
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
+				DebugMode.soundMap.getSound("sounds/tankMove.ogg").play();
 			} else {
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").stop();
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").play();
+				DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").play();
 			}
 		} else {
-			if (DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").isPlaying()) {
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankIdle.ogg").stop();
+			if (DebugMode.soundMap.getSound("sounds/tankIdle.ogg").isPlaying()) {
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
 			}
-			if (DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").isPlaying()) {
-				DebugMode.soundMap.getSound("src/main/resources/sounds/tankMove.ogg").stop();
+			if (DebugMode.soundMap.getSound("sounds/tankMove.ogg").isPlaying()) {
+				DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
 			}
 		}
 	}
@@ -436,11 +436,11 @@ public class TankEntity extends HittableEntity {
 								}
 							}
 							if (DebugMode.soundMap.isSoundOn()) {
-								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
-								DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").play();
+								DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
+								DebugMode.soundMap.getSound("sounds/bullet.ogg").play();
 							} else {
-								if (DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").isPlaying()) {
-									DebugMode.soundMap.getSound("src/main/resources/sounds/bullet.ogg").stop();
+								if (DebugMode.soundMap.getSound("sounds/bullet.ogg").isPlaying()) {
+									DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
 								}
 							}
 							DebugMode.objectMap.addEntity(
