@@ -80,16 +80,16 @@ public class TankEntity extends HittableEntity {
 					remove();
 				}
 			}
-		} if (entity instanceof TankEntity) {
+		} if (entity instanceof HittableEntity) {
 			Vector3f pushBack = getPos();
 			if (getPos().x > (entity.getPos().x + entity.getScale()))
-				pushBack.add(tankSpeed, 0, 0);
+				pushBack.add(tankSpeed / 2, 0, 0);
 			else if (getPos().x < (entity.getPos().x - entity.getScale()))
-				pushBack.add(-tankSpeed, 0, 0);
+				pushBack.add(-tankSpeed / 2, 0, 0);
 			else if (getPos().z > (entity.getPos().z + entity.getScale()))
-				pushBack.add(0, 0, tankSpeed);
+				pushBack.add(0, 0, tankSpeed / 2);
 			else if (getPos().z < (entity.getPos().z - entity.getScale()))
-				pushBack.add(0, 0, -tankSpeed);
+				pushBack.add(0, 0, -tankSpeed / 2);
 
 			setPos(pushBack.x, pushBack.y, pushBack.z);
 		}
