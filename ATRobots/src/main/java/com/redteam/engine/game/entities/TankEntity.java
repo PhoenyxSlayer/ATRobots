@@ -62,9 +62,7 @@ public class TankEntity extends HittableEntity {
 			// TODO : REDUCES HEALTH
 		}
 		// TODO : CREATE MINE COLLISION
-		if (entity instanceof TankEntity) {
-			// TODO : PREVENT TANKS GOING THROUGH EACH OTHER
-		}
+
 	}
 
 	private int health = 100;
@@ -82,8 +80,18 @@ public class TankEntity extends HittableEntity {
 					remove();
 				}
 			}
-		} else if (entity instanceof com.redteam.engine.game.entities.TankEntity) {
-			// TODO : MAKE IT SO IT DOESN'T GO THROUGH EACH OTHER
+		} if (entity instanceof TankEntity) {
+			Vector3f pushBack = getPos();
+			if (getPos().x > (entity.getPos().x + entity.getScale()))
+				pushBack.add(tankSpeed, 0, 0);
+			else if (getPos().x < (entity.getPos().x - entity.getScale()))
+				pushBack.add(-tankSpeed, 0, 0);
+			else if (getPos().z > (entity.getPos().z + entity.getScale()))
+				pushBack.add(0, 0, tankSpeed);
+			else if (getPos().z < (entity.getPos().z - entity.getScale()))
+				pushBack.add(0, 0, -tankSpeed);
+
+			setPos(pushBack.x, pushBack.y, pushBack.z);
 		}
 	}
 
@@ -97,11 +105,11 @@ public class TankEntity extends HittableEntity {
 	// debugGameTick Variables
 
 	private final Vector3f movement = new Vector3f(0, 0, 0),
-			bulletPos = new Vector3f(0, 0, 0);
+						   bulletPos = new Vector3f(0, 0, 0);
 
 	private float tankSpeed,
-			tankAngle,
-			turretAngle;
+				  tankAngle,
+				  turretAngle;
 
 	private boolean tankMoving = false;
 

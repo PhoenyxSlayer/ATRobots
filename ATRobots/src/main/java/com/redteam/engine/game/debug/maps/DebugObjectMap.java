@@ -22,6 +22,15 @@ public class DebugObjectMap implements iObjMapping {
                                         DebugMode.RandomizeTankLocation(),       // POSITION
                                         new Vector3f(0,0,0)                 // ROTATION
                                     ));
+
+        addEntity(new HittableEntity (
+                "dummyTank",
+                DebugMode.setModel("/models/tank.obj", "textures/base/cyan.jpg"),
+                DebugMode.RandomizeTankLocation(),
+                new Vector3f(0, DebugMode.RandomizeTankRotation(),0),
+                1f,
+                5f
+        ));
     }
 
     // Terrain Adding

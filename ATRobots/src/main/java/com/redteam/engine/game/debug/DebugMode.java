@@ -3,7 +3,9 @@ package com.redteam.engine.game.debug;
 import com.redteam.engine.core.*;
 import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
+import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.core.rendering.RenderManager;
+import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.core.rendering.image_parser;
 import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.game.debug.maps.DebugGUIMap;
@@ -207,4 +209,14 @@ public class DebugMode implements ILogic {
 		return generator.nextFloat();
 	}
 
+	public static Model setModel(String OBJModel, String texture) {
+		Model model = loader.loadOBJModel(OBJModel);
+		try {
+			model.setTexture(new Texture(loader.loadTexture(texture)), 1f);
+			return model;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

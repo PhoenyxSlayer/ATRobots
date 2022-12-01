@@ -15,8 +15,8 @@ class TestHittableEntityClass extends HittableEntity {
     public TestHittableEntityClass(String id, Model model, Vector3f pos, Vector3f rotation, float scale, float hitBoxScale) {
         super(id, model, pos, rotation, scale, hitBoxScale);
     }
-    protected void collision(Entity entity) {}
-    protected void debugCollision(Entity entity) {}
+    public void collision(Entity entity) {}
+    public void debugCollision(Entity entity) {}
 
     public void gameTick() {}
     public void debugGameTick() {}
