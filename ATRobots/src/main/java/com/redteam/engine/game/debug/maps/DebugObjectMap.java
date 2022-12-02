@@ -7,6 +7,7 @@ import com.redteam.engine.core.rendering.Material;
 import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.core.terrain.Terrain;
 import com.redteam.engine.game.debug.DebugMode;
+import com.redteam.engine.game.entities.MineEntity;
 import com.redteam.engine.game.entities.TankEntity;
 import com.redteam.engine.utils.Constants;
 import org.joml.Vector3f;
@@ -30,6 +31,12 @@ public class DebugObjectMap implements iObjMapping {
                 new Vector3f(0, DebugMode.RandomizeTankRotation(),0),
                 1f,
                 5f
+        ));
+
+        addEntity(new MineEntity(
+                "dummyMine",
+                DebugMode.RandomizeTankLocation(),
+                new Vector3f(0, DebugMode.RandomizeTankRotation(),0)
         ));
     }
 
