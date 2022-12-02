@@ -61,27 +61,16 @@ public class TankEntity extends HittableEntity {
 			entity.remove();
 			// TODO : REDUCES HEALTH
 		}
-		// TODO : CREATE MINE COLLISION
-
+		else if (entity instanceof MineEntity) {
+			entity.remove();
+			// TODO : REDUCES HEALTH
+		}
 	}
 
 	private int health = 100;
 	@Override
 	public void debugCollision(Entity entity) {
-		if (entity instanceof HittableEntity) {
-			Vector3f pushBack = getPos();
-			if (getPos().x > (entity.getPos().x + entity.getScale()))
-				pushBack.add((tankSpeed / 2), 0, 0);
-			else if (getPos().x < (entity.getPos().x - entity.getScale()))
-				pushBack.add(-(tankSpeed / 2), 0, 0);
-			else if (getPos().z > (entity.getPos().z + entity.getScale()))
-				pushBack.add(0, 0, (tankSpeed / 2));
-			else if (getPos().z < (entity.getPos().z - entity.getScale()))
-				pushBack.add(0, 0, -(tankSpeed / 2));
-
-			setPos(pushBack.x, pushBack.y, pushBack.z);
-		}
-		else if (entity instanceof BulletEntity) {
+		if (entity instanceof BulletEntity) {
 			entity.remove();
 			System.out.println(getID() + " Hit! w/ " + entity.getID());
 			if (health > 0) {
@@ -102,6 +91,19 @@ public class TankEntity extends HittableEntity {
 			if (health == 0) {
 				remove();
 			}
+		}
+		else if (entity instanceof HittableEntity) {
+			Vector3f pushBack = getPos();
+			if (getPos().x > (entity.getPos().x + entity.getScale()))
+				pushBack.add((tankSpeed), 0, 0);
+			else if (getPos().x < (entity.getPos().x - entity.getScale()))
+				pushBack.add(-(tankSpeed), 0, 0);
+			else if (getPos().z > (entity.getPos().z + entity.getScale()))
+				pushBack.add(0, 0, (tankSpeed));
+			else if (getPos().z < (entity.getPos().z - entity.getScale()))
+				pushBack.add(0, 0, -(tankSpeed));
+
+			setPos(pushBack.x, pushBack.y, pushBack.z);
 		}
 	}
 
@@ -442,6 +444,7 @@ public class TankEntity extends HittableEntity {
 							GL11.glViewport(0, 0, glfwGetVideoMode.width(),glfwGetVideoMode.height());
 						} else {
 							monitor = 0;
+							assert glfwGetVideoMode != null;
 							GLFW.glfwSetWindowMonitor(	window,
 														monitor,
 													(glfwGetVideoMode.width() - WIDTH) / 2,

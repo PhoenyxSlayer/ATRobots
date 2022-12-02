@@ -151,11 +151,14 @@ public class HittableEntity extends Entity {
 		formCube();
 		for (Object ent : entitiesArray) {
 			assert ent instanceof HittableEntity;
-			if(!((Entity) ent).getID().startsWith(getID())) {
+			// This is preventing from the entity sending collision to itself
+
+			// This is preventing bullets/mines from hitting its original creator
+			// ID's for these are created like tank_bullet, tank_mine, etc..
+			if(!((Entity) ent).getID().equals(getID()) && !(((Entity) ent).getID().startsWith(getID()))) {
 				if ((passThrough((HittableEntity) ent)) ||
 						(passThrough(((Entity) ent).getPos()))) {
 					this.debugCollision((Entity) ent);
-					((HittableEntity) ent).debugCollision(this);
 					return;
 				}
 			}
