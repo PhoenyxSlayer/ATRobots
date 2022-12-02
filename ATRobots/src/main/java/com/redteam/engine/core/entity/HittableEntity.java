@@ -143,30 +143,21 @@ public class HittableEntity extends Entity {
 	}
 
 	// Collision Detection
-	@SuppressWarnings("unused")
-	public void mainCollisionCheck() {
-		/* TODO : ADD REAL GAME IMPLEMENTATION
-			*	HINT: YOU ONLY HAVE TO CHANGE THE ARRAY FOR WHATEVER OBJECT
-			*		  YOU'RE USING FOR THE REAL GAME
-			*/
-		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
-		checkForCollision(entitiesArray);
-	}
-
 	public void debugCollisionCheck() {
-		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
-		checkForCollision(entitiesArray);
+		checkForCollision();
 	}
-	public void checkForCollision(Object[] entityArray) {
+	public void checkForCollision() {
 		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
 		formCube();
 		for (Object ent : entitiesArray) {
 			assert ent instanceof HittableEntity;
-			if ((passThrough((HittableEntity) ent)) ||
-					(passThrough(((Entity) ent).getPos()))) {
-				this.debugCollision((Entity) ent);
-				((HittableEntity) ent).debugCollision(this);
-				return;
+			if(!((Entity) ent).getID().startsWith(getID())) {
+				if ((passThrough((HittableEntity) ent)) ||
+						(passThrough(((Entity) ent).getPos()))) {
+					this.debugCollision((Entity) ent);
+					((HittableEntity) ent).debugCollision(this);
+					return;
+				}
 			}
 		}
 	}
