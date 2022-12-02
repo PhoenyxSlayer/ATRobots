@@ -68,30 +68,40 @@ public class TankEntity extends HittableEntity {
 	private int health = 100;
 	@Override
 	public void debugCollision(Entity entity) {
-		if (entity instanceof BulletEntity) {
-			if (!entity.getID().startsWith(getID())) {
-				entity.remove();
-				System.out.println(getID() + " Hit!");
-				if (health > 0) {
-					health -= 10;
-				}
-				System.out.println("Health: " + health);
-				if (health == 0) {
-					remove();
-				}
-			}
-		} if (entity instanceof HittableEntity) {
+		if (entity instanceof HittableEntity) {
 			Vector3f pushBack = getPos();
 			if (getPos().x > (entity.getPos().x + entity.getScale()))
-				pushBack.add(tankSpeed / 2, 0, 0);
+				pushBack.add((tankSpeed / 2), 0, 0);
 			else if (getPos().x < (entity.getPos().x - entity.getScale()))
-				pushBack.add(-tankSpeed / 2, 0, 0);
+				pushBack.add(-(tankSpeed / 2), 0, 0);
 			else if (getPos().z > (entity.getPos().z + entity.getScale()))
-				pushBack.add(0, 0, tankSpeed / 2);
+				pushBack.add(0, 0, (tankSpeed / 2));
 			else if (getPos().z < (entity.getPos().z - entity.getScale()))
-				pushBack.add(0, 0, -tankSpeed / 2);
+				pushBack.add(0, 0, -(tankSpeed / 2));
 
 			setPos(pushBack.x, pushBack.y, pushBack.z);
+		}
+		else if (entity instanceof BulletEntity) {
+			entity.remove();
+			System.out.println(getID() + " Hit! w/ " + entity.getID());
+			if (health > 0) {
+				health -= 10;
+			}
+			System.out.println("Health: " + health);
+			if (health == 0) {
+				remove();
+			}
+		}
+		else if (entity instanceof MineEntity) {
+			entity.remove();
+			System.out.println(getID() + " Hit! w/ " + entity.getID());
+			if (health > 0) {
+				health -= 10;
+			}
+			System.out.println("Health: " + health);
+			if (health == 0) {
+				remove();
+			}
 		}
 	}
 
@@ -499,6 +509,14 @@ public class TankEntity extends HittableEntity {
 											new Vector3f(bulletPos.x, 2.55f, bulletPos.z),        // POSITION
 											new Vector3f(0, turretAngle + 90, 90),        // ROTATION
 											true                                                    // IS IT MOVING?
+									));
+						}
+						if(key == GLFW_KEY_E) {
+							DebugMode.objectMap.addEntity(
+									new MineEntity(
+											getID() + "_mine",                                    // ID
+											new Vector3f(getPos().x, 0.5f, getPos().z),         	 // POSITION
+											new Vector3f(0, 0, 0)					         // ROTATION
 									));
 						}
 					}
