@@ -133,7 +133,7 @@ public class HittableEntity extends Entity {
 			System.out.println("Health: " + health);
 			if (health == 0) { remove(); }
 		}
-		if (entity instanceof MineEntity) {
+		else if (entity instanceof MineEntity) {
 			entity.remove();
 			System.out.println(getID() + " Hit! w/ " + entity.getID());
 			if (health > 0) { health -= 10; }
