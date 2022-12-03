@@ -218,3 +218,15 @@ ATRobots/bin/main/sounds/bullet.ogg
 ATRobots/bin/main/sounds/message.ogg
 ATRobots/bin/main/sounds/tankIdle.ogg
 ATRobots/bin/main/sounds/tankMove.ogg
+ATRobots/build/reports/tests/test/classes/com.redteam.engine.core.entity.TestEntity.html
+ATRobots/build/reports/tests/test/classes/com.redteam.engine.core.entity.TestHittableEntity.html
+ATRobots/build/reports/tests/test/classes/com.redteam.engine.game.entities.TestBulletEntity.html
+ATRobots/build/reports/tests/test/classes/com.redteam.engine.game.entities.TestMineEntity.html
+ATRobots/build/reports/tests/test/classes/com.redteam.engine.game.entities.TestTankEntity.html
+ATRobots/build/reports/tests/test/packages/com.redteam.engine.core.entity.html
+ATRobots/build/reports/tests/test/packages/com.redteam.engine.game.entities.html
+ATRobots/build/test-results/test/TEST-com.redteam.engine.core.entity.TestEntity.xml
+ATRobots/build/test-results/test/TEST-com.redteam.engine.core.entity.TestHittableEntity.xml
+ATRobots/build/test-results/test/TEST-com.redteam.engine.game.entities.TestBulletEntity.xml
+ATRobots/build/test-results/test/TEST-com.redteam.engine.game.entities.TestMineEntity.xml
+ATRobots/build/test-results/test/TEST-com.redteam.engine.game.entities.TestTankEntity.xml
