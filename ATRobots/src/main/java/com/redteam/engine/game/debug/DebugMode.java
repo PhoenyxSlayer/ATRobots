@@ -17,6 +17,7 @@ import com.redteam.engine.utils.Constants;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -180,6 +181,7 @@ public class DebugMode implements ILogic {
 	public static void updateSpectator() {
 		spectator = !spectator;
 		if(spectator) {
+			GLFW.glfwSetCursorPos(ATRobots.getWindow().getWindowHandle(), (ATRobots.getWindow().getWidth()), (ATRobots.getWindow().getHeight()));
 			GLFW.glfwSetInputMode(ATRobots.getWindow().getWindowHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 		} else {
 			GLFW.glfwSetInputMode(ATRobots.getWindow().getWindowHandle(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);

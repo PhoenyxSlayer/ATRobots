@@ -444,6 +444,8 @@ public class TankEntity extends HittableEntity {
 														 GLFW_DONT_CARE
 													 );
 							GL11.glViewport(0, 0, glfwGetVideoMode.width(),glfwGetVideoMode.height());
+							ATRobots.getWindow().setWidth(glfwGetVideoMode.width());
+							ATRobots.getWindow().setHeight(glfwGetVideoMode.height());
 						} else {
 							monitor = 0;
 							assert glfwGetVideoMode != null;
@@ -457,6 +459,8 @@ public class TankEntity extends HittableEntity {
 													 );
 							GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
 							GL11.glViewport(0, 0, WIDTH, HEIGHT);
+							ATRobots.getWindow().setWidth(WIDTH);
+							ATRobots.getWindow().setHeight(HEIGHT);
 						}
 					}
 					if (key == GLFW_KEY_M) {
