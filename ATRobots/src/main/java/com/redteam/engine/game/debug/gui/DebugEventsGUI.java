@@ -2,8 +2,6 @@ package com.redteam.engine.game.debug.gui;
 
 import imgui.ImGui;
 
-import java.util.Objects;
-
 @SuppressWarnings("unused")
 public class DebugEventsGUI implements iDebugGUI {
 
