@@ -3,6 +3,7 @@ package com.redteam.engine.game.debug.maps;
 import com.redteam.engine.core.Window;
 import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.game.debug.gui.DebugCurrentEntitiesGUI;
+import com.redteam.engine.game.debug.gui.DebugEventsGUI;
 import com.redteam.engine.game.debug.gui.DebugSpectatorGUI;
 import com.redteam.engine.game.main.ATRobots;
 import imgui.ImGui;
@@ -19,6 +20,8 @@ public class DebugGUIMap {
     private final DebugSpectatorGUI spectatorGUI = new DebugSpectatorGUI();
     private final DebugCurrentEntitiesGUI currentEntitiesGUI = new DebugCurrentEntitiesGUI();
 
+    private final DebugEventsGUI currentEventsGUI = new DebugEventsGUI();
+
 
     public void spectatorGUI(boolean spectator) {
         spectatorGUI.init();
@@ -33,6 +36,17 @@ public class DebugGUIMap {
         currentEntitiesGUI.update();
         currentEntitiesGUI.close();
     }
+
+    public void eventsGUI() {
+        currentEventsGUI.init();
+        currentEventsGUI.update();
+        currentEventsGUI.close();
+    }
+
+    public void addEvent(String event) {
+        currentEventsGUI.addEvent(event);
+    }
+
 
     public boolean getDebugMode() {
         return debugMode;

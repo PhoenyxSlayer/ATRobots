@@ -72,22 +72,22 @@ public class TankEntity extends HittableEntity {
 	public void debugCollision(Entity entity) {
 		if (entity instanceof BulletEntity) {
 			entity.remove();
-			System.out.println(getID() + " Hit! w/ " + entity.getID());
+			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
 			if (health > 0) {
 				health -= 10;
 			}
-			System.out.println("Health: " + health);
+			DebugMode.debugGUIMap.addEvent("Health: " + health);
 			if (health == 0) {
 				remove();
 			}
 		}
 		else if (entity instanceof MineEntity) {
 			entity.remove();
-			System.out.println(getID() + " Hit! w/ " + entity.getID());
+			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
 			if (health > 0) {
 				health -= 10;
 			}
-			System.out.println("Health: " + health);
+			DebugMode.debugGUIMap.addEvent("Health: " + health);
 			if (health == 0) {
 				remove();
 			}
