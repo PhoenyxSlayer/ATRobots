@@ -45,8 +45,6 @@ public class DebugMode implements ILogic {
 	private final Vector3f cameraInc;
 
 	private static boolean spectator;
-
-	private static String events = null;
 	
 	public DebugMode() {
 		debugGUIMap = new DebugGUIMap();
