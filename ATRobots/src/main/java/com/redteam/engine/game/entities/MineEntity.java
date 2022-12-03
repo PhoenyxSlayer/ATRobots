@@ -19,7 +19,6 @@ public class MineEntity extends HittableEntity {
 		mineModel = setMineModel();
 	}
 
-	@SuppressWarnings("unused")
 	public MineEntity(String id, Model mineModel, Vector3f pos, Vector3f rotation) {
 		super(id, mineModel, pos, rotation, 1, 2f);
 
