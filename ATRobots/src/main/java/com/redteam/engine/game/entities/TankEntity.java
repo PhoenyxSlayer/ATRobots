@@ -131,11 +131,10 @@ public class TankEntity extends HittableEntity {
 		// Tank by Default is not Moving
 		tankMoving = false;
 
-		// Makes sure Tank is in the Border
+		// MAKES SURE ENTITY IS IN BORDER
 		outOfBorder();
-		if (!DebugMode.isSpectator()) {
-			// MAKES SURE ENTITY IS IN BORDER
 
+		if (!DebugMode.isSpectator()) {
 			// WASD Movement
 			tankControls();
 			setRotation(0, tankAngle, 0);
@@ -148,13 +147,9 @@ public class TankEntity extends HittableEntity {
 
 			// TODO : IMPLEMENT ADDING KEYSTROKES FROM OTHER CLASSES/FUNCTIONS TO THIS
 
-
-
 			// Camera Moving w/ Tank
 			DebugMode.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
 			DebugMode.camera.setRotation(90.0f, 0, 0);
-
-			// Tank Idle/Moving Sounds
 		}
 		// PERFORMS ALL KEY TOGGLES + SHOOTING
 		debugKeyMappings();
