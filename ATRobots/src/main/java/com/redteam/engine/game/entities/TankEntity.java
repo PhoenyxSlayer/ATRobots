@@ -123,14 +123,18 @@ public class TankEntity extends HittableEntity {
 				  tankAngle,
 				  turretAngle;
 
-	private boolean tankMoving = false;
+	private boolean tankMoving;
 
 	@Override
 	public void debugGameTick() {
 
+		// Tank by Default is not Moving
+		tankMoving = false;
+
+		// Makes sure Tank is in the Border
+		outOfBorder();
 		if (!DebugMode.isSpectator()) {
 			// MAKES SURE ENTITY IS IN BORDER
-			outOfBorder();
 
 			// WASD Movement
 			tankControls();
@@ -143,16 +147,20 @@ public class TankEntity extends HittableEntity {
 			setTurretRotation(0, turretAngle, 0);
 
 			// TODO : IMPLEMENT ADDING KEYSTROKES FROM OTHER CLASSES/FUNCTIONS TO THIS
-			// PERFORMS ALL KEY TOGGLES + SHOOTING
-			debugKeyMappings();
+
+
 
 			// Camera Moving w/ Tank
 			DebugMode.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
 			DebugMode.camera.setRotation(90.0f, 0, 0);
 
 			// Tank Idle/Moving Sounds
-			tankSounds();
 		}
+		// PERFORMS ALL KEY TOGGLES + SHOOTING
+		debugKeyMappings();
+
+		// RENDERS SOUND
+		tankSounds();
 	}
 
 	private static Model setTankModel(String modelOBJ, String texture) {
@@ -288,7 +296,6 @@ public class TankEntity extends HittableEntity {
 
 	private void tankControls() {
 		// By default, it's not moving
-		tankMoving = false;
 
 		if (ATRobots.window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			tankSpeed = ((float) (MOVEMENT_SPEED * Engine.tick()) * 3);
