@@ -2,7 +2,6 @@ package com.redteam.engine.game.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.redteam.engine.game.entities.BulletEntity;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 

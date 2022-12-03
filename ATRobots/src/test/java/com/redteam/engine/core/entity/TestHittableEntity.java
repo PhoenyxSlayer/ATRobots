@@ -66,15 +66,15 @@ class TestHittableEntity {
                 new Vector3f(-2.5f, -2.5f, -2.5f) // bottom left
         };
 
-        assertTrue(new Vector3f(-2.5f,2.5f,2.5f).equals(testHitBox[0]));
-        assertTrue(new Vector3f(2.5f,2.5f,2.5f).equals(testHitBox[1]));
-        assertFalse(new Vector3f(2.6f,-2.5f,2.5f).equals(testHitBox[2]));
-        assertTrue(new Vector3f(-2.5f,-2.5f,2.5f).equals(testHitBox[3]));
+        assertEquals(new Vector3f(-2.5f, 2.5f, 2.5f), testHitBox[0]);
+        assertEquals(new Vector3f(2.5f, 2.5f, 2.5f), testHitBox[1]);
+        assertNotEquals(new Vector3f(2.6f, -2.5f, 2.5f), testHitBox[2]);
+        assertEquals(new Vector3f(-2.5f, -2.5f, 2.5f), testHitBox[3]);
 
-        assertFalse(new Vector3f(-45.0f,2.5f,-2.5f).equals(testHitBox[4]));
-        assertFalse(new Vector3f(2.5f,10.0f,-2.5f).equals(testHitBox[5]));
-        assertTrue(new Vector3f(2.5f,-2.5f,-2.5f).equals(testHitBox[6]));
-        assertFalse(new Vector3f(-24.0f,-2.5f,9.0f).equals(testHitBox[7]));
+        assertNotEquals(new Vector3f(-45.0f, 2.5f, -2.5f), testHitBox[4]);
+        assertNotEquals(new Vector3f(2.5f, 10.0f, -2.5f), testHitBox[5]);
+        assertEquals(new Vector3f(2.5f, -2.5f, -2.5f), testHitBox[6]);
+        assertNotEquals(new Vector3f(-24.0f, -2.5f, 9.0f), testHitBox[7]);
     }
 
     // PASS THROUGH TEST
