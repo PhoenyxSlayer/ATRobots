@@ -18,14 +18,15 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Iterator;
 import java.util.Random;
 
 import static com.redteam.engine.core.Engine.tick;
 import static com.redteam.engine.core.iObjMapping.entities;
-import static com.redteam.engine.utils.Constants.CAMERA_STEP;
-import static com.redteam.engine.utils.Constants.MOUSE_SENSITIVITY;
+import static com.redteam.engine.utils.Constants.*;
+import static com.redteam.engine.utils.Constants.HEIGHT;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class DebugMode implements ILogic {
@@ -220,6 +221,64 @@ public class DebugMode implements ILogic {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+
+	private static boolean fullscreen = false;
+
+
+	public static void basicControls(long window, int key, int action) {
+		if (action == GLFW_PRESS) {
+			if (key == GLFW_KEY_F11) {
+				fullscreen = !fullscreen;
+				long monitor;
+				GLFWVidMode glfwGetVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+				if (fullscreen) {
+					assert glfwGetVideoMode != null;
+					monitor = ATRobots.getWindow().getPrimaryMonitor();
+
+					GLFW.glfwSetWindowMonitor(window,
+							monitor,
+							0,
+							0,
+							glfwGetVideoMode.width(),
+							glfwGetVideoMode.height(),
+							GLFW_DONT_CARE
+					);
+					GL11.glViewport(0, 0, glfwGetVideoMode.width(), glfwGetVideoMode.height());
+					ATRobots.getWindow().setWidth(glfwGetVideoMode.width());
+					ATRobots.getWindow().setHeight(glfwGetVideoMode.height());
+				} else {
+					monitor = 0;
+					assert glfwGetVideoMode != null;
+					GLFW.glfwSetWindowMonitor(window,
+							monitor,
+							(glfwGetVideoMode.width() - WIDTH) / 2,
+							(glfwGetVideoMode.height() - HEIGHT) / 2,
+							WIDTH,
+							HEIGHT,
+							GLFW_DONT_CARE
+					);
+					GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
+					GL11.glViewport(0, 0, WIDTH, HEIGHT);
+					ATRobots.getWindow().setWidth(WIDTH);
+					ATRobots.getWindow().setHeight(HEIGHT);
+				}
+			}
+			if (key == GLFW_KEY_M) {
+				DebugMode.soundMap.setSound();
+			}
+			if (key == GLFW_KEY_F4)
+				DebugMode.debugGUIMap.updateDebugMode();        // Enables the Debug GUIs
+			if (key == GLFW_KEY_V)
+				DebugMode.updateSpectator();
+		}
+		if (action == GLFW_RELEASE) {
+			if (key == GLFW_KEY_ESCAPE) {
+				System.out.println("EXITING WINDOW " + ATRobots.getWindow().getTitle());
+				glfwSetWindowShouldClose(window, true);
+			}
 		}
 	}
 }

@@ -38,6 +38,12 @@ public class DebugObjectMap implements iObjMapping {
                 DebugMode.RandomizeTankLocation(),
                 new Vector3f(0, DebugMode.RandomizeTankRotation(),0)
         ));
+
+        addEntity(new MineEntity(
+                "dummyMine",
+                DebugMode.RandomizeTankLocation(),
+                new Vector3f(0, DebugMode.RandomizeTankRotation(),0)
+        ));
     }
 
     // Terrain Adding
