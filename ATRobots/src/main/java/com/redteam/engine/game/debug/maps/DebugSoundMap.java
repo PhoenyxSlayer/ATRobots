@@ -6,7 +6,6 @@ import com.redteam.engine.core.sound.Sound;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 public class DebugSoundMap implements iSoundMapping {
     private boolean sound = true;

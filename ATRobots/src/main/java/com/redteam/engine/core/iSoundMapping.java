@@ -2,9 +2,7 @@ package com.redteam.engine.core;
 
 import com.redteam.engine.core.sound.Sound;
 
-import javax.sound.sampled.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
