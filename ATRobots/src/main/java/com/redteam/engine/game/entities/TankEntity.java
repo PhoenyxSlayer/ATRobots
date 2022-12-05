@@ -150,6 +150,7 @@ public class TankEntity extends HittableEntity {
 		}
 
 		if (health <= 0) {
+			DebugMode.updateTankStatus();
 			DebugMode.soundMap.turnAllSoundsOff();
 			DebugMode.updateSpectator();
 			remove();

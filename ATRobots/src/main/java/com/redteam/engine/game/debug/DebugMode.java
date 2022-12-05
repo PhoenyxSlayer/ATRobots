@@ -224,6 +224,16 @@ public class DebugMode implements ILogic {
 		}
 	}
 
+	// Is tank alive?
+	private static boolean tankStatus = true;
+	public static void updateTankStatus() {
+		tankStatus = !tankStatus;
+	}
+
+	public static boolean isTankAlive() {
+		return tankStatus;
+	}
+
 
 	private static boolean fullscreen = false;
 
@@ -271,7 +281,7 @@ public class DebugMode implements ILogic {
 			}
 			if (key == GLFW_KEY_F4)
 				DebugMode.debugGUIMap.updateDebugMode();        // Enables the Debug GUIs
-			if (key == GLFW_KEY_V)
+			if ((key == GLFW_KEY_V) && isTankAlive())
 				DebugMode.updateSpectator();
 		}
 		if (action == GLFW_RELEASE) {
