@@ -9,10 +9,7 @@ import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL11;
 
 import static com.redteam.engine.utils.Constants.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -74,6 +71,7 @@ public class TankEntity extends HittableEntity {
 			health -= 10;
 			DebugMode.debugGUIMap.addEvent("Health: " + health);
 		} else if (entity instanceof MineEntity) {
+			DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
 			entity.remove();
 			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
 			health -= 50;
@@ -400,8 +398,6 @@ public class TankEntity extends HittableEntity {
 		}
 		return false;
 	}
-
-	boolean fullscreen = false;
 
 	private void debugKeyMappings() {
 		// Enables the Debug GUIs

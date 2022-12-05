@@ -17,6 +17,7 @@ public class DebugSoundMap implements iSoundMapping {
         addSound("sounds/bloop_x.ogg", false);
         addSound("sounds/tankIdle.ogg", true);
         addSound("sounds/tankMove.ogg", true);
+        addSound("sounds/explosion.ogg", false);
     }
 
     // Daniel Implementation of Sound .ogg

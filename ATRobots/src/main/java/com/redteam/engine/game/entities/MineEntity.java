@@ -5,7 +5,9 @@ import com.redteam.engine.core.entity.Entity;
 import com.redteam.engine.core.entity.HittableEntity;
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.core.rendering.Texture;
+import com.redteam.engine.game.debug.DebugMode;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 public class MineEntity extends HittableEntity {
 
@@ -36,6 +38,17 @@ public class MineEntity extends HittableEntity {
 		}
 	}
 
+	private static Model setMineAnimation() {
+		Model model = loader.loadOBJModel("/models/tank.obj");
+		try {
+			model.setTexture(new Texture(loader.loadTexture("textures/mine.png")), 1f);
+			return model;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@SuppressWarnings("unused")
 	public Model getMineModel() { return mineModel; }
 
@@ -43,6 +56,7 @@ public class MineEntity extends HittableEntity {
 	}
 	public void debugCollision(Entity entity) {}
 
+	boolean animation = false;
 	public void gameTick() {
 		// TODO : REAL-GAMES GAME TICK IMPLEMENTATION
 		if(outOfBorder()) {
