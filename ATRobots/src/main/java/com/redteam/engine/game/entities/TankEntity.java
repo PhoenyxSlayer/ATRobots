@@ -384,8 +384,7 @@ public class TankEntity extends HittableEntity {
 	}
 
 	private void toggleMotorSounds(boolean state) {
-		boolean tankSoundOn = state;
-		if(tankSoundOn) {
+		if(state) {
 			if (tankMoving) {
 				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
 				DebugMode.soundMap.getSound("sounds/tankMove.ogg").play();
@@ -393,6 +392,11 @@ public class TankEntity extends HittableEntity {
 				DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
 				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").play();
 			}
+		} else {
+			if(DebugMode.soundMap.getSound("sounds/tankMove.ogg").isPlaying())
+				DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
+			if(DebugMode.soundMap.getSound("sounds/tankIdle.ogg").isPlaying())
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
 		}
 	}
 
