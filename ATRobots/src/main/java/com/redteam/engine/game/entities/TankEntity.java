@@ -163,14 +163,14 @@ public class TankEntity extends HittableEntity {
 
 		// RENDERS SOUND
 		if (DebugMode.soundMap.isSoundOn()) {
-			toggleMotorSounds();
+			toggleMotorSounds(true);
 		} else {
 			DebugMode.soundMap.turnAllSoundsOff();
 		}
 
 		if (health <= 0) {
 			DebugMode.updateTankStatus();
-			DebugMode.soundMap.turnAllSoundsOff();
+			toggleMotorSounds(false);
 			DebugMode.updateSpectator();
 			DebugMode.debugGUIMap.addEvent(getID() + " down!");
 			remove();
@@ -383,14 +383,16 @@ public class TankEntity extends HittableEntity {
 
 	}
 
-
-	private void toggleMotorSounds() {
-		if (tankMoving) {
-			DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
-			DebugMode.soundMap.getSound("sounds/tankMove.ogg").play();
-		} else {
-			DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
-			DebugMode.soundMap.getSound("sounds/tankIdle.ogg").play();
+	private void toggleMotorSounds(boolean state) {
+		boolean tankSoundOn = state;
+		if(tankSoundOn) {
+			if (tankMoving) {
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
+				DebugMode.soundMap.getSound("sounds/tankMove.ogg").play();
+			} else {
+				DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").play();
+			}
 		}
 	}
 
