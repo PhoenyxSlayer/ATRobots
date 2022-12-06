@@ -2,15 +2,13 @@ package com.redteam.engine.core.entity;
 
 import com.redteam.engine.core.rendering.Model;
 import com.redteam.engine.game.debug.DebugMode;
-import com.redteam.engine.game.entities.BulletEntity;
-import com.redteam.engine.game.entities.MineEntity;
 import org.joml.Vector3f;
 
 /* https://docs.google.com/document/d/1PEnyHnWt1y7VdEA1bnkRN30tYblDDacImu-bdZJjqKs/edit?usp=sharing
  *  -> Link to Design Doc
  */
 
-public class HittableEntity extends Entity {
+public abstract class HittableEntity extends Entity {
 
 	private float hitBoxScale;
 
@@ -120,32 +118,15 @@ public class HittableEntity extends Entity {
 	}
 
 	@SuppressWarnings("unused")
-	public void collision(Entity entity) {
-	}
+	public abstract void collision(Entity entity);
 
-	int health = 100;
-
-	public void debugCollision(Entity entity) {
-		if (entity instanceof BulletEntity) {
-			entity.remove();
-			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
-			if (health > 0) { health -= 10; }
-			DebugMode.debugGUIMap.addEvent("Health: " + health);
-			if (health == 0) { remove(); }
-		}
-		else if (entity instanceof MineEntity) {
-			entity.remove();
-			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
-			if (health > 0) { health -= 10; }
-			DebugMode.debugGUIMap.addEvent("Health: " + health);
-			if (health == 0) { remove(); }
-		}
-	}
+	public abstract void debugCollision(Entity entity);
 
 	// Collision Detection
 	public void debugCollisionCheck() {
 		checkForCollision();
 	}
+
 	public void checkForCollision() {
 		Object[] entitiesArray = DebugMode.objectMap.entityMap().toArray();
 		formCube();
@@ -164,10 +145,4 @@ public class HittableEntity extends Entity {
 			}
 		}
 	}
-
-	@Override
-	public void gameTick() {}
-
-	@Override
-	public void debugGameTick() {}
 }

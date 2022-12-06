@@ -71,21 +71,42 @@ public class TankEntity extends HittableEntity {
 			health -= 10;
 			DebugMode.debugGUIMap.addEvent("Health: " + health);
 		} else if (entity instanceof MineEntity) {
-			DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
 			entity.remove();
+			DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
 			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
 			health -= 50;
 			DebugMode.debugGUIMap.addEvent("Health: " + health);
 		} else if (entity instanceof HittableEntity) {
 			Vector3f pushBack = getPos();
-			if (getPos().x > (entity.getPos().x + entity.getScale()))
-				pushBack.add((tankSpeed), 0, 0);
+			float pushBackSpeed = tankSpeed / 2;
+			if ((getPos().x > (entity.getPos().x + entity.getScale())) &&
+					(getPos().z > (entity.getPos().z + entity.getScale()))) {
+				pushBack.add((pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, (pushBackSpeed));
+			}
+			else if ((getPos().x < (entity.getPos().x - entity.getScale())) &&
+					(getPos().z < (entity.getPos().z - entity.getScale()))) {
+				pushBack.add(-(pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, -(pushBackSpeed));
+			}
+			else if ((getPos().x > (entity.getPos().x + entity.getScale())) &&
+					(getPos().z < (entity.getPos().z - entity.getScale()))) {
+				pushBack.add((pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, -(pushBackSpeed));
+			}
+			else if ((getPos().x < (entity.getPos().x - entity.getScale())) &&
+					(getPos().z > (entity.getPos().z + entity.getScale()))) {
+				pushBack.add(-(pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, (pushBackSpeed));
+			}
+			else if (getPos().x > (entity.getPos().x + entity.getScale()))
+				pushBack.add((pushBackSpeed), 0, 0);
 			else if (getPos().x < (entity.getPos().x - entity.getScale()))
-				pushBack.add(-(tankSpeed), 0, 0);
+				pushBack.add(-(pushBackSpeed), 0, 0);
 			else if (getPos().z > (entity.getPos().z + entity.getScale()))
-				pushBack.add(0, 0, (tankSpeed));
+				pushBack.add(0, 0, (pushBackSpeed));
 			else if (getPos().z < (entity.getPos().z - entity.getScale()))
-				pushBack.add(0, 0, -(tankSpeed));
+				pushBack.add(0, 0, -(pushBackSpeed));
 
 			setPos(pushBack.x, pushBack.y, pushBack.z);
 		}
@@ -151,6 +172,7 @@ public class TankEntity extends HittableEntity {
 			DebugMode.updateTankStatus();
 			DebugMode.soundMap.turnAllSoundsOff();
 			DebugMode.updateSpectator();
+			DebugMode.debugGUIMap.addEvent(getID() + " down!");
 			remove();
 		}
 
