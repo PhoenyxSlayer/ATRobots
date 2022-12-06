@@ -5,7 +5,6 @@ import imgui.ImGui;
 
 import java.util.HashSet;
 
-@SuppressWarnings("unused")
 public class DebugCurrentEntitiesGUI implements iDebugGUI {
 
 	private HashSet<Entity> entities = new HashSet<>();

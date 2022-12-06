@@ -12,8 +12,8 @@ import static com.redteam.engine.utils.Constants.Z_BORDER;
 
 public abstract class Entity {
 
-	private final String id;
-    private final Model model;
+	private String id;
+    private Model model;
     private final Vector3f pos;
     private final Vector3f rotation;
     private float scale;
@@ -56,9 +56,13 @@ public abstract class Entity {
     	return id;
     }
 
+    public void setID(String id) { this.id = id; }
+
     public Model getModel() {
         return model;
     }
+
+    public void setModel(Model model) { this.model = model; }
 
     public Vector3f getPos() {
         return pos;

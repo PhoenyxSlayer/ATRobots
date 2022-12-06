@@ -9,10 +9,7 @@ import com.redteam.engine.core.rendering.Texture;
 import com.redteam.engine.game.debug.DebugMode;
 import com.redteam.engine.game.main.ATRobots;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL11;
 
 import static com.redteam.engine.utils.Constants.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -60,36 +57,56 @@ public class TankEntity extends HittableEntity {
 		if (entity instanceof BulletEntity) {
 			entity.remove();
 			// TODO : REDUCES HEALTH
+		} else if (entity instanceof MineEntity) {
+			entity.remove();
+			// TODO : REDUCES HEALTH
 		}
-		// TODO : CREATE MINE COLLISION
-
 	}
 
-	private int health = 100;
 	@Override
 	public void debugCollision(Entity entity) {
 		if (entity instanceof BulletEntity) {
-			if (!entity.getID().startsWith(getID())) {
-				entity.remove();
-				System.out.println(getID() + " Hit!");
-				if (health > 0) {
-					health -= 10;
-				}
-				System.out.println("Health: " + health);
-				if (health == 0) {
-					remove();
-				}
-			}
-		} if (entity instanceof HittableEntity) {
+			entity.remove();
+			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
+			health -= 10;
+			DebugMode.debugGUIMap.addEvent("Health: " + health);
+		} else if (entity instanceof MineEntity) {
+			entity.remove();
+			DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
+			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
+			health -= 50;
+			DebugMode.debugGUIMap.addEvent("Health: " + health);
+		} else if (entity instanceof HittableEntity) {
 			Vector3f pushBack = getPos();
-			if (getPos().x > (entity.getPos().x + entity.getScale()))
-				pushBack.add(tankSpeed / 2, 0, 0);
+			float pushBackSpeed = tankSpeed / 2;
+			if ((getPos().x > (entity.getPos().x + entity.getScale())) &&
+					(getPos().z > (entity.getPos().z + entity.getScale()))) {
+				pushBack.add((pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, (pushBackSpeed));
+			}
+			else if ((getPos().x < (entity.getPos().x - entity.getScale())) &&
+					(getPos().z < (entity.getPos().z - entity.getScale()))) {
+				pushBack.add(-(pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, -(pushBackSpeed));
+			}
+			else if ((getPos().x > (entity.getPos().x + entity.getScale())) &&
+					(getPos().z < (entity.getPos().z - entity.getScale()))) {
+				pushBack.add((pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, -(pushBackSpeed));
+			}
+			else if ((getPos().x < (entity.getPos().x - entity.getScale())) &&
+					(getPos().z > (entity.getPos().z + entity.getScale()))) {
+				pushBack.add(-(pushBackSpeed), 0, 0);
+				pushBack.add(0, 0, (pushBackSpeed));
+			}
+			else if (getPos().x > (entity.getPos().x + entity.getScale()))
+				pushBack.add((pushBackSpeed), 0, 0);
 			else if (getPos().x < (entity.getPos().x - entity.getScale()))
-				pushBack.add(-tankSpeed / 2, 0, 0);
+				pushBack.add(-(pushBackSpeed), 0, 0);
 			else if (getPos().z > (entity.getPos().z + entity.getScale()))
-				pushBack.add(0, 0, tankSpeed / 2);
+				pushBack.add(0, 0, (pushBackSpeed));
 			else if (getPos().z < (entity.getPos().z - entity.getScale()))
-				pushBack.add(0, 0, -tankSpeed / 2);
+				pushBack.add(0, 0, -(pushBackSpeed));
 
 			setPos(pushBack.x, pushBack.y, pushBack.z);
 		}
@@ -105,20 +122,27 @@ public class TankEntity extends HittableEntity {
 	// debugGameTick Variables
 
 	private final Vector3f movement = new Vector3f(0, 0, 0),
-						   bulletPos = new Vector3f(0, 0, 0);
+			bulletPos = new Vector3f(0, 0, 0);
 
 	private float tankSpeed,
-				  tankAngle,
-				  turretAngle;
+			tankAngle,
+			turretAngle;
 
-	private boolean tankMoving = false;
+	private boolean tankMoving;
+
+	private int health = 100;
 
 	@Override
 	public void debugGameTick() {
 
+
+		// Tank by Default is not Moving
+		tankMoving = false;
+
+		// MAKES SURE ENTITY IS IN BORDER
+		outOfBorder();
+
 		if (!DebugMode.isSpectator()) {
-			// MAKES SURE ENTITY IS IN BORDER
-			outOfBorder();
 
 			// WASD Movement
 			tankControls();
@@ -131,16 +155,29 @@ public class TankEntity extends HittableEntity {
 			setTurretRotation(0, turretAngle, 0);
 
 			// TODO : IMPLEMENT ADDING KEYSTROKES FROM OTHER CLASSES/FUNCTIONS TO THIS
-			// PERFORMS ALL KEY TOGGLES + SHOOTING
-			debugKeyMappings();
 
 			// Camera Moving w/ Tank
 			DebugMode.camera.setPosition(getPos().x, getPos().y + 50f, getPos().z);
 			DebugMode.camera.setRotation(90.0f, 0, 0);
-
-			// Tank Idle/Moving Sounds
-			tankSounds();
 		}
+
+		// RENDERS SOUND
+		if (DebugMode.soundMap.isSoundOn()) {
+			toggleMotorSounds(true);
+		} else {
+			DebugMode.soundMap.turnAllSoundsOff();
+		}
+
+		if (health <= 0) {
+			DebugMode.updateTankStatus();
+			toggleMotorSounds(false);
+			DebugMode.updateSpectator();
+			DebugMode.debugGUIMap.addEvent(getID() + " down!");
+			remove();
+		}
+
+		// PERFORMS ALL KEY TOGGLES + SHOOTING + MINES
+		debugKeyMappings();
 	}
 
 	private static Model setTankModel(String modelOBJ, String texture) {
@@ -170,11 +207,11 @@ public class TankEntity extends HittableEntity {
 	private static String getTextureColor(String color, String textureFile) {
 		switch (color) {
 			case "Green":
-				case "green":
+			case "green":
 			case "G":
-				case "g":
-					textureFile += "green.jpg";
-					break;
+			case "g":
+				textureFile += "green.jpg";
+				break;
 			case "Red":
 			case "red":
 			case "R":
@@ -276,7 +313,6 @@ public class TankEntity extends HittableEntity {
 
 	private void tankControls() {
 		// By default, it's not moving
-		tankMoving = false;
 
 		if (ATRobots.window.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			tankSpeed = ((float) (MOVEMENT_SPEED * Engine.tick()) * 3);
@@ -289,41 +325,34 @@ public class TankEntity extends HittableEntity {
 			tankAngle = 225;
 			movement.x = -tankSpeed;                // MOVES UP-LEFT
 			movement.z = -tankSpeed;
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_W) & ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
 			tankMoving = true;
 			tankAngle = 135;
 			movement.x = tankSpeed;                    // MOVES UP-RIGHT
 			movement.z = -tankSpeed;
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_D) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_D) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 45;
 			movement.x = tankSpeed;                    // MOVES DOWN-RIGHT
 			movement.z = tankSpeed;
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_A) & ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 315;
 			movement.x = -tankSpeed;                // MOVES DOWN-LEFT
 			movement.z = tankSpeed;
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_W)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_W)) {
 			tankMoving = true;
 			tankAngle = 180;
 			movement.z = -tankSpeed;                // MOVES UP
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_A)) {
 			tankMoving = true;
 			tankAngle = 270;
 			movement.x = -tankSpeed;                // MOVES LEFT
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_S)) {
 			tankMoving = true;
 			tankAngle = 0;
 			movement.z = tankSpeed;                    // MOVES DOWN
-		}
-		else if (ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
+		} else if (ATRobots.window.isKeyPressed(GLFW_KEY_D)) {
 			tankMoving = true;
 			tankAngle = 90;
 			movement.x = tankSpeed;                    // MOVES RIGHT
@@ -354,9 +383,8 @@ public class TankEntity extends HittableEntity {
 
 	}
 
-
-	private void tankSounds() {
-		if (DebugMode.soundMap.isSoundOn()) {    //
+	private void toggleMotorSounds(boolean state) {
+		if(state) {
 			if (tankMoving) {
 				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
 				DebugMode.soundMap.getSound("sounds/tankMove.ogg").play();
@@ -365,12 +393,10 @@ public class TankEntity extends HittableEntity {
 				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").play();
 			}
 		} else {
-			if (DebugMode.soundMap.getSound("sounds/tankIdle.ogg").isPlaying()) {
-				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
-			}
-			if (DebugMode.soundMap.getSound("sounds/tankMove.ogg").isPlaying()) {
+			if(DebugMode.soundMap.getSound("sounds/tankMove.ogg").isPlaying())
 				DebugMode.soundMap.getSound("sounds/tankMove.ogg").stop();
-			}
+			if(DebugMode.soundMap.getSound("sounds/tankIdle.ogg").isPlaying())
+				DebugMode.soundMap.getSound("sounds/tankIdle.ogg").stop();
 		}
 	}
 
@@ -401,117 +427,85 @@ public class TankEntity extends HittableEntity {
 		return false;
 	}
 
-	boolean fullscreen = false;
-
 	private void debugKeyMappings() {
 		// Enables the Debug GUIs
-		// ID
-		// POSITION
-		// ROTATION
-		// IS IT MOVING?
-		GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if (action == GLFW_PRESS) {
-					if (key == GLFW_KEY_F11) {
-						fullscreen = !fullscreen;
-						long monitor;
-						GLFWVidMode glfwGetVideoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-						if(fullscreen) {
-							assert glfwGetVideoMode != null;
-							monitor = ATRobots.getWindow().getPrimaryMonitor();
-
-							GLFW.glfwSetWindowMonitor(	window,
-														monitor,
-													0,
-													0,
-														 glfwGetVideoMode.width(),
-													     glfwGetVideoMode.height(),
-														 GLFW_DONT_CARE
-													 );
-							GL11.glViewport(0, 0, glfwGetVideoMode.width(),glfwGetVideoMode.height());
-						} else {
-							monitor = 0;
-							GLFW.glfwSetWindowMonitor(	window,
-														monitor,
-													(glfwGetVideoMode.width() - WIDTH) / 2,
-													(glfwGetVideoMode.height() - HEIGHT) / 2,
-														WIDTH,
-														HEIGHT,
-														GLFW_DONT_CARE
-													 );
-							GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
-							GL11.glViewport(0, 0, WIDTH, HEIGHT);
-						}
-					}
-					if (key == GLFW_KEY_M) {
-						DebugMode.soundMap.setSound();
-					}
-					if (key == GLFW_KEY_F4)
-						DebugMode.debugGUIMap.updateDebugMode();        // Enables the Debug GUIs
-					if (key == GLFW_KEY_V)
-						DebugMode.updateSpectator();
-					if (!DebugMode.isSpectator()) {
-						if (key == GLFW_KEY_SPACE) {
-							bulletPos.x = getPos().x;
-							bulletPos.z = getPos().z;
-							switch ((int) turretAngle) {
-								case 0:
-									bulletPos.z += 4f;
-									break;
-								case 45:
-									bulletPos.x += 4f;
-									bulletPos.z += 4f;
-									break;
-								case 90:
-									bulletPos.x += 4f;
-									break;
-								case 135:
-									bulletPos.x += 4f;
-									bulletPos.z -= 4f;
-									break;
-								case 180:
-									bulletPos.z -= 4f;
-									break;
-								case 225:
-									bulletPos.x -= 4f;
-									bulletPos.z -= 4f;
-									break;
-								case 270:
-									bulletPos.x -= 4f;
-									break;
-								case 315:
-									bulletPos.x -= 4f;
-									bulletPos.z += 4f;
-									break;
-							}
-							if (DebugMode.soundMap.isSoundOn()) {
-								DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
-								DebugMode.soundMap.getSound("sounds/bullet.ogg").play();
-							} else {
-								if (DebugMode.soundMap.getSound("sounds/bullet.ogg").isPlaying()) {
-									DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
+		GLFWKeyCallback keyCallback;
+		if (!DebugMode.isSpectator()) {
+			keyCallback = new GLFWKeyCallback() {
+				@Override
+				public void invoke(long window, int key, int scancode, int action, int mods) {
+					DebugMode.basicControls(window, key, action);
+					if (action == GLFW_PRESS) {
+							if (key == GLFW_KEY_SPACE) {
+								bulletPos.x = getPos().x;
+								bulletPos.z = getPos().z;
+								switch ((int) turretAngle) {
+									case 0:
+										bulletPos.z += 4f;
+										break;
+									case 45:
+										bulletPos.x += 4f;
+										bulletPos.z += 4f;
+										break;
+									case 90:
+										bulletPos.x += 4f;
+										break;
+									case 135:
+										bulletPos.x += 4f;
+										bulletPos.z -= 4f;
+										break;
+									case 180:
+										bulletPos.z -= 4f;
+										break;
+									case 225:
+										bulletPos.x -= 4f;
+										bulletPos.z -= 4f;
+										break;
+									case 270:
+										bulletPos.x -= 4f;
+										break;
+									case 315:
+										bulletPos.x -= 4f;
+										bulletPos.z += 4f;
+										break;
 								}
+								if (DebugMode.soundMap.isSoundOn()) {
+									DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
+									DebugMode.soundMap.getSound("sounds/bullet.ogg").play();
+								} else {
+									if (DebugMode.soundMap.getSound("sounds/bullet.ogg").isPlaying()) {
+										DebugMode.soundMap.getSound("sounds/bullet.ogg").stop();
+									}
+								}
+								DebugMode.objectMap.addEntity(
+										new BulletEntity(
+												getID() + "_bullet",                                    // ID
+												new Vector3f(bulletPos.x, 2.55f, bulletPos.z),        // POSITION
+												new Vector3f(0, turretAngle + 90, 90),        // ROTATION
+												true                                                    // IS IT MOVING?
+										));
 							}
-							DebugMode.objectMap.addEntity(
-									new BulletEntity(
-											getID() + "_bullet",                                    // ID
-											new Vector3f(bulletPos.x, 2.55f, bulletPos.z),        // POSITION
-											new Vector3f(0, turretAngle + 90, 90),        // ROTATION
-											true                                                    // IS IT MOVING?
-									));
-						}
+							if (key == GLFW_KEY_E) {
+								DebugMode.objectMap.addEntity(
+										new MineEntity(
+												getID() + "_mine",                                    // ID
+												new Vector3f(getPos().x, 0.5f, getPos().z),             // POSITION
+												new Vector3f(0, 0, 0)                             // ROTATION
+										));
+							}
 					}
 				}
-				if (action == GLFW_RELEASE) {
-					if (key == GLFW_KEY_ESCAPE) {
-						System.out.println("EXITING WINDOW " + ATRobots.getWindow().getTitle());
-						glfwSetWindowShouldClose(window, true);
-					}
-
+			};
+		} else {
+			keyCallback = new GLFWKeyCallback() {
+				@Override
+				public void invoke(long window, int key, int scancode, int action, int mods) {
+					DebugMode.basicControls(window, key, action);
 				}
-			}
-		};
+			};
+		}
 		glfwSetKeyCallback(ATRobots.window.getWindowHandle(), keyCallback);
 	}
+
+
 }

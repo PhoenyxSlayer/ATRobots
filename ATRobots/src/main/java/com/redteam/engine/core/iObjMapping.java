@@ -36,8 +36,9 @@ public interface iObjMapping {
 		return light;
 	}
 
-	default void addEntity(Entity e) {
+	default Entity addEntity(Entity e) {
 		entities.add(e);
+		return e;
 	}
 
 	default void removeEntity(Entity e) {
