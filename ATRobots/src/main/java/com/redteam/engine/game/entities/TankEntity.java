@@ -72,7 +72,14 @@ public class TankEntity extends HittableEntity {
 			DebugMode.debugGUIMap.addEvent("Health: " + health);
 		} else if (entity instanceof MineEntity) {
 			entity.remove();
-			DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
+			if (DebugMode.soundMap.isSoundOn()) {
+				DebugMode.soundMap.getSound("sounds/explosion.ogg").stop();
+				DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
+			} else {
+				if (DebugMode.soundMap.getSound("sounds/explosion.ogg").isPlaying()) {
+					DebugMode.soundMap.getSound("sounds/explosion.ogg").stop();
+				}
+			}
 			DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
 			health -= 50;
 			DebugMode.debugGUIMap.addEvent("Health: " + health);
@@ -492,6 +499,14 @@ public class TankEntity extends HittableEntity {
 												new Vector3f(getPos().x, 0.5f, getPos().z),             // POSITION
 												new Vector3f(0, 0, 0)                             // ROTATION
 										));
+								if (DebugMode.soundMap.isSoundOn()) {
+									DebugMode.soundMap.getSound("sounds/mineSpawn.ogg").stop();
+									DebugMode.soundMap.getSound("sounds/mineSpawn.ogg").play();
+								} else {
+									if (DebugMode.soundMap.getSound("sounds/mineSpawn.ogg").isPlaying()) {
+										DebugMode.soundMap.getSound("sounds/mineSpawn.ogg").stop();
+									}
+								}
 							}
 					}
 				}

@@ -52,7 +52,7 @@ public class DebugMode implements ILogic {
 		debugGUIMap = new DebugGUIMap();
 		objectMap = new DebugObjectMap();
 		soundMap = new DebugSoundMap();
-		icon = image_parser.load_image("textures/test.png");
+		icon = image_parser.load_image("textures/icon.png");
 		renderer = new RenderManager();
 		window = ATRobots.getWindow();
 		loader = new ObjectLoader();

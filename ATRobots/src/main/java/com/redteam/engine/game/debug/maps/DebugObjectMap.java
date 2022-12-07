@@ -56,7 +56,14 @@ public class DebugObjectMap implements iObjMapping {
                 }
                 else if (entity instanceof MineEntity) {
                     entity.remove();
-                    DebugMode.debugGUIMap.addEvent(getID() + " Hit! w/ " + entity.getID());
+                    if (DebugMode.soundMap.isSoundOn()) {
+                        DebugMode.soundMap.getSound("sounds/explosion.ogg").stop();
+                        DebugMode.soundMap.getSound("sounds/explosion.ogg").play();
+                    } else {
+                        if (DebugMode.soundMap.getSound("sounds/explosion.ogg").isPlaying()) {
+                            DebugMode.soundMap.getSound("sounds/explosion.ogg").stop();
+                        }
+                    }
                     health -= 50;
                     DebugMode.debugGUIMap.addEvent("Health: " + health);
                 } else if (entity instanceof HittableEntity) {

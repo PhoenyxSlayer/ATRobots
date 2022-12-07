@@ -13,7 +13,7 @@ public class DebugSoundMap implements iSoundMapping {
     public void init() {
         /* 1st File Source, 2nd Loops?*/
         addSound("sounds/bullet.ogg", false);
-        addSound("sounds/bloop_x.ogg", false);
+        addSound("sounds/mineSpawn.ogg", false);
         addSound("sounds/tankIdle.ogg", true);
         addSound("sounds/tankMove.ogg", true);
         addSound("sounds/explosion.ogg", false);
